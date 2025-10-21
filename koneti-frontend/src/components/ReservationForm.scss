@@ -1,0 +1,319 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+.reservation-wrapper {
+  font-family: "Poppins", sans-serif;
+  padding: 8rem 2rem;
+  margin-bottom: 250px;
+  background-color: #fdfaf6;
+  display: flex;
+  justify-content: center;
+
+  .reservation-form {
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem 2rem 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: formFadeIn 0.6s ease-out forwards;
+
+    label {
+      font-weight: 600;
+      color: #5a3e36;
+      align-self: flex-start;
+    }
+
+    .type-grid,
+    .subtype-grid {
+      display: flex;
+      gap: 1rem;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      width: 100%;
+
+      .type-card,
+      .subtype-card {
+        flex: 1 1 0;
+        max-width: 180px;
+        min-width: 100px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 1rem;
+        background: #fff;
+        border: 1px solid #ccc;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+        &.selected {
+          background: #f6e8d7;
+          border-color: #926447;
+        }
+
+        &:hover {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .info-icon {
+          margin-left: 0.5rem;
+          color: #926447;
+          cursor: pointer;
+
+          &:hover {
+            color: #5a3e36;
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+
+    .form-section,
+    .event-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      align-items: center;
+
+      input,
+      textarea {
+        width: 100%;
+        max-width: 350px; 
+        padding: 0.6rem 0.9rem;
+        border-radius: 0.6rem;
+        border: 1px solid #ccc;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.95rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+        &:focus {
+          border-color: #926447;
+          box-shadow: 0 0 6px rgba(146, 100, 71, 0.3);
+          outline: none;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+      }
+    }
+
+    .btn-submit {
+      padding: 0.7rem 1.5rem;
+      border-radius: 1rem;
+      background: linear-gradient(145deg, #f6e8d7, #e9d9c6);
+      border: none;
+      font-weight: 600;
+      color: #5a3e36;
+      cursor: pointer;
+      align-self: center;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        transform: translateY(-2px);
+      }
+    }
+  }
+  .popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+
+    .popup {
+      background: linear-gradient(
+        145deg,
+        #fdf6f0,
+        #f7e6d4
+      ); 
+      font-family: "Playfair Display", serif;
+      padding: 2.5rem 2rem;
+      border-radius: 1.5rem;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+      text-align: center;
+      animation: popupFade 0.35s ease-out;
+
+      .close-btn {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.7rem;
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: #926447;
+        cursor: pointer;
+        transition: transform 0.2s ease, color 0.2s ease;
+
+        &:hover {
+          transform: scale(1.3);
+          color: #5a3e36;
+        }
+      }
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: #5a3e36;
+        font-weight: 700;
+        font-size: 1.6rem;
+
+        &::after {
+          content: attr(data-emoji);
+          margin-left: 0.5rem;
+        }
+      }
+
+      p {
+        color: #422d1c;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        padding-left: 1.4rem;
+        text-align: left;
+        margin: 0 0 1rem 0;
+
+        li {
+          margin: 0.4rem 0;
+          color: #422d1c;
+          font-size: 0.95rem;
+        }
+      }
+
+      .extra-info {
+        margin-top: 1rem;
+        font-style: italic;
+        color: #5a3e36;
+      }
+    }
+  }
+
+  @keyframes popupFade {
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes popupFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes formFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-error {
+  border-color: red !important;
+  animation: shake 0.3s;
+}
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reservation-wrapper {
+    padding: 5rem 1rem;
+
+    .reservation-form {
+      .type-grid,
+      .subtype-grid {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+
+        .type-card,
+        .subtype-card {
+          max-width: 120px;
+          padding: 0.5rem 0.8rem;
+          font-size: 0.85rem;
+        }
+      }
+
+      .form-section,
+      .event-form {
+        input,
+        textarea {
+          font-size: 0.9rem;
+        }
+      }
+
+      .btn-submit {
+        align-self: center;
+        text-align: center;
+      }
+    }
+  }
+}
