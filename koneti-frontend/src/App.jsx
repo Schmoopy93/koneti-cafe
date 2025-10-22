@@ -9,6 +9,7 @@ import ScrollToTop from "./ScrollToTop";
 import StaffLogin from "./components/StaffLogin";
 import AdminPage from "./components/AdminPage";
 import Gallery from "./components/Gallery";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function App() {
   return (
@@ -21,7 +22,14 @@ export default function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/reservation" element={<ReservationForm />} />
           <Route path="/login" element={<StaffLogin />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/gallery" element={<Gallery />} />
         </Routes>
       </main>

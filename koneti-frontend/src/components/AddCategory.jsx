@@ -1,24 +1,13 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCoffee,
-  faGlassWhiskey,
-  faCocktail,
-  faWineGlassAlt,
-  faBeer,
-  faMugHot,
-  faWineBottle,
-  faGlassMartiniAlt,
-  faGlassCheers,
-  faGlassWater,
-  faBlender,
-  faBottleDroplet,
-  faChampagneGlasses,
-  faJugDetergent,
-  faIceCream,
-  faLemon,
+  faCoffee, faMugHot, faBeer, faWineGlassAlt, faWineBottle,
+  faGlassWhiskey, faCocktail, faGlassMartiniAlt, faGlassCheers,
+  faChampagneGlasses, faGlassWater, faBottleDroplet, faBlender,
+  faJugDetergent, faIceCream, faLemon
 } from "@fortawesome/free-solid-svg-icons";
 
+import toast, { Toaster } from "react-hot-toast";
 import "./AddCategory.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -42,23 +31,44 @@ const iconOptions = [
   { name: "faLemon", icon: faLemon, label: "Limunada" },
 ];
 
-export default function AddCategory({ onClose }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    icon: "",
-  });
+export default function AddCategory() {
+  const [formData, setFormData] = useState({ name: "", icon: "" });
+  const [errors, setErrors] = useState({});
+  const [shakeFields, setShakeFields] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleIconSelect = (iconName) => {
     setFormData({ ...formData, icon: iconName });
+    if (errors.icon) setErrors({ ...errors, icon: "" });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Naziv kategorije je obavezan.";
+    if (!formData.icon) newErrors.icon = "Morate izabrati ikonicu.";
+    return newErrors;
+  };
+
+  const triggerShake = (fields) => {
+    const shakeObj = {};
+    fields.forEach(f => shakeObj[f] = true);
+    setShakeFields(shakeObj);
+    setTimeout(() => setShakeFields({}), 500);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      triggerShake(Object.keys(validationErrors));
+      toast.error("Proverite greške u formi!");
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/categories`, {
@@ -68,46 +78,53 @@ export default function AddCategory({ onClose }) {
       });
 
       if (res.ok) {
-        alert("Kategorija uspešno dodata!");
+        toast.success("Kategorija uspešno dodata!");
+        // Reset input polja, ali forma ostaje otvorena
         setFormData({ name: "", icon: "" });
-        onClose?.();
+        setErrors({});
+        setShakeFields({});
       } else {
-        alert("Greška pri dodavanju kategorije");
+        toast.error("Greška pri dodavanju kategorije");
       }
     } catch (err) {
       console.error(err);
-      alert("Greška na serveru");
+      toast.error("Greška na serveru");
     }
   };
 
   return (
     <div className="add-category-form">
-      <h3>Dodaj novu kategoriju</h3>
+      <Toaster position="top-right" reverseOrder={false} />
+      <h3>Nova kategorija</h3>
       <form onSubmit={handleSubmit}>
-        <label>Naziv kategorije:</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+        <div className="form-group">
+          <label>Naziv kategorije:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className={shakeFields.name ? "shake" : ""}
+          />
+          {errors.name && <span className="error">{errors.name}</span>}
+        </div>
 
-        <label>Izaberi ikonicu:</label>
-        <div className="icon-picker">
-          {iconOptions.map((option) => (
-            <button
-              key={option.name}
-              type="button"
-              title={option.label}
-              className={`icon-btn ${
-                formData.icon === option.name ? "selected" : ""
-              }`}
-              onClick={() => handleIconSelect(option.name)}
-            >
-              <FontAwesomeIcon icon={option.icon} />
-            </button>
-          ))}
+        <div className="form-group">
+          <label>Izaberi ikonicu:</label>
+          <div className={`icon-picker ${shakeFields.icon ? "shake" : ""}`}>
+            {iconOptions.map((option) => (
+              <button
+                key={option.name}
+                type="button"
+                title={option.label}
+                className={`icon-btn ${formData.icon === option.name ? "selected" : ""}`}
+                onClick={() => handleIconSelect(option.name)}
+              >
+                <FontAwesomeIcon icon={option.icon} />
+              </button>
+            ))}
+          </div>
+          {errors.icon && <span className="error">{errors.icon}</span>}
         </div>
 
         <button type="submit" className="gradient-btn">

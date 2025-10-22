@@ -76,6 +76,45 @@
   }
 }
 
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.image-preview {
+  margin-top: 0.5rem;
+  max-width: 200px;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+.shake {
+  animation: shake 0.3s ease;
+  border-color: #d9534f !important; /* crvena ivica za grešku */
+}
+.error {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 @keyframes formFadeIn {
   0% {
     opacity: 0;

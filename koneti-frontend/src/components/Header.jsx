@@ -52,7 +52,7 @@ export default function Header() {
             )}
 
             {token && (
-              <Link to="/admin" onClick={handleLogout} data-tooltip="Odjava">
+              <Link to="/" onClick={handleLogout} data-tooltip="Odjava">
               <FontAwesomeIcon icon={faRightFromBracket} />
               </Link>
             )}

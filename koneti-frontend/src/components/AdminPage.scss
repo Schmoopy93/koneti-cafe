@@ -26,7 +26,7 @@
   top: 70px;
   height: calc(100vh - 70px);
   transition: all 0.3s ease;
-  font-family: "Poppins", sans-serif;
+  font-family: cursive; // promenjeno sa Poppins na cursive da bude isto kao Menu
 
   .collapse-btn {
     background: none;
@@ -43,9 +43,45 @@
     }
   }
 
+  .sidebar-staff {
+    margin-top: 2rem;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    background: linear-gradient(270deg, #cfa87f, #d2a679, #e0c2a0);
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientTextShift 8s ease infinite;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      cursor: default;
+    }
+
+    @keyframes gradientTextShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      margin-top: 1.5rem;
+    }
+  }
+
   .sidebar-title {
-    font-weight: 700;   // kao u Menu.jsx
-    font-size: 1.2rem;  // kao u Menu.jsx
+    font-weight: 700;
+    font-size: 1.2rem;
     text-align: center;
     color: #5a3e36;
   }
@@ -55,8 +91,8 @@
     border: none;
     border-radius: 0.8rem;
     padding: 0.8rem 1rem;
-    font-weight: 600;  // kao Menu.jsx
-    font-size: 1rem;   // kao Menu.jsx
+    font-weight: 600;
+    font-size: 1rem;
     color: #5a3e36;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -64,36 +100,37 @@
     align-items: center;
     justify-content: flex-start;
     gap: 0.5rem;
-    position: relative; // tooltip pozicija
+    position: relative;
+    font-family: cursive; // dodato da bude isto kao Menu
 
     .icon {
       font-size: 1.2rem;
+      color: #5a3e36;
     }
 
     &:hover {
-      background: #e9d9c6;
+      background: #cfae92; // svetlije za hover kao u Menu
       transform: translateX(5px);
       color: #926447;
     }
 
     &::after {
-content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%; /* Tooltip ide iznad dugmeta */
-    left: 50%;
-    transform: translateX(-50%) translateY(-5px); /* Mali razmak iznad dugmeta */
-    background: #f6e8d7;
-    color: #5a3e36;
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.5rem;
-    white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    z-index: 10;
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      transform: translateX(-50%) translateY(-5px);
+      background: #f6e8d7;
+      color: #5a3e36;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 10;
     }
 
     &:hover::after {
@@ -102,7 +139,7 @@ content: attr(data-tooltip);
     }
 
     &.active {
-      background: #926447;
+      background: #d9bfa7; // active boja ista kao u Menu
       color: #fff;
 
       .icon {
@@ -128,7 +165,6 @@ content: attr(data-tooltip);
     }
   }
 
-  /* MOBILE */
   @media (max-width: 768px) {
     width: 95%;
     flex-direction: row;
@@ -168,8 +204,6 @@ content: attr(data-tooltip);
     }
   }
 }
-
-
 /* ================= GLAVNI SADRŽAJ ================= */
 .admin-main {
   flex: 1;
@@ -326,8 +360,14 @@ content: attr(data-tooltip);
 }
 
 @keyframes popupFade {
-  0% { opacity: 0; transform: translateY(-20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===== RESPONSIVE ADMIN SIDEBAR (mobile) ===== */
@@ -380,10 +420,10 @@ content: attr(data-tooltip);
   max-width: 600px;
   width: 100%;
   margin: 2rem auto;
-  padding: 2rem;
-  background: linear-gradient(145deg, #fdf6f0, #f7e6d4);
+  //padding: 2rem;
+  //background: linear-gradient(145deg, #fdf6f0, #f7e6d4);
   border-radius: 1rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
 
   form {
@@ -396,7 +436,9 @@ content: attr(data-tooltip);
       color: #5a3e36;
     }
 
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       width: 100%;
       padding: 0.6rem 0.8rem;
       border-radius: 0.6rem;
@@ -437,24 +479,69 @@ content: attr(data-tooltip);
 /* ================= RESPONSIVE FORMS ================= */
 @media (max-width: 768px) {
   .form-wrapper {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 2rem auto;      // centrirano vertikalno i horizontalno
+    width: 90%;             // zauzima većinu širine ekrana
+    max-width: 400px;       // maksimalna širina za veće ekrane
+    padding: 0;             // bez dodatnog paddinga
+    display: flex;
+    justify-content: center;
 
     form {
+      display: flex;
+      flex-direction: column;
       gap: 0.75rem;
+      width: 100%;
 
-      input, select, textarea {
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #5a3e36;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
         font-size: 0.9rem;
         padding: 0.5rem 0.6rem;
+        border: none;          // uklonjeni okviri
+        background: transparent;
+        border-bottom: 1px solid #d1a679; // diskretan donji “underline”
+        border-radius: 0;
+        outline: none;
+
+        &:focus {
+          border-bottom-color: #926447;
+        }
+      }
+
+      textarea {
+        min-height: 70px;
       }
 
       button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+        border: none;
+        border-radius: 0.5rem;
+        background: #b08b62;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: #926447;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
       }
     }
   }
 }
-
 
 

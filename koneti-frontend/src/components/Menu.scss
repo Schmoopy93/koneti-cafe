@@ -58,7 +58,8 @@
     }
 
     .sidebar-title {
-      font-weight: 700;
+      font-weight: 800;
+      font-family: cursive;
       margin-bottom: 1.5rem;
       font-size: 1.2rem;
       text-align: center;
@@ -70,6 +71,20 @@
       gap: 1rem;
       width: 100%;
       margin-top: 1rem;
+
+      flex: 1; // koristi preostali prostor sidebar-a
+      overflow-y: auto; // omogućava scroll ako ima puno stavki
+      padding-right: 0.5rem; // da scrollbar ne pregazi sadržaj
+
+      // Diskretni scrollbar
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
 
       .category-btn {
         background: none;
@@ -84,6 +99,7 @@
         color: #5a3e36;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-family: cursive;
 
         .icon {
           font-size: 1.1rem;
@@ -91,19 +107,56 @@
         }
 
         &:hover {
-          background: #e9d9c6;
+          background: #cfae92;
           transform: translateX(5px);
           color: #926447;
         }
 
+        &::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-5px);
+          background: #f6e8d7;
+          color: #5a3e36;
+          font-weight: 800;
+          font-size: 0.9rem;
+          padding: 0.3rem 0.6rem;
+          border-radius: 0.5rem;
+          white-space: nowrap;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.25s ease, transform 0.25s ease;
+          z-index: 10;
+        }
+
+        &:hover::after {
+          opacity: 1;
+          transform: translateY(-50%) translateX(0);
+        }
+
         &.active {
-          background: #926447;
+          background: #d9bfa7;
           color: #fff;
 
           .icon {
             color: #fff;
           }
         }
+      }
+    }
+
+    .sidebar-logo {
+      width: 80px; /* širina loga */
+      height: 80px; /* visina loga */
+      margin-bottom: 1rem;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* zadrži proporcije */
+        display: block;
       }
     }
   }
@@ -126,6 +179,7 @@
       padding-bottom: 0.5rem;
       text-align: center;
       color: #5a3e36;
+      font-family: cursive;
     }
 
     .drinks-grid {
@@ -149,15 +203,26 @@
           box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
 
+        .drink-img {
+          width: 100%;
+          max-width: 150px;
+          height: auto;
+          border-radius: 0.5rem;
+          margin-bottom: 0.5rem;
+          object-fit: cover;
+        }
+
         h3 {
           font-size: 1.1rem;
           font-weight: 600;
           margin-bottom: 0.3rem;
+          font-family: cursive;
         }
 
         .price {
           font-weight: 700;
           color: #926447;
+          font-family: cursive;
         }
       }
     }

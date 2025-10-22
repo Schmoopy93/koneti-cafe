@@ -1,15 +1,18 @@
 .navbar {
-  background-color: #f2e9dc;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
+  background-color: #cfa68a; /* cappuccino boja */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+  position: sticky; 
+  top: 0; /* ostaje na vrhu */
   z-index: 1000;
+  border-radius: 15px 15px 15px 15px; 
+  padding: 0; /* uklonjen unutrašnji razmak */
+  width: 100%; /* da navbar pokrije celu širinu */
 }
 
 .nav-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0.8rem 1.5rem;
+  margin: 0 auto; /* centrirano unutar širine */
+  padding: 0.8rem 1.5rem; /* unutrašnji razmak unutar navbar-a */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20,7 +23,9 @@
   height: 35px;
   width: auto;
   object-fit: contain;
+  
 }
+
 .nav-links {
   display: flex;
   gap: 1.5rem;
@@ -32,9 +37,9 @@
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1.2rem;
-    border-radius: 1rem;
-    background: linear-gradient(145deg, #f6e8d7, #e9d9c6);
-    color: #5a3e36;
+    border-radius: 1rem; /* zaobljeni linkovi */
+    background: #cfa68a; /* tamniji button-like link */
+    color: #fdfaf6; /* svetli tekst za kontrast */
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
     font-size: 1rem;
@@ -43,20 +48,20 @@
     transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       transform: translateY(-2px);
-      background: linear-gradient(145deg, #e9d9c6, #f6e8d7);
+      background: #7d5a4f; /* malo svetliji hover */
     }
 
-    /* === Tooltip stil === */
+    /* Tooltip stil */
     &::after {
       content: attr(data-tooltip);
       position: absolute;
       bottom: -2.4rem;
       left: 50%;
       transform: translateX(-50%) translateY(5px);
-      background: #f6e8d7;
-      color: #5a3e36;
+      background: #e4bb89; /* tamniji tooltip */
+      color: #fdfaf6;
       padding: 0.4rem 0.6rem;
       border-radius: 0.5rem;
       font-size: 0.85rem;
@@ -64,7 +69,7 @@
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
       transition: opacity 0.25s ease, transform 0.25s ease;
       z-index: 10;
     }
@@ -76,7 +81,6 @@
   }
 }
 
-
 .nav-links.open {
   display: flex;
   flex-direction: column;
@@ -84,7 +88,7 @@
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: #f2e9dc;
+  background-color: #3b2f2f; /* tamnija mobilna lista */
   padding: 1rem 0;
   gap: 1rem;
 
@@ -100,10 +104,11 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #5a3e36;
+  color: #fdfaf6; /* svetla boja za hamburger */
+  font-size: 1.2rem;
 
   &:hover {
-    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5));
     transform: translateY(-2px);
   }
 }

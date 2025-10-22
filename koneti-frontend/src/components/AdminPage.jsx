@@ -10,7 +10,13 @@ import "./AdminPage.scss";
 
 import AddDrink from "./AddDrink";
 import AddCategory from "./AddCategory";
-import { FaCalendarAlt, FaGlassMartiniAlt, FaListAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaGlassMartiniAlt,
+  FaListAlt,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const locales = { "en-US": enUS };
@@ -58,48 +64,58 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page-wrapper">
-      {/* ===== Sidebar ===== */}
-    <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
-  <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-    {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
-  </button>
+      <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
+        {!collapsed && (
+          <div className="sidebar-staff">
+            <span>KONETI ADMIN</span>
+          </div>
+        )}
+        <button
+          className="collapse-btn"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </button>
 
-  <button
-    className={`sidebar-btn ${openCalendar ? "active" : ""}`}
-    onClick={() => {
-      setOpenCalendar(true);
-      setOpenForm(false);
-      setOpenCategoryForm(false);
-    }}
-    data-tooltip="Kalendar"
-  >
-    <FaCalendarAlt className="icon" />
-  </button>
+        <button
+          className={`sidebar-btn ${openCalendar ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(true);
+            setOpenForm(false);
+            setOpenCategoryForm(false);
+          }}
+          data-tooltip="Pregled rezervacija"
+        >
+          <FaCalendarAlt className="icon" />
+          <span>Pregled rezervacija</span>
+        </button>
 
-  <button
-    className={`sidebar-btn ${openForm ? "active" : ""}`}
-    onClick={() => {
-      setOpenCalendar(false);
-      setOpenForm(true);
-      setOpenCategoryForm(false);
-    }}
-    data-tooltip="Dodaj piće u meni"
-  >
-    <FaGlassMartiniAlt className="icon" />
-  </button>
+        <button
+          className={`sidebar-btn ${openForm ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(false);
+            setOpenForm(true);
+            setOpenCategoryForm(false);
+          }}
+          data-tooltip="Novi unos pića"
+        >
+          <FaGlassMartiniAlt className="icon" />
+          <span>Nova konzumacija</span>
+        </button>
 
-  <button
-    className={`sidebar-btn ${openCategoryForm ? "active" : ""}`}
-    onClick={() => {
-      setOpenCalendar(false);
-      setOpenForm(false);
-      setOpenCategoryForm(true);
-    }}
-    data-tooltip="Dodaj kategoriju"
-  >
-    <FaListAlt className="icon" />
-  </button>
-</aside>
+        <button
+          className={`sidebar-btn ${openCategoryForm ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(false);
+            setOpenForm(false);
+            setOpenCategoryForm(true);
+          }}
+          data-tooltip="Nova kategorija"
+        >
+          <FaListAlt className="icon" />
+          <span>Nova kategorija</span>
+        </button>
+      </aside>
 
       {/* ===== Glavni sadržaj ===== */}
       <main className="admin-main">
@@ -138,7 +154,10 @@ export default function AdminPage() {
       {selectedEvent && (
         <div className="event-details-overlay">
           <div className="event-details-card">
-            <button className="close-icon-btn" onClick={() => setSelectedEvent(null)}>
+            <button
+              className="close-icon-btn"
+              onClick={() => setSelectedEvent(null)}
+            >
               ×
             </button>
             <h3>{selectedEvent.name}</h3>
@@ -162,7 +181,8 @@ export default function AdminPage() {
               <strong>Telefon:</strong> {selectedEvent.phone}
             </p>
             <p>
-              <strong>Datum:</strong> {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
+              <strong>Datum:</strong>{" "}
+              {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
             </p>
             <p>
               <strong>Vreme:</strong> {selectedEvent.time}
