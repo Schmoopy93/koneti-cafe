@@ -26,6 +26,7 @@
   top: 70px;
   height: calc(100vh - 70px);
   transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
 
   .collapse-btn {
     background: none;
@@ -43,8 +44,8 @@
   }
 
   .sidebar-title {
-    font-weight: 700;
-    font-size: 1.3rem;
+    font-weight: 700;   // kao u Menu.jsx
+    font-size: 1.2rem;  // kao u Menu.jsx
     text-align: center;
     color: #5a3e36;
   }
@@ -54,7 +55,8 @@
     border: none;
     border-radius: 0.8rem;
     padding: 0.8rem 1rem;
-    font-weight: 600;
+    font-weight: 600;  // kao Menu.jsx
+    font-size: 1rem;   // kao Menu.jsx
     color: #5a3e36;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -62,9 +64,10 @@
     align-items: center;
     justify-content: flex-start;
     gap: 0.5rem;
+    position: relative; // tooltip pozicija
 
-    span {
-      transition: opacity 0.3s ease;
+    .icon {
+      font-size: 1.2rem;
     }
 
     &:hover {
@@ -73,11 +76,36 @@
       color: #926447;
     }
 
+    &::after {
+content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Tooltip ide iznad dugmeta */
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px); /* Mali razmak iznad dugmeta */
+    background: #f6e8d7;
+    color: #5a3e36;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 10;
+    }
+
+    &:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
     &.active {
       background: #926447;
       color: #fff;
 
-      span {
+      .icon {
         color: #fff;
       }
     }
@@ -117,9 +145,30 @@
     .sidebar-btn {
       flex: 1;
       justify-content: center;
+
+      span {
+        display: none;
+      }
+
+      svg {
+        font-size: 1.2rem;
+        color: #5a3e36;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #926447;
+        }
+      }
+
+      &::after {
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+      }
     }
   }
 }
+
 
 /* ================= GLAVNI SADRŽAJ ================= */
 .admin-main {

@@ -92,7 +92,7 @@ export default function AddDrink() {
           />
         </div>
 
-        <button type="submit">Dodaj drink</button>
+        <button type="submit">Sačuvaj</button>
       </form>
     </div>
   );

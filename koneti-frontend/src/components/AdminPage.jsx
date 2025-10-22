@@ -59,47 +59,47 @@ export default function AdminPage() {
   return (
     <div className="admin-page-wrapper">
       {/* ===== Sidebar ===== */}
-      <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
-        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
-        </button>
+    <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
+  <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+    {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
+  </button>
 
-        <button
-          className={`sidebar-btn ${openCalendar ? "active" : ""}`}
-          onClick={() => {
-            setOpenCalendar(true);
-            setOpenForm(false);
-            setOpenCategoryForm(false);
-          }}
-        >
-          <FaCalendarAlt className="icon" />
-          <span>Kalendar</span>
-        </button>
+  <button
+    className={`sidebar-btn ${openCalendar ? "active" : ""}`}
+    onClick={() => {
+      setOpenCalendar(true);
+      setOpenForm(false);
+      setOpenCategoryForm(false);
+    }}
+    data-tooltip="Kalendar"
+  >
+    <FaCalendarAlt className="icon" />
+  </button>
 
-        <button
-          className={`sidebar-btn ${openForm ? "active" : ""}`}
-          onClick={() => {
-            setOpenCalendar(false);
-            setOpenForm(true);
-            setOpenCategoryForm(false);
-          }}
-        >
-          <FaGlassMartiniAlt className="icon" />
-          <span>Dodaj piće</span>
-        </button>
+  <button
+    className={`sidebar-btn ${openForm ? "active" : ""}`}
+    onClick={() => {
+      setOpenCalendar(false);
+      setOpenForm(true);
+      setOpenCategoryForm(false);
+    }}
+    data-tooltip="Dodaj piće u meni"
+  >
+    <FaGlassMartiniAlt className="icon" />
+  </button>
 
-        <button
-          className={`sidebar-btn ${openCategoryForm ? "active" : ""}`}
-          onClick={() => {
-            setOpenCalendar(false);
-            setOpenForm(false);
-            setOpenCategoryForm(true);
-          }}
-        >
-          <FaListAlt className="icon" />
-          <span>Dodaj kategoriju</span>
-        </button>
-      </aside>
+  <button
+    className={`sidebar-btn ${openCategoryForm ? "active" : ""}`}
+    onClick={() => {
+      setOpenCalendar(false);
+      setOpenForm(false);
+      setOpenCategoryForm(true);
+    }}
+    data-tooltip="Dodaj kategoriju"
+  >
+    <FaListAlt className="icon" />
+  </button>
+</aside>
 
       {/* ===== Glavni sadržaj ===== */}
       <main className="admin-main">

@@ -3,10 +3,12 @@
 .reservation-wrapper {
   font-family: "Poppins", sans-serif;
   padding: 8rem 2rem;
-  margin-bottom: 250px;
+  //margin-bottom: 250px;
   background-color: #fdfaf6;
   display: flex;
   justify-content: center;
+  min-height: 50vh; /* zauzima najmanje visinu celog prozora */
+
 
   .reservation-form {
     max-width: 600px;

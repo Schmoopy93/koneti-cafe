@@ -7,7 +7,8 @@
   max-width: 600px;
   margin: 2rem auto;
   border-radius: 1rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0d6c9; // blagi okvir oko forme
+  box-shadow: none; // uklonjena tamna senka
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -68,7 +69,7 @@
       margin-top: 1rem;
 
       &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); // blaga senka samo za dugme
         transform: translateY(-2px);
       }
     }
