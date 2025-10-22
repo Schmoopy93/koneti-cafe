@@ -5,19 +5,42 @@ import {
   faGlassWhiskey,
   faCocktail,
   faWineGlassAlt,
+  faBeer,
+  faMugHot,
+  faWineBottle,
+  faGlassMartiniAlt,
+  faGlassCheers,
+  faGlassWater,
+  faBlender,
+  faBottleDroplet,
+  faChampagneGlasses,
+  faIceCream,
+  faLemon,
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import "./Menu.scss";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-// mapiranje FA ikonica po nazivu kategorije (proširi po potrebi)
-const iconMap = {
-  Kafa: faCoffee,
-  Sokovi: faGlassWhiskey,
-  Napici: faCocktail,
-  Šejkovi: faWineGlassAlt,
+// Mapiranje string naziva ikonice -> FA icon
+const faIconsMap = {
+  faCoffee,
+  faGlassWhiskey,
+  faCocktail,
+  faWineGlassAlt,
+  faBeer,
+  faMugHot,
+  faWineBottle,
+  faGlassMartiniAlt,
+  faGlassCheers,
+  faGlassWater,
+  faBlender,
+  faBottleDroplet,
+  faChampagneGlasses,
+  faIceCream,
+  faLemon,
 };
 
 export default function Menu() {
@@ -35,7 +58,7 @@ export default function Menu() {
       try {
         const res = await fetch(`${API_URL}/categories`);
         if (!res.ok) throw new Error("Failed to fetch categories");
-        const data = await res.json(); // [{_id, name}]
+        const data = await res.json(); // [{_id, name, icon}]
         setCategories(data);
         setSelectedCategory(data[0]?._id || "");
       } catch (err) {
@@ -49,7 +72,7 @@ export default function Menu() {
   useEffect(() => {
     const fetchDrinks = async () => {
       try {
-        const res = await fetch(`${API_URL}/drinks`); // koristi proxy ili pun URL
+        const res = await fetch(`${API_URL}/drinks`);
         if (!res.ok) throw new Error("Failed to fetch drinks");
         const data = await res.json();
         setDrinks(data);
@@ -73,7 +96,10 @@ export default function Menu() {
   );
   const totalPages = Math.ceil(categoryDrinks.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentDrinks = categoryDrinks.slice(startIndex, startIndex + itemsPerPage);
+  const currentDrinks = categoryDrinks.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
@@ -87,7 +113,9 @@ export default function Menu() {
             className="collapse-btn"
             onClick={() => setCollapsed(!collapsed)}
           >
-            <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronLeft} />
+            <FontAwesomeIcon
+              icon={collapsed ? faChevronRight : faChevronLeft}
+            />
           </button>
 
           <div className="sidebar-title">Kategorije</div>
@@ -103,7 +131,12 @@ export default function Menu() {
                   setCurrentPage(1);
                 }}
               >
-                {cat.name && <FontAwesomeIcon icon={iconMap[cat.name]} className="icon" />}
+                {cat.icon && (
+                  <FontAwesomeIcon
+                    icon={faIconsMap[cat.icon]}
+                    className="icon"
+                  />
+                )}
                 <span>{cat.name}</span>
               </button>
             ))}
@@ -133,7 +166,12 @@ export default function Menu() {
                   setCurrentPage(1);
                 }}
               >
-                {cat.name && <FontAwesomeIcon icon={iconMap[cat.name]} className="icon" />}
+                {cat.icon && (
+                  <FontAwesomeIcon
+                    icon={faIconsMap[cat.icon]}
+                    className="icon"
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -154,7 +192,6 @@ export default function Menu() {
             >
               <h3>{drink.name}</h3>
               <p className="price">{drink.price}</p>
-              {/* {drink.description && <p className="description">{drink.description}</p>} */}
             </motion.div>
           ))}
         </div>
@@ -167,7 +204,10 @@ export default function Menu() {
             <span>
               {currentPage} / {totalPages}
             </span>
-            <button onClick={handleNext} disabled={currentPage === totalPages}>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
               Next
             </button>
           </div>

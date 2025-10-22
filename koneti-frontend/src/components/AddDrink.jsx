@@ -42,7 +42,7 @@ export default function AddDrink() {
 
   return (
     <div className="add-drink-form">
-      <h2>Dodaj novi drink</h2>
+      <h2>Dodaj novu konzumaciju</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Naziv:</label>

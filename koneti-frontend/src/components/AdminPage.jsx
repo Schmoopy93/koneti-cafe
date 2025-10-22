@@ -9,6 +9,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./AdminPage.scss";
 
 import AddDrink from "./AddDrink";
+import AddCategory from "./AddCategory";
+import { FaCalendarAlt, FaGlassMartiniAlt, FaListAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const locales = { "en-US": enUS };
@@ -23,11 +25,13 @@ const localizer = dateFnsLocalizer({
 
 export default function AdminPage() {
   const [events, setEvents] = useState([]);
-  const [openCalendar, setOpenCalendar] = useState(true); // kalendar
-  const [openForm, setOpenForm] = useState(false); // forma
+  const [openCalendar, setOpenCalendar] = useState(true);
+  const [openForm, setOpenForm] = useState(false);
+  const [openCategoryForm, setOpenCategoryForm] = useState(false);
   const [view, setView] = useState(Views.MONTH);
   const [date, setDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/reservations`)
@@ -36,12 +40,10 @@ export default function AdminPage() {
         const formattedEvents = data.map((e) => {
           const datePart = new Date(e.date);
           let startDate = new Date(datePart);
-
           if (e.time) {
             const [hours, minutes] = e.time.split(":");
             startDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
           }
-
           return {
             ...e,
             title: `${e.name} (${e.type})`,
@@ -54,113 +56,128 @@ export default function AdminPage() {
       .catch(console.error);
   }, []);
 
-  const toggleCalendar = () => {
-    setOpenCalendar((prev) => {
-      if (!prev) setOpenForm(false); // zatvori formu ako je kalendar otvaran
-      return !prev;
-    });
-  };
-
-  const toggleForm = () => {
-    setOpenForm((prev) => {
-      if (!prev) setOpenCalendar(false); // zatvori kalendar ako se forma otvara
-      return !prev;
-    });
-  };
-
   return (
     <div className="admin-page-wrapper">
-      <div className="calendar-dropdown-wrapper">
-        <button className="gradient-btn" onClick={toggleCalendar}>
-          {openCalendar ? "Zatvori kalendar" : "Prikaži kalendar"}
+      {/* ===== Sidebar ===== */}
+      <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
+        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+          {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
         </button>
 
         <button
-          className="gradient-btn"
-          onClick={toggleForm}
-          style={{ marginLeft: "1rem" }}
+          className={`sidebar-btn ${openCalendar ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(true);
+            setOpenForm(false);
+            setOpenCategoryForm(false);
+          }}
         >
-          {openForm ? "Zatvori Dodaj u meni" : "Dodaj u meni"}
+          <FaCalendarAlt className="icon" />
+          <span>Kalendar</span>
         </button>
 
-        {/* Forma */}
+        <button
+          className={`sidebar-btn ${openForm ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(false);
+            setOpenForm(true);
+            setOpenCategoryForm(false);
+          }}
+        >
+          <FaGlassMartiniAlt className="icon" />
+          <span>Dodaj piće</span>
+        </button>
+
+        <button
+          className={`sidebar-btn ${openCategoryForm ? "active" : ""}`}
+          onClick={() => {
+            setOpenCalendar(false);
+            setOpenForm(false);
+            setOpenCategoryForm(true);
+          }}
+        >
+          <FaListAlt className="icon" />
+          <span>Dodaj kategoriju</span>
+        </button>
+      </aside>
+
+      {/* ===== Glavni sadržaj ===== */}
+      <main className="admin-main">
+        {openCalendar && (
+          <div className="calendar-container">
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: "100%", width: "100%" }}
+              view={view}
+              onView={setView}
+              date={date}
+              onNavigate={setDate}
+              views={["month", "week", "day"]}
+              onSelectEvent={(event) => setSelectedEvent(event)}
+            />
+          </div>
+        )}
+
         {openForm && (
-          <div className="add-drink-form-wrapper">
+          <div className="form-wrapper">
             <AddDrink onClose={() => setOpenForm(false)} />
           </div>
         )}
 
-        {/* Kalendar */}
-        {openCalendar && (
-          <div className={`calendar-container ${!openCalendar ? "collapsed" : ""}`}>
-            <div className="calendar-inner">
-              <Calendar
-                localizer={localizer}
-                events={events}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: "100%", width: "100%" }}
-                view={view}
-                onView={setView}
-                date={date}
-                onNavigate={setDate}
-                views={["month", "week", "day"]}
-                onSelectEvent={(event) => setSelectedEvent(event)}
-              />
-            </div>
+        {openCategoryForm && (
+          <div className="form-wrapper">
+            <AddCategory onClose={() => setOpenCategoryForm(false)} />
           </div>
         )}
+      </main>
 
-        {/* Modal za detalje eventa */}
-        {selectedEvent && (
-          <div className="event-details-overlay">
-            <div className="event-details-card">
-              <button
-                className="close-icon-btn"
-                onClick={() => setSelectedEvent(null)}
-              >
-                ×
-              </button>
-
-              <h3>{selectedEvent.name}</h3>
+      {/* ===== Modal detalja događaja ===== */}
+      {selectedEvent && (
+        <div className="event-details-overlay">
+          <div className="event-details-card">
+            <button className="close-icon-btn" onClick={() => setSelectedEvent(null)}>
+              ×
+            </button>
+            <h3>{selectedEvent.name}</h3>
+            <p>
+              <strong>Tip:</strong>{" "}
+              {selectedEvent.type === "biznis"
+                ? "Biznis sastanak"
+                : selectedEvent.type === "proslava"
+                ? "Proslava"
+                : selectedEvent.name}
+            </p>
+            {selectedEvent.subType && (
               <p>
-                <strong>Tip:</strong>
-                {selectedEvent.type === "biznis"
-                  ? " Biznis sastanak"
-                  : selectedEvent.type === "proslava"
-                  ? " Proslava"
-                  : selectedEvent.name}
+                <strong>Podtip:</strong> {selectedEvent.subType}
               </p>
-              {selectedEvent.subType && (
-                <p>
-                  <strong>Podtip:</strong> {selectedEvent.subType}
-                </p>
-              )}
+            )}
+            <p>
+              <strong>Email:</strong> {selectedEvent.email}
+            </p>
+            <p>
+              <strong>Telefon:</strong> {selectedEvent.phone}
+            </p>
+            <p>
+              <strong>Datum:</strong> {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
+            </p>
+            <p>
+              <strong>Vreme:</strong> {selectedEvent.time}
+            </p>
+            <p>
+              <strong>Broj gostiju:</strong> {selectedEvent.guests}
+            </p>
+            {selectedEvent.message && (
               <p>
-                <strong>Email:</strong> {selectedEvent.email}
+                <strong>Poruka:</strong> {selectedEvent.message}
               </p>
-              <p>
-                <strong>Telefon:</strong> {selectedEvent.phone}
-              </p>
-              <p>
-                <strong>Datum:</strong>{" "}
-                {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
-              </p>
-              <p>
-                <strong>Vreme:</strong> {selectedEvent.time}
-              </p>
-              <p>
-                <strong>Broj gostiju:</strong> {selectedEvent.guests}
-              </p>
-              {selectedEvent.message && (
-                <p>
-                  <strong>Poruka:</strong> {selectedEvent.message}
-                </p>
-              )}
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
