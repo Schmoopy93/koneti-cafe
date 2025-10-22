@@ -3,12 +3,17 @@ import Category from "../models/Category.js";
 
 export const createDrink = async (req, res) => {
   try {
-    const { name, price, category, description, image } = req.body;
+    // req.body => name, price, category, description
+    // req.file => uploadovana slika
+    const { name, price, category, description } = req.body;
+    const image = req.file ? req.file.path : "";
+
+    if (!name || !price || !category)
+      return res.status(400).json({ message: "Obavezna polja nedostaju" });
 
     const categoryExists = await Category.findById(category);
-    if (!categoryExists) {
+    if (!categoryExists)
       return res.status(400).json({ message: "Kategorija ne postoji." });
-    }
 
     const drink = new Drink({ name, price, category, description, image });
     await drink.save();
@@ -18,6 +23,7 @@ export const createDrink = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 export const getDrinks = async (req, res) => {
   try {
@@ -43,7 +49,8 @@ export const updateDrink = async (req, res) => {
     const drink = await Drink.findById(req.params.id);
     if (!drink) return res.status(404).json({ message: "Drink nije pronađen" });
 
-    const { name, price, category, description, image } = req.body;
+    const { name, price, category, description } = req.body;
+
     if (category) {
       const categoryExists = await Category.findById(category);
       if (!categoryExists) return res.status(400).json({ message: "Kategorija ne postoji" });
@@ -53,7 +60,16 @@ export const updateDrink = async (req, res) => {
     if (name) drink.name = name;
     if (price) drink.price = price;
     if (description) drink.description = description;
-    if (image) drink.image = image;
+
+    // Ako je poslata nova slika
+    if (req.file) {
+      // opcionalno: obriši staru sliku sa servera
+      if (drink.image) {
+        const oldImagePath = path.join("uploads/drinks", drink.image);
+        if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
+      }
+      drink.image = req.file.filename; // sačuvaj ime fajla u bazi
+    }
 
     await drink.save();
     res.json(drink);
@@ -61,6 +77,7 @@ export const updateDrink = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 export const deleteDrink = async (req, res) => {
   try {

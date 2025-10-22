@@ -6,13 +6,16 @@ import {
   updateDrink,
   deleteDrink,
 } from "../controllers/drinkController.js";
+import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-router.post("/", createDrink);
-router.get("/", getDrinks);           
-router.get("/:id", getDrinkById);   
-router.put("/:id", updateDrink);      
-router.delete("/:id", deleteDrink);   
+// sada uploaduje sliku i šalje ostale podatke
+router.post("/", upload.single("image"), createDrink);
+router.put("/:id", upload.single("image"), updateDrink);
+
+router.get("/", getDrinks);
+router.get("/:id", getDrinkById);
+router.delete("/:id", deleteDrink);
 
 export default router;
