@@ -14,7 +14,7 @@ export default function AddDrink() {
   const [errors, setErrors] = useState({});
   const [shakeFields, setShakeFields] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null); // <--- ref za fajl input
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/categories")
@@ -89,7 +89,7 @@ export default function AddDrink() {
         setFormData({ name: "", price: "", category: "", description: "", image: null });
         setImagePreview(null);
         setErrors({});
-        if (fileInputRef.current) fileInputRef.current.value = ""; // reset fajl input
+        if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
         toast.error("Greška pri dodavanju konzumacije");
       }
@@ -164,7 +164,7 @@ export default function AddDrink() {
             accept="image/png, image/jpeg"
             onChange={handleFileChange}
             className={shakeFields.image ? "shake" : ""}
-            ref={fileInputRef} // <--- ref za reset
+            ref={fileInputRef}
           />
           {errors.image && <span className="error">{errors.image}</span>}
           {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}

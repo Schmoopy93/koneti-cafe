@@ -10,13 +10,12 @@ export default function StaffLogin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Ako token postoji, odmah redirect
   useEffect(() => {
     const token = sessionStorage.getItem("adminToken");
     if (token) {
-      navigate("/admin", { replace: true }); // replace: true da ne bi bio u istoriji
+      navigate("/admin", { replace: true });
     }
-  }, [navigate]); // dodaj navigate u dependency array
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,10 +42,8 @@ export default function StaffLogin() {
 
       if (!res.ok) throw new Error(data.message || "Login failed");
 
-      // Čuvanje tokena u sessionStorage
       sessionStorage.setItem("adminToken", data.token);
 
-      // Redirect na admin stranicu
       navigate("/admin", { replace: true });
     } catch (err) {
       setError(err.message);

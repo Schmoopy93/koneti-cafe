@@ -72,11 +72,10 @@
       width: 100%;
       margin-top: 1rem;
 
-      flex: 1; // koristi preostali prostor sidebar-a
-      overflow-y: auto; // omogućava scroll ako ima puno stavki
-      padding-right: 0.5rem; // da scrollbar ne pregazi sadržaj
+      flex: 1;
+      overflow-y: auto; 
+      padding-right: 0.5rem;
 
-      // Diskretni scrollbar
       &::-webkit-scrollbar {
         width: 6px;
       }
@@ -149,13 +148,17 @@
     }
 
     .sidebar-logo {
-      width: 80px; /* širina loga */
-      height: 80px; /* visina loga */
+      width: 80px;
+      /* širina loga */
+      height: 80px;
+      /* visina loga */
       margin-bottom: 1rem;
+
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* zadrži proporcije */
+        object-fit: contain;
+        /* zadrži proporcije */
         display: block;
       }
     }
@@ -205,12 +208,24 @@
 
         .drink-img {
           width: 100%;
-          max-width: 150px;
-          height: auto;
-          border-radius: 0.5rem;
-          margin-bottom: 0.5rem;
-          object-fit: cover;
+          height: 130px;
+          object-fit: contain;
+          border-radius: 0.6rem;
+          padding: 0.3rem;
+          margin-bottom: 0.6rem;
+          display: block;
+          opacity: 0;
+          transform: scale(0.95);
+          animation: imageFadeIn 0.8s ease forwards;
         }
+
+        @keyframes imageFadeIn {
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
 
         h3 {
           font-size: 1.1rem;
@@ -263,7 +278,7 @@
 
     /* ===== Mobile category grid ===== */
     .mobile-category-grid {
-      display: none; // default hidden
+      display: none;
       width: 100%;
       gap: 0.5rem;
       margin-bottom: 1rem;
@@ -274,7 +289,7 @@
         background: #f6e8d7;
         border: none;
         border-radius: 0.8rem;
-        width: 22%; // 4 u redu
+        width: 22%;
         padding: 0.8rem;
         display: flex;
         align-items: center;
@@ -317,7 +332,7 @@
     min-height: auto;
 
     .sidebar {
-      display: none; // sakrij sidebar na mobilnom
+      display: none;
     }
 
     .drink-content {
@@ -325,7 +340,7 @@
       border-radius: 0 0 1rem 1rem;
 
       .mobile-category-grid {
-        display: flex; // prikazujemo mobilni grid
+        display: flex;
       }
 
       .drinks-grid {

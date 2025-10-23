@@ -17,7 +17,7 @@ export default function ContactForm() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setFormErrors({ ...formErrors, [name]: "" }); // ukloni grešku kada korisnik kuca
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
   const validateForm = () => {

@@ -26,7 +26,7 @@
   top: 70px;
   height: calc(100vh - 70px);
   transition: all 0.3s ease;
-  font-family: cursive; // promenjeno sa Poppins na cursive da bude isto kao Menu
+  font-family: cursive;
 
   .collapse-btn {
     background: none;
@@ -101,7 +101,7 @@
     justify-content: flex-start;
     gap: 0.5rem;
     position: relative;
-    font-family: cursive; // dodato da bude isto kao Menu
+    font-family: cursive;
 
     .icon {
       font-size: 1.2rem;
@@ -109,7 +109,7 @@
     }
 
     &:hover {
-      background: #cfae92; // svetlije za hover kao u Menu
+      background: #cfae92;
       transform: translateX(5px);
       color: #926447;
     }
@@ -139,7 +139,7 @@
     }
 
     &.active {
-      background: #d9bfa7; // active boja ista kao u Menu
+      background: #d9bfa7;
       color: #fff;
 
       .icon {
@@ -420,8 +420,6 @@
   max-width: 600px;
   width: 100%;
   margin: 2rem auto;
-  //padding: 2rem;
-  //background: linear-gradient(145deg, #fdf6f0, #f7e6d4);
   border-radius: 1rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
@@ -479,10 +477,10 @@
 /* ================= RESPONSIVE FORMS ================= */
 @media (max-width: 768px) {
   .form-wrapper {
-    margin: 2rem auto;      // centrirano vertikalno i horizontalno
-    width: 90%;             // zauzima većinu širine ekrana
-    max-width: 400px;       // maksimalna širina za veće ekrane
-    padding: 0;             // bez dodatnog paddinga
+    margin: 2rem auto; 
+    width: 90%;            
+    max-width: 400px;       
+    padding: 0;            
     display: flex;
     justify-content: center;
 
@@ -504,9 +502,9 @@
         width: 100%;
         font-size: 0.9rem;
         padding: 0.5rem 0.6rem;
-        border: none;          // uklonjeni okviri
+        border: none;
         background: transparent;
-        border-bottom: 1px solid #d1a679; // diskretan donji “underline”
+        border-bottom: 1px solid #d1a679;
         border-radius: 0;
         outline: none;
 

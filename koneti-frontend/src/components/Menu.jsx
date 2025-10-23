@@ -53,7 +53,7 @@ export default function Menu() {
   const [collapsed, setCollapsed] = useState(false);
   const itemsPerPage = 8;
 
-  // Fetch categories
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -67,8 +67,7 @@ export default function Menu() {
     };
     fetchCategories();
   }, []);
-
-  // Fetch drinks
+  
   useEffect(() => {
     const fetchDrinks = async () => {
       try {
@@ -82,14 +81,14 @@ export default function Menu() {
     fetchDrinks();
   }, []);
 
-  // Responsive
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Reset page on category change
+
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory]);

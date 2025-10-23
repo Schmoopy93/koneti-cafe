@@ -10,7 +10,7 @@ export default function Offer() {
       title: "Kafić i konzumacije",
       text: "Uživajte u pažljivo odabranim napicima i toploj atmosferi.",
       img: "/src/assets/espresso.jpg",
-      link: "/drinks",
+      link: "/menu",
       linkText: "Karta pića",
     },
     {
@@ -39,7 +39,7 @@ export default function Offer() {
           }
         });
       },
-      { threshold: 0.2 } // 20% vidljivo
+      { threshold: 0.2 }
     );
 
     cardsRef.current.forEach(card => {

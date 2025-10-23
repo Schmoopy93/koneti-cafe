@@ -3,12 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHouse,      // Početna
-  faMartiniGlass,   // Meni
-  faCalendarCheck, // Rezervacije
-  faImages,     // Galerija
-  faUserShield, // Admin
-  faRightFromBracket // Logout
+  faHouse,
+  faMartiniGlass, 
+  faCalendarCheck,
+  faImages,
+  faUserShield,
+  faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.scss";
 import logo from "../assets/koneti-logo-header.png";

@@ -79,7 +79,6 @@ export default function AddCategory() {
 
       if (res.ok) {
         toast.success("Kategorija uspešno dodata!");
-        // Reset input polja, ali forma ostaje otvorena
         setFormData({ name: "", icon: "" });
         setErrors({});
         setShakeFields({});
