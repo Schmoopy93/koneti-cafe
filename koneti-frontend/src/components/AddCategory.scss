@@ -48,39 +48,40 @@
       }
     }
 
-    .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 0.8rem;
-      margin-top: 0.5rem;
+.icon-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); // manje ikonice
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 
-      .icon-option {
-        background: #fff;
-        border: 2px solid transparent;
-        border-radius: 0.8rem;
-        padding: 0.8rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.6rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
+  .icon-btn {
+    background: #cfa68a;               
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;              
+    cursor: pointer;
+    color: #fff;                    
+    transition: all 0.3s ease;
 
-        &:hover {
-          border-color: #caa27e;
-          box-shadow: none;
-          transform: translateY(-2px);
-        }
+    &:hover {
+      border-color: #caa27e;
+      transform: translateY(-2px);
+    }
 
     &.selected {
-      background-color: #f3e8db;
-      border-color: #926447;
+      background-color: #fff;        
+      border-color: #926447;        
       color: #926447;
       transform: scale(1.15);
-      box-shadow: 0 0 8px rgba(146, 100, 71, 0.4);
+      box-shadow: 0 0 10px rgba(146, 100, 71, 0.5);
     }
-      }
-    }
+  }
+}
+
 
     button {
       padding: 0.7rem 1.5rem;

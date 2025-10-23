@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema(
       trim: true,
     },
     icon: {
-      type: String, // ovde čuvamo string koji mapiraš na FA ikonu, npr. "coffee"
+      type: String,
       required: true,
     },
     description: {

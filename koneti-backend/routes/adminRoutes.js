@@ -18,10 +18,10 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    return res.json({ token }); // <--- obavezno json
+    return res.json({ token });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Server error" }); // <--- obavezno json
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

@@ -3,8 +3,6 @@ import Category from "../models/Category.js";
 
 export const createDrink = async (req, res) => {
   try {
-    // req.body => name, price, category, description
-    // req.file => uploadovana slika
     const { name, price, category, description } = req.body;
     const image = req.file ? req.file.path : "";
 
@@ -61,14 +59,13 @@ export const updateDrink = async (req, res) => {
     if (price) drink.price = price;
     if (description) drink.description = description;
 
-    // Ako je poslata nova slika
+
     if (req.file) {
-      // opcionalno: obriši staru sliku sa servera
       if (drink.image) {
         const oldImagePath = path.join("uploads/drinks", drink.image);
         if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
       }
-      drink.image = req.file.filename; // sačuvaj ime fajla u bazi
+      drink.image = req.file.filename;
     }
 
     await drink.save();

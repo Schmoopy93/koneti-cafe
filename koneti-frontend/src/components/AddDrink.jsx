@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import Cropper from "react-easy-crop";
 import toast, { Toaster } from "react-hot-toast";
+import getCroppedImg from "./cropImage";
 import "./AddDrink.scss";
 
 export default function AddDrink() {
@@ -14,6 +16,13 @@ export default function AddDrink() {
   const [errors, setErrors] = useState({});
   const [shakeFields, setShakeFields] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
+
+  // Cropper state
+  const [showCropper, setShowCropper] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -31,9 +40,31 @@ export default function AddDrink() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const url = URL.createObjectURL(file);
       setFormData({ ...formData, image: file });
-      setImagePreview(URL.createObjectURL(file));
+      setImagePreview(url);
+      setShowCropper(true);
       if (errors.image) setErrors({ ...errors, image: "" });
+    }
+  };
+
+  const onCropComplete = (croppedArea, croppedPixels) => {
+    setCroppedAreaPixels(croppedPixels);
+  };
+
+  const saveCroppedImage = async () => {
+    try {
+      const croppedBlob = await getCroppedImg(imagePreview, croppedAreaPixels);
+      const croppedFile = new File([croppedBlob], formData.image.name, {
+        type: "image/jpeg",
+      });
+      setFormData({ ...formData, image: croppedFile });
+      setImagePreview(URL.createObjectURL(croppedFile));
+      setShowCropper(false);
+      toast.success("Crop je sačuvan!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Greška prilikom cropovanja slike");
     }
   };
 
@@ -56,7 +87,7 @@ export default function AddDrink() {
 
   const triggerShake = (fields) => {
     const shakeObj = {};
-    fields.forEach(f => shakeObj[f] = true);
+    fields.forEach((f) => (shakeObj[f] = true));
     setShakeFields(shakeObj);
     setTimeout(() => setShakeFields({}), 500);
   };
@@ -167,8 +198,56 @@ export default function AddDrink() {
             ref={fileInputRef}
           />
           {errors.image && <span className="error">{errors.image}</span>}
-          {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
+
+          {imagePreview && !showCropper && (
+            <img src={imagePreview} alt="Preview" className="image-preview" />
+          )}
         </div>
+
+        {/* Cropper */}
+        {showCropper && (
+          <div className="cropper-container">
+            <div className="cropper-wrapper">
+              <Cropper
+                image={imagePreview}
+                crop={crop}
+                zoom={zoom}
+                aspect={4 / 3}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+
+            <div className="cropper-controls">
+              <label>Zoom:</label>
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.01}
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+              />
+              <div className="cropper-buttons">
+                <button type="button" onClick={saveCroppedImage}>
+                  Potvrdi crop
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCropper(false);
+                    setImagePreview(null);
+                    setFormData({ ...formData, image: null });
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                  }}
+                >
+                  Otkaži
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <button type="submit">Sačuvaj</button>
       </form>

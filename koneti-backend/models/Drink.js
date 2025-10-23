@@ -22,7 +22,7 @@ const drinkSchema = new mongoose.Schema(
       default: "",
     },
     image: {
-      type: String, // URL ili path slike
+      type: String,
       default: "",
     },
   },
