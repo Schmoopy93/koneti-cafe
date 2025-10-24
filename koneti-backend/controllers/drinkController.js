@@ -1,27 +1,37 @@
+import fs from "fs";
+import path from "path";
 import Drink from "../models/Drink.js";
 import Category from "../models/Category.js";
 
 export const createDrink = async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
-    const image = req.file ? req.file.path : "";
+    const image = req.file ? req.file.filename : "";
 
-    if (!name || !price || !category)
-      return res.status(400).json({ message: "Obavezna polja nedostaju" });
+    if (!name || !price || !category) {
+      return res.status(400).json({ message: "Obavezna polja nedostaju." });
+    }
 
     const categoryExists = await Category.findById(category);
-    if (!categoryExists)
+    if (!categoryExists) {
       return res.status(400).json({ message: "Kategorija ne postoji." });
+    }
 
-    const drink = new Drink({ name, price, category, description, image });
+    const drink = new Drink({
+      name,
+      price,
+      category,
+      description,
+      image,
+    });
+
     await drink.save();
-
     res.status(201).json(drink);
   } catch (err) {
+    console.error("Greška pri kreiranju pića:", err);
     res.status(500).json({ message: err.message });
   }
 };
-
 
 export const getDrinks = async (req, res) => {
   try {
@@ -35,7 +45,9 @@ export const getDrinks = async (req, res) => {
 export const getDrinkById = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id).populate("category", "name");
-    if (!drink) return res.status(404).json({ message: "Drink nije pronađen" });
+    if (!drink) {
+      return res.status(404).json({ message: "Piće nije pronađeno." });
+    }
     res.json(drink);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -45,13 +57,17 @@ export const getDrinkById = async (req, res) => {
 export const updateDrink = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id);
-    if (!drink) return res.status(404).json({ message: "Drink nije pronađen" });
+    if (!drink) {
+      return res.status(404).json({ message: "Piće nije pronađeno." });
+    }
 
     const { name, price, category, description } = req.body;
 
     if (category) {
       const categoryExists = await Category.findById(category);
-      if (!categoryExists) return res.status(400).json({ message: "Kategorija ne postoji" });
+      if (!categoryExists) {
+        return res.status(400).json({ message: "Kategorija ne postoji." });
+      }
       drink.category = category;
     }
 
@@ -59,11 +75,12 @@ export const updateDrink = async (req, res) => {
     if (price) drink.price = price;
     if (description) drink.description = description;
 
-
     if (req.file) {
       if (drink.image) {
         const oldImagePath = path.join("uploads/drinks", drink.image);
-        if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
       }
       drink.image = req.file.filename;
     }
@@ -71,6 +88,7 @@ export const updateDrink = async (req, res) => {
     await drink.save();
     res.json(drink);
   } catch (err) {
+    console.error("Greška pri ažuriranju pića:", err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -79,11 +97,23 @@ export const updateDrink = async (req, res) => {
 export const deleteDrink = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id);
-    if (!drink) return res.status(404).json({ message: "Drink nije pronađen" });
+    if (!drink) {
+      return res.status(404).json({ message: "Piće nije pronađeno." });
+    }
 
-    await drink.remove();
-    res.json({ message: "Drink obrisan" });
+    // Obrisi sliku ako postoji
+    if (drink.image) {
+      const imagePath = path.join("uploads/drinks", drink.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    await Drink.deleteOne({ _id: drink._id });
+
+    res.json({ message: "Piće uspešno obrisano." });
   } catch (err) {
+    console.error("Greška pri brisanju pića:", err);
     res.status(500).json({ message: err.message });
   }
 };
