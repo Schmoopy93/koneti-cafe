@@ -11,7 +11,6 @@ import {
   faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.scss";
-import logo from "../assets/koneti-logo-header.png";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +27,7 @@ export default function Header() {
     <header className="navbar">
       <div className="nav-container">
         <Link to="/login" className="logo">
-          <img src={logo} alt="Café Koneti" className="logo-img" />
+          <img src="/koneti-logo-header.png" alt="Café Koneti" className="logo-img" />
         </Link>
 
           <nav className={`nav-links ${isOpen ? "open" : ""}`}>

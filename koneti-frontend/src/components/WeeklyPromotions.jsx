@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
 import "./WeeklyPromotions.scss";
-import espressoSale from "../assets/espresso-sale.png";
 
 
 const dummyPromotions = [
-  { id: 1, title: "Espresso popust", description: "Uživajte u espressu sa 20% popusta.", img: espressoSale },
+  { id: 1, title: "Espresso popust", description: "Uživajte u espressu sa 20% popusta.", img: "/espresso-sale.png" },
   { id: 2, title: "Cappuccino deal", description: "Cappuccino + kolač za 500 RSD.", img: "https://source.unsplash.com/300x200/?cappuccino" },
   { id: 3, title: "Latte akcija", description: "Latte napitci po specijalnoj ceni.", img: "https://source.unsplash.com/300x200/?latte" },
   { id: 4, title: "Sok dana", description: "Sveže ceđeni sokovi po sniženoj ceni.", img: "https://source.unsplash.com/300x200/?juice" },

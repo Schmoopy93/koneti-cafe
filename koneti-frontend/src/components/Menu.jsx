@@ -21,7 +21,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import "./Menu.scss";
-import logo from "../assets/koneti-logo.png";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
@@ -109,7 +108,7 @@ export default function Menu() {
       {!isMobile && (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-logo">
-            <img src={logo} alt="Koneti Logo" className="logo-img" />
+            <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
           </div>
           <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
             <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronLeft} />

@@ -1,14 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
 import "./Footer.scss";
-import logo from "../assets/koneti-logo.png";
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-logo">
-          <img src={logo} alt="Koneti Logo" className="logo-img" />
+          <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
         </div>
 
         <div className="footer-center">
