@@ -168,11 +168,7 @@ export default function Menu() {
               transition={{ duration: 0.3 }}
             >
               {drink.image && (
-                <img
-                  src={`${VITE_IMG_URL}/${drink.image}`}
-                  alt={drink.name}
-                  className="drink-img"
-                />
+                <img src={drink.image} alt={drink.name} className="drink-img" />
               )}
               <h3>{drink.name}</h3>
               <p className="price">{drink.price} RSD</p>

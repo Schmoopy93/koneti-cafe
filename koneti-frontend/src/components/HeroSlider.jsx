@@ -16,9 +16,9 @@ export default function HeroSlider() {
   };
 
   const images = [
-    "/src/assets/cafe1.jpg",
-    "/src/assets/cafe2.jpg",
-    "/src/assets/cafe3.jpg",
+    "cafe1.jpg",
+    "cafe2.jpg",
+    "cafe3.jpg",
   ];
 
   return (

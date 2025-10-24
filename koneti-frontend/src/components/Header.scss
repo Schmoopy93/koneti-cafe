@@ -1,18 +1,17 @@
 .navbar {
-  background-color: #cfa68a; /* cappuccino boja */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
-  position: sticky; 
-  top: 0; /* ostaje na vrhu */
+  background-color: #cfa68a; /* cappuccino ton */
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  border-radius: 15px 15px 15px 15px; 
-  padding: 0; /* uklonjen unutrašnji razmak */
-  width: 100%; /* da navbar pokrije celu širinu */
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .nav-container {
   max-width: 1200px;
-  margin: 0 auto; /* centrirano unutar širine */
-  padding: 0.8rem 1.5rem; /* unutrašnji razmak unutar navbar-a */
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -23,13 +22,14 @@
   height: 35px;
   width: auto;
   object-fit: contain;
-  
 }
 
+/* LINKOVI */
 .nav-links {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  transition: all 0.4s ease;
 
   a {
     position: relative;
@@ -37,9 +37,9 @@
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1.2rem;
-    border-radius: 1rem; /* zaobljeni linkovi */
-    background: #cfa68a; /* tamniji button-like link */
-    color: #fdfaf6; /* svetli tekst za kontrast */
+    border-radius: 1rem;
+    background: #cfa68a;
+    color: #fdfaf6;
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
     font-size: 1rem;
@@ -50,17 +50,17 @@
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       transform: translateY(-2px);
-      background: #7d5a4f; /* malo svetliji hover */
+      background: #7d5a4f;
     }
 
-    /* Tooltip stil */
+    /* Tooltip */
     &::after {
       content: attr(data-tooltip);
       position: absolute;
       bottom: -2.4rem;
       left: 50%;
       transform: translateX(-50%) translateY(5px);
-      background: #e4bb89; /* tamniji tooltip */
+      background: #e4bb89;
       color: #fdfaf6;
       padding: 0.4rem 0.6rem;
       border-radius: 0.5rem;
@@ -81,47 +81,59 @@
   }
 }
 
-.nav-links.open {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #3b2f2f; /* tamnija mobilna lista */
-  padding: 1rem 0;
-  gap: 1rem;
-
-  a {
-    margin: 0 auto;
-    max-width: 150px;
-    width: 80%;
-  }
-}
-
+/* TOGGLE dugme */
 .menu-toggle {
   display: none;
   background: none;
   border: none;
   cursor: pointer;
-  color: #fdfaf6; /* svetla boja za hamburger */
-  font-size: 1.2rem;
+  color: #fdfaf6;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
 
   &:hover {
-    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5));
-    transform: translateY(-2px);
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+    transform: scale(1.1);
   }
 }
 
+/* MOBILNI MENI */
 @media screen and (max-width: 768px) {
   .nav-links {
-    display: none;
     flex-direction: column;
     align-items: center;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -10px);
+    width: 90%;
+    background-color: #e7c7ac; /* nežnija boja od glavne */
+    border-radius: 20px;
+    padding: 1.2rem 0;
+    gap: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    transition: all 0.4s ease;
   }
 
   .nav-links.open {
-    display: flex;
+    opacity: 1;
+    transform: translate(-50%, 10px);
+    pointer-events: auto;
+  }
+
+  .nav-links a {
+    background: transparent;
+    color: #3b2f2f;
+    font-size: 1.1rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      color: #7d5a4f;
+      transform: translateY(-2px);
+    }
   }
 
   .menu-toggle {
