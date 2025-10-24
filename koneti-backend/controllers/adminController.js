@@ -62,7 +62,9 @@ export const deleteAdmin = async (req, res) => {
     const admin = await Admin.findById(id);
     if (!admin) return res.status(404).json({ message: "Admin ne postoji" });
 
-    await admin.remove();
+    // moderni način brisanja
+    await Admin.findByIdAndDelete(id);
+
     return res.json({ message: "Admin obrisan" });
   } catch (err) {
     console.error(err);
