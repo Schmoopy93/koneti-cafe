@@ -4,6 +4,8 @@ import toast, { Toaster } from "react-hot-toast";
 import getCroppedImg from "./cropImage";
 import "./AddDrink.scss";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function AddDrink() {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
@@ -26,7 +28,7 @@ export default function AddDrink() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/categories")
+    fetch(`${API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch(console.error);
@@ -110,7 +112,7 @@ export default function AddDrink() {
       payload.append("description", formData.description);
       payload.append("image", formData.image);
 
-      const res = await fetch("http://localhost:5000/api/drinks", {
+      const res = await fetch(`${API_URL}/drinks`, {
         method: "POST",
         body: payload,
       });
