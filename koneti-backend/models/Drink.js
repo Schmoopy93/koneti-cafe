@@ -22,7 +22,11 @@ const drinkSchema = new mongoose.Schema(
       default: "",
     },
     image: {
-      type: String,
+      type: String, // URL slike sa Cloudinary
+      default: "",
+    },
+    cloudinary_id: {
+      type: String, // Cloudinary public_id za brisanje ili transformacije
       default: "",
     },
   },

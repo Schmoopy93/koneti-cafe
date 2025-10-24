@@ -2,12 +2,25 @@ import fs from "fs";
 import path from "path";
 import Drink from "../models/Drink.js";
 import Category from "../models/Category.js";
+import cloudinary from "../middleware/cloudinary.js";
 
 export const createDrink = async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
-    const image = req.file ? req.file.filename : "";
+    let imageUrl = "";
+    let cloudinaryId = "";
 
+    if (req.file) {
+      // Upload na Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "drinks",
+      });
+      imageUrl = result.secure_url;    // javni URL slike
+      cloudinaryId = result.public_id; // interni ID za brisanje
+      fs.unlinkSync(req.file.path);    // obriši privremeni fajl
+    }
+
+    // Validacija
     if (!name || !price || !category) {
       return res.status(400).json({ message: "Obavezna polja nedostaju." });
     }
@@ -17,12 +30,14 @@ export const createDrink = async (req, res) => {
       return res.status(400).json({ message: "Kategorija ne postoji." });
     }
 
+    // Čuvanje u MongoDB
     const drink = new Drink({
       name,
       price,
       category,
       description,
-      image,
+      image: imageUrl,
+      cloudinary_id: cloudinaryId,
     });
 
     await drink.save();
