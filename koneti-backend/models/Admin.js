@@ -13,7 +13,6 @@ adminSchema.pre("save", async function(next) {
   next();
 });
 
-// Metod za proveru lozinke
 adminSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
