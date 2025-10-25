@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { I18nextProvider } from "react-i18next";
 import { AuthProvider } from "./contexts/AuthContext";
+import i18n from "./i18n";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./components/home/Home";
@@ -16,38 +18,40 @@ import CookieConsent from "./components/utils/CookieConsent";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/reservation" element={<ReservationForm />} />
-            <Route path="/login" element={<StaffLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/menu-management"
-              element={
-                <ProtectedRoute>
-                  <MenuManagementPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/gallery" element={<Gallery />} />
-          </Routes>
-        </main>
-        <Footer />
-        <CookieConsent />
-      </Router>
-    </AuthProvider>
+    <I18nextProvider i18n={i18n}>
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/reservation" element={<ReservationForm />} />
+              <Route path="/login" element={<StaffLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/menu-management"
+                element={
+                  <ProtectedRoute>
+                    <MenuManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/gallery" element={<Gallery />} />
+            </Routes>
+          </main>
+          <Footer />
+          <CookieConsent />
+        </Router>
+      </AuthProvider>
+    </I18nextProvider>
   );
 }

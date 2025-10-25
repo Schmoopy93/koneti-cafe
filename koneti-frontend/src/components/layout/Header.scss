@@ -23,6 +23,86 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-left: auto;
+}
+
+.language-dropdown {
+  position: relative;
+}
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.15rem 0.2rem;
+  cursor: pointer;
+  color: #5a3e36;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(90, 62, 54, 0.1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(90, 62, 54, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.language-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 12px rgba(90, 62, 54, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  min-width: 80px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: none;
+  border: none;
+  color: #5a3e36;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: rgba(207, 166, 138, 0.1);
+  }
+
+  &:first-child {
+    border-radius: 0.4rem 0.4rem 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 0.4rem 0.4rem;
+  }
+
+  &:only-child {
+    border-radius: 0.4rem;
+  }
 }
 
 .logo-img {
@@ -130,24 +210,33 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0.5rem);
   left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  background: transparent;
+  transform: translateX(-50%) scale(1);
+  width: 200px;
+  background: linear-gradient(135deg, #f0d4b3 0%, #f5e6d3 25%, #f8f0e6 50%, #f5e6d3 75%, #f0d4b3 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 12px rgba(90, 62, 54, 0.2);
   padding: 1rem;
   gap: 0.5rem;
+  opacity: 1;
+
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 
   a {
-    width: 100%;
+    width: 85%;
+    max-width: 160px;
+    margin: 0 auto;
     background: linear-gradient(135deg, #cfa68a, #d4a574);
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    padding: 0.8rem;
+    padding: 0.6rem;
     border-radius: 0.6rem;
     text-align: center;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     transition: all 0.2s ease;
 
     &:hover {
@@ -158,6 +247,21 @@
     &::after {
       display: none;
     }
+  }
+}
+
+@keyframes menuOpen {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9) translateY(-10px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-50%) scale(1.02) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) translateY(0);
   }
 }
 
@@ -185,6 +289,63 @@
   }
 }
 
+.mobile-language-switcher {
+  display: none;
+}
+
+.language-switcher-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #cfa68a, #d4a574);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.8rem;
+  border-radius: 0.6rem;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, #d4a574, #e6c79a);
+    transform: translateY(-1px);
+  }
+}
+
+.language-dropdown-menu-mobile {
+  background: transparent;
+  border-radius: 0.6rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.language-option-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #cfa68a, #d4a574);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, #d4a574, #e6c79a);
+    transform: translateY(-1px);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .nav-links {
     display: none;
@@ -202,5 +363,15 @@
 
   .header-right {
     gap: 0.5rem;
+  }
+
+  .mobile-language-switcher {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .language-dropdown {
+    display: none;
   }
 }

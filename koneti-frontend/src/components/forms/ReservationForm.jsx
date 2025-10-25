@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInfoCircle,
@@ -15,6 +16,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ReservationForm() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     type: "",
     subType: "",
@@ -98,79 +100,21 @@ export default function ReservationForm() {
 
   const openInfo = (type, e) => {
     e.stopPropagation();
-    let data = {};
-
-    // === POSLOVNI SASTANCI / PREZENTACIJE ===
-    if (type === "biznis") {
-      data = {
-        title: "Poslovni sastanci / prezentacije 💼",
-        description:
-          "Finger food + kafa + voda + opciono vino. Idealno za timske sastanke, prezentacije ili poslovne ručkove.",
-        details: [
-          "🪑 35 mesta / do 50 koktel postavka",
-          "📶 Wi-Fi i tehnička oprema",
-          "☕ Prijatna atmosfera",
-        ],
-        price: "35€ po osobi ili minimum 500€",
-        extraInfo: "Rezervišite prostor za profesionalan i prijatan događaj.",
-      };
-    }
-
-    // === KONETI EXPERIENCE GENERAL ===
-    else if (type === "koneti") {
-      data = {
-        title: "Koneti Experience 🥂",
-        description:
-          "Ekskluzivno iskustvo u srcu Novog Sada. Tri nivoa luksuza prilagođena vašim potrebama.",
-        details: [
-          "🎭 Tri različita paketa (Basic, Premium, VIP)",
-          "🍽️ Personalizovani meni i napici",
-          "🎵 Ambijentalna muzika i dekoracija",
-          "📸 Mogućnost dodatnih usluga",
-          "🏛️ Elegantan prostor u centru grada",
-        ],
-        price: "Od 35€ do 60€ po osobi",
-        extraInfo: "Izaberite paket koji najbolje odgovara vašoj prilici i budžetu.",
-      };
-    }
-
-    // === KONETI EXPERIENCE (tri nivoa) ===
-    else if (type === "basic") {
-      data = {
-        title: "Koneti Experience – Basic 🥉",
-        description: "Manja okupljanja / rođendani.",
-        details: [
-          "🍷 Domaći napici + meze",
-          "🪑 35 mesta / do 50 koktel postavka",
-        ],
-        price: "35€ po osobi ili minimum 450€",
-        extraInfo: "Savršeno za intimna i opuštena druženja.",
-      };
-    } else if (type === "premium") {
-      data = {
-        title: "Koneti Experience – Premium ⭐",
-        description: "Posebne proslave / strani gosti.",
-        details: [
-          "🥂 Premium pića + finger food & kanapeji",
-          "🪑 35 mesta / do 50 koktel postavka",
-        ],
-        price: "45€ po osobi ili minimum 600€",
-        extraInfo: "Za elegantne i moderno organizovane proslave.",
-      };
-    } else if (type === "vip") {
-      data = {
-        title: "Koneti Experience – VIP 👑",
-        description: "Luksuzne večere i privatne proslave.",
-        details: [
-          "🍾 Ekskluzivna pića + prošireni finger food + desert",
-          "🎨 Posebna dekoracija i ambijent",
-          "📸 Fotograf, DJ i torta po izboru",
-          "🪑 35 mesta / do 50 koktel postavka",
-        ],
-        price: "60€ po osobi ili minimum 800€",
-        extraInfo: "Za one koji žele vrhunsko Koneti iskustvo.",
-      };
-    }
+    const typeToKey = {
+      biznis: 'business',
+      koneti: 'experience',
+      basic: 'basic',
+      premium: 'premium',
+      vip: 'vip'
+    };
+    const key = typeToKey[type] || type;
+    const data = {
+      title: t(`home.reservation.popups.${key}.title`),
+      description: t(`home.reservation.popups.${key}.description`),
+      details: t(`home.reservation.popups.${key}.details`, { returnObjects: true }),
+      price: t(`home.reservation.popups.${key}.price`),
+      extraInfo: t(`home.reservation.popups.${key}.extraInfo`),
+    };
 
     setPopupData(data);
     setShowPopup(true);
@@ -187,34 +131,34 @@ export default function ReservationForm() {
     const selectedDate = new Date(formData.date);
     const currentTime = new Date();
     const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
-    
-    if (!formData.type) errors.type = "Odaberite tip rezervacije";
+
+    if (!formData.type) errors.type = t('home.reservation.errors.type');
     if (formData.type === "koneti" && !formData.subType)
-      errors.subType = "Odaberite paket";
-    if (!formData.name) errors.name = "Unesite ime i prezime";
-    
+      errors.subType = t('home.reservation.errors.subType');
+    if (!formData.name) errors.name = t('home.reservation.errors.name');
+
     if (!formData.email) {
-      errors.email = "Unesite email";
+      errors.email = t('home.reservation.errors.email');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "Unesite validan email";
+      errors.email = t('home.reservation.errors.emailInvalid');
     }
-    
-    if (!formData.phone) errors.phone = "Unesite telefon";
-    
+
+    if (!formData.phone) errors.phone = t('home.reservation.errors.phone');
+
     if (!formData.date) {
-      errors.date = "Odaberite datum";
+      errors.date = t('home.reservation.errors.date');
     } else if (selectedDate < today.setHours(0,0,0,0)) {
-      errors.date = "Datum ne može biti u prošlosti";
+      errors.date = t('home.reservation.errors.datePast');
     }
-    
+
     if (!formData.time) {
-      errors.time = "Odaberite vreme";
+      errors.time = t('home.reservation.errors.time');
     } else if (formData.date && selectedDateTime < currentTime) {
-      errors.time = "Vreme ne može biti u prošlosti";
+      errors.time = t('home.reservation.errors.timePast');
     }
-    
+
     if (!formData.guests || formData.guests < 1)
-      errors.guests = "Unesite broj gostiju";
+      errors.guests = t('home.reservation.errors.guests');
     return errors;
   };
 
@@ -264,28 +208,27 @@ export default function ReservationForm() {
       }, 5000);
     } catch (error) {
       console.error(error);
-      alert("Došlo je do greške prilikom slanja rezervacije. Pokušajte ponovo.");
+      alert(t('home.reservation.errors.submit'));
     }
   };
 
   return (
     <div className="reservation-wrapper">
-      <h2 className="section-title">
-        Rezervišite Vaš <span className="highlight">Koneti Experience</span>
+      <h2 className="section-title" dangerouslySetInnerHTML={{ __html: t('home.reservation.title') }}>
       </h2>
       <form className="reservation-form" onSubmit={handleSubmit}>
         <div className="intro-text">
-          <p>Dobrodošli u Koneti - ekskluzivno mesto u srcu Novog Sada! Izaberite tip rezervacije koji najbolje odgovara vašim potrebama:</p>
+          <p>{t('home.reservation.intro')}</p>
         </div>
-        
-        <label>Tip rezervacije:</label>
+
+        <label>{t('home.reservation.typeLabel')}</label>
         <div className="type-grid">
           {/* Biznis */}
           <div
             className={`type-card ${formData.type === "biznis" ? "selected" : ""} ${shakeFields.type ? "shake" : ""}`}
             onClick={() => handleTypeSelect("biznis")}
           >
-            <FontAwesomeIcon icon={faLaptop} className="type-icon" /> Poslovni sastanci / prezentacije
+            <FontAwesomeIcon icon={faLaptop} className="type-icon" /> {t('home.reservation.types.business')}
             <FontAwesomeIcon
               icon={faInfoCircle}
               className="info-icon"
@@ -298,7 +241,7 @@ export default function ReservationForm() {
             className={`type-card ${formData.type === "koneti" ? "selected" : ""} ${shakeFields.type ? "shake" : ""}`}
             onClick={() => handleTypeSelect("koneti")}
           >
-            <FontAwesomeIcon icon={faChampagneGlasses} className="type-icon" /> Koneti Experience
+            <FontAwesomeIcon icon={faChampagneGlasses} className="type-icon" /> {t('home.reservation.types.experience')}
             <FontAwesomeIcon
               icon={faInfoCircle}
               className="info-icon"
@@ -311,69 +254,69 @@ export default function ReservationForm() {
         {/* Biznis forma */}
         {formData.type === "biznis" && (
           <div className="form-section">
-            <input 
-              name="name" 
-              value={formData.name} 
-              onChange={handleChange} 
-              placeholder="Ime i prezime" 
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder={t('home.reservation.form.name')}
               className={shakeFields.name ? "shake" : ""}
             />
             {formErrors.name && <span className="error">{formErrors.name}</span>}
-            
-            <input 
-              name="email" 
-              type="email" 
-              value={formData.email} 
-              onChange={handleChange} 
-              placeholder="Email" 
+
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder={t('home.reservation.form.email')}
               className={shakeFields.email ? "shake" : ""}
             />
             {formErrors.email && <span className="error">{formErrors.email}</span>}
-            
-            <input 
-              name="phone" 
-              type="tel" 
-              value={formData.phone} 
-              onChange={handleChange} 
-              placeholder="Telefon" 
+
+            <input
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder={t('home.reservation.form.phone')}
               className={shakeFields.phone ? "shake" : ""}
             />
             {formErrors.phone && <span className="error">{formErrors.phone}</span>}
-            
-            <input 
-              name="date" 
-              type="date" 
-              value={formData.date} 
-              onChange={handleChange} 
+
+            <input
+              name="date"
+              type="date"
+              value={formData.date}
+              onChange={handleChange}
               className={shakeFields.date ? "shake" : ""}
             />
             {formErrors.date && <span className="error">{formErrors.date}</span>}
-            
-            <input 
-              name="time" 
-              type="time" 
-              value={formData.time} 
-              onChange={handleChange} 
+
+            <input
+              name="time"
+              type="time"
+              value={formData.time}
+              onChange={handleChange}
               className={shakeFields.time ? "shake" : ""}
             />
             {formErrors.time && <span className="error">{formErrors.time}</span>}
-            
-            <input 
-              name="guests" 
-              type="number" 
-              min="1" 
-              value={formData.guests} 
-              onChange={handleChange} 
-              placeholder="Broj gostiju"
+
+            <input
+              name="guests"
+              type="number"
+              min="1"
+              value={formData.guests}
+              onChange={handleChange}
+              placeholder={t('home.reservation.form.guests')}
               className={shakeFields.guests ? "shake" : ""}
             />
             {formErrors.guests && <span className="error">{formErrors.guests}</span>}
-            
-            <textarea 
-              name="message" 
-              value={formData.message} 
-              onChange={handleChange} 
-              placeholder="Poruka" 
+
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder={t('home.reservation.form.message')}
               className={shakeFields.message ? "shake" : ""}
             />
             {formErrors.message && <span className="error">{formErrors.message}</span>}
@@ -383,27 +326,27 @@ export default function ReservationForm() {
         {/* Koneti Experience */}
         {formData.type === "koneti" && (
           <>
-            <label>Izaberite paket:</label>
+            <label>{t('home.reservation.packageLabel')}</label>
             <div className="type-grid-three">
               <div
                 className={`subtype-card ${formData.subType === "basic" ? "selected" : ""} ${shakeFields.subType ? "shake" : ""}`}
                 onClick={() => handleSubTypeSelect("basic")}
               >
-                <FontAwesomeIcon icon={faMedal} className="type-icon silver" /> Basic
+                <FontAwesomeIcon icon={faMedal} className="type-icon silver" /> {t('home.reservation.packages.basic')}
                 <FontAwesomeIcon icon={faInfoCircle} className="info-icon" onClick={(e) => openInfo("basic", e)} />
               </div>
               <div
                 className={`subtype-card ${formData.subType === "premium" ? "selected" : ""} ${shakeFields.subType ? "shake" : ""}`}
                 onClick={() => handleSubTypeSelect("premium")}
               >
-                <FontAwesomeIcon icon={faStar} className="type-icon gold" /> Premium
+                <FontAwesomeIcon icon={faStar} className="type-icon gold" /> {t('home.reservation.packages.premium')}
                 <FontAwesomeIcon icon={faInfoCircle} className="info-icon" onClick={(e) => openInfo("premium", e)} />
               </div>
               <div
                 className={`subtype-card ${formData.subType === "vip" ? "selected" : ""} ${shakeFields.subType ? "shake" : ""}`}
                 onClick={() => handleSubTypeSelect("vip")}
               >
-                <FontAwesomeIcon icon={faCrown} className="type-icon vip" /> VIP
+                <FontAwesomeIcon icon={faCrown} className="type-icon vip" /> {t('home.reservation.packages.vip')}
                 <FontAwesomeIcon icon={faInfoCircle} className="info-icon" onClick={(e) => openInfo("vip", e)} />
               </div>
             </div>
@@ -411,69 +354,69 @@ export default function ReservationForm() {
 
             {showEventForm && (
               <div className="event-form">
-                <input 
-                  name="name" 
-                  value={formData.name} 
-                  onChange={handleChange} 
-                  placeholder="Ime i prezime" 
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder={t('home.reservation.form.name')}
                   className={shakeFields.name ? "shake" : ""}
                 />
                 {formErrors.name && <span className="error">{formErrors.name}</span>}
-                
-                <input 
-                  name="email" 
-                  type="email" 
-                  value={formData.email} 
-                  onChange={handleChange} 
-                  placeholder="Email" 
+
+                <input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t('home.reservation.form.email')}
                   className={shakeFields.email ? "shake" : ""}
                 />
                 {formErrors.email && <span className="error">{formErrors.email}</span>}
-                
-                <input 
-                  name="phone" 
-                  type="tel" 
-                  value={formData.phone} 
-                  onChange={handleChange} 
-                  placeholder="Telefon" 
+
+                <input
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t('home.reservation.form.phone')}
                   className={shakeFields.phone ? "shake" : ""}
                 />
                 {formErrors.phone && <span className="error">{formErrors.phone}</span>}
-                
-                <input 
-                  name="date" 
-                  type="date" 
-                  value={formData.date} 
-                  onChange={handleChange} 
+
+                <input
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleChange}
                   className={shakeFields.date ? "shake" : ""}
                 />
                 {formErrors.date && <span className="error">{formErrors.date}</span>}
-                
-                <input 
-                  name="time" 
-                  type="time" 
-                  value={formData.time} 
-                  onChange={handleChange} 
+
+                <input
+                  name="time"
+                  type="time"
+                  value={formData.time}
+                  onChange={handleChange}
                   className={shakeFields.time ? "shake" : ""}
                 />
                 {formErrors.time && <span className="error">{formErrors.time}</span>}
-                
-                <input 
-                  name="guests" 
-                  type="number" 
-                  min="1" 
-                  value={formData.guests} 
-                  onChange={handleChange} 
-                  placeholder="Broj gostiju"
+
+                <input
+                  name="guests"
+                  type="number"
+                  min="1"
+                  value={formData.guests}
+                  onChange={handleChange}
+                  placeholder={t('home.reservation.form.guests')}
                   className={shakeFields.guests ? "shake" : ""}
                 />
                 {formErrors.guests && <span className="error">{formErrors.guests}</span>}
-                
-                <textarea 
-                  name="message" 
-                  value={formData.message} 
-                  onChange={handleChange} 
-                  placeholder="Poruka" 
+
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder={t('home.reservation.form.message')}
                   className={shakeFields.message ? "shake" : ""}
                 />
                 {formErrors.message && <span className="error">{formErrors.message}</span>}
@@ -484,7 +427,7 @@ export default function ReservationForm() {
 
         {((formData.type === "biznis") || (formData.type === "koneti" && formData.subType)) && (
           <button type="submit" className="btn-submit">
-            Pošalji rezervaciju
+            {t('home.reservation.submit')}
           </button>
         )}
       </form>

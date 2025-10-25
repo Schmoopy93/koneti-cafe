@@ -1,42 +1,44 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./Offer.scss";
 
 export default function Offer() {
+  const { t } = useTranslation();
   const cardsRef = useRef([]);
 
   const services = [
     {
-      title: "Vrhunska kafa",
-      subtitle: "Autentični ukusi",
-      text: "Uživajte u pažljivo odabranim zrnima kafe iz celog sveta. Naši baristi pripremaju svaku šolju sa ljubavlju i preciznošću.",
-      features: ["Espresso", "Cappuccino", "Latte", "Americano"],
+      title: t('home.offer.services.coffee.title'),
+      subtitle: t('home.offer.services.coffee.subtitle'),
+      text: t('home.offer.services.coffee.description'),
+      features: t('home.offer.services.coffee.features', { returnObjects: true }),
       icon: "☕",
       img: "espresso.jpg",
       link: "/menu",
-      linkText: "Pogledaj meni",
+      linkText: t('home.offer.services.coffee.linkText'),
       color: "#8B4513"
     },
     {
-      title: "Poslovni prostor",
-      subtitle: "Idealno za sastanke",
-      text: "Moderno opremljen prostor sa WiFi konekcijom, idealan za poslovne sastanke, prezentacije i kreativne sesije.",
-      features: ["Free WiFi", "Projektor", "Tiho okruženje", "Parking"],
+      title: t('home.offer.services.business.title'),
+      subtitle: t('home.offer.services.business.subtitle'),
+      text: t('home.offer.services.business.description'),
+      features: t('home.offer.services.business.features', { returnObjects: true }),
       icon: "💼",
       img: "business-meeting.jpg",
       link: "/reservation",
-      linkText: "Rezerviši prostor",
+      linkText: t('home.offer.services.business.linkText'),
       color: "#2C3E50"
     },
     {
-      title: "Privatne proslave",
-      subtitle: "Nezaboravni događaji",
-      text: "Organizujte rođendane, devojačke/momačke večeri ili bilo koju proslavu u našem toplom i prijatnom ambijentu.",
-      features: ["Dekoracija", "Muzika", "Catering", "Fotografisanje"],
+      title: t('home.offer.services.party.title'),
+      subtitle: t('home.offer.services.party.subtitle'),
+      text: t('home.offer.services.party.description'),
+      features: t('home.offer.services.party.features', { returnObjects: true }),
       icon: "🎉",
       img: "party.jpg",
       link: "/reservation",
-      linkText: "Planiraj događaj",
+      linkText: t('home.offer.services.party.linkText'),
       color: "#E74C3C"
     },
   ];
@@ -66,10 +68,10 @@ export default function Offer() {
       <div className="offer-header">
         <h2 className="section-title">
           <span className="title-icon">🎆</span>
-          Naša ponuda
+          {t('home.offer.title')}
         </h2>
         <p className="section-subtitle">
-          Otkrijte sve što Café Koneti ima da ponudi - od vrhunske kafe do nezaboravnih događaja
+          {t('home.offer.subtitle')}
         </p>
       </div>
 

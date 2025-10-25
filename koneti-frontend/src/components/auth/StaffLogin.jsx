@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 import "./StaffLogin.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function StaffLogin() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -41,7 +43,7 @@ export default function StaffLogin() {
       try {
         data = await res.json();
       } catch {
-        throw new Error("Server nije vratio JSON");
+        throw new Error(t('staffLogin.serverError'));
       }
 
       if (!res.ok) throw new Error(data.message || "Login failed");
@@ -59,8 +61,8 @@ export default function StaffLogin() {
   return (
     <div className="staff-login-section">
       <div className="staff-header">
-        <h2 className="section-title">Koneti Café</h2>
-        <p className="section-subtitle">Administratorski pristup</p>
+        <h2 className="section-title">{t('staffLogin.title')}</h2>
+        <p className="section-subtitle">{t('staffLogin.subtitle')}</p>
       </div>
       
       <div className="staff-container">
@@ -68,25 +70,25 @@ export default function StaffLogin() {
           {error && <p className="error">{error}</p>}
           
           <div className="form-group">
-            <label>Email</label>
+            <label>{t('staffLogin.emailLabel')}</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Unesite email adresu"
+              placeholder={t('staffLogin.emailPlaceholder')}
               required
             />
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label>{t('staffLogin.passwordLabel')}</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Unesite lozinku"
+              placeholder={t('staffLogin.passwordPlaceholder')}
               required
             />
           </div>
@@ -100,10 +102,10 @@ export default function StaffLogin() {
               {loading ? (
                 <div className="loading-content">
                   <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-bounce" />
-                  <span>Prijavljivanje...</span>
+                  <span>{t('staffLogin.loggingIn')}</span>
                 </div>
               ) : (
-                "Prijavite se"
+                t('staffLogin.loginButton')
               )}
             </button>
           </div>

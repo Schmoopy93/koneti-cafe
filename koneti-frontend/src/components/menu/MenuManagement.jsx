@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faPlus, faSearch, faGlassMartiniAlt, faList, faChevronLeft, faChevronRight, faSort, faTag } from "@fortawesome/free-solid-svg-icons";
 import "./MenuManagement.scss";
@@ -6,6 +7,7 @@ import "./MenuManagement.scss";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink }) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -86,7 +88,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
             <FontAwesomeIcon icon={faSearch} />
             <input
               type="text"
-              placeholder="Pretraži pića..."
+              placeholder={t('admin.menuManagement.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -94,11 +96,11 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
         </div>
         
         <div className="category-tabs">
-          <button 
+          <button
             className={selectedCategory === "all" ? "active" : ""}
             onClick={() => setSelectedCategory("all")}
           >
-            Sve kategorije ({drinks.length})
+            {t('admin.menuManagement.allCategories')} ({drinks.length})
           </button>
           {categories.map(category => (
             <button
@@ -113,24 +115,24 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
         
         <div className="filter-container">
           <FontAwesomeIcon icon={faSort} className="filter-icon" />
-          <label className="filter-label">Sortiraj po:</label>
-          <select 
+          <label className="filter-label">{t('admin.menuManagement.sortLabel')}</label>
+          <select
             className="filter-dropdown"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="name">A-Z</option>
-            <option value="price-low">Najjeftiniji</option>
-            <option value="price-high">Najskuplji</option>
+            <option value="name">{t('admin.menuManagement.sortOptions.name')}</option>
+            <option value="price-low">{t('admin.menuManagement.sortOptions.priceLow')}</option>
+            <option value="price-high">{t('admin.menuManagement.sortOptions.priceHigh')}</option>
           </select>
         </div>
         
         <div className="action-buttons">
           <button className="btn-add-drink" onClick={onAddDrink}>
-            <FontAwesomeIcon icon={faPlus} /> Dodaj piće
+            <FontAwesomeIcon icon={faPlus} /> {t('admin.addDrink.addButton')}
           </button>
           <button className="btn-add-category" onClick={onAddCategory}>
-            <FontAwesomeIcon icon={faTag} /> Dodaj kategoriju
+            <FontAwesomeIcon icon={faTag} /> {t('admin.addCategory.addButton')}
           </button>
         </div>
       </div>
@@ -140,8 +142,8 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
       <div className="drinks-section">
         <h3>
           <FontAwesomeIcon icon={faGlassMartiniAlt} style={{marginRight: '0.5rem'}} />
-          {selectedCategory === "all" 
-            ? `Sva pića (${filteredDrinks.length})`
+          {selectedCategory === "all"
+            ? `${t('admin.menuManagement.allDrinks')} (${filteredDrinks.length})`
             : `${categories.find(c => c._id === selectedCategory)?.name || ""} (${filteredDrinks.length})`
           }
         </h3>
@@ -177,12 +179,12 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
         
         {totalPages > 1 && (
           <div className="pagination">
-            <button 
+            <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
               <FontAwesomeIcon icon={faChevronLeft} style={{marginRight: '0.5rem'}} />
-              Prethodna
+              {t('admin.menuManagement.pagination.prev')}
             </button>
             
             <div className="page-numbers">
@@ -197,11 +199,11 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
               ))}
             </div>
             
-            <button 
+            <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
-              Sledeća
+              {t('admin.menuManagement.pagination.next')}
               <FontAwesomeIcon icon={faChevronRight} style={{marginLeft: '0.5rem'}} />
             </button>
           </div>
@@ -211,14 +213,14 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
       {showDeleteConfirm && (
         <div className="delete-confirm-overlay" onClick={() => setShowDeleteConfirm(null)}>
           <div className="delete-confirm-popup" onClick={(e) => e.stopPropagation()}>
-            <h3>Potvrda brisanja</h3>
-            <p>Da li ste sigurni da želite da obrišete piće <strong>{showDeleteConfirm.name}</strong>?</p>
+            <h3>{t('admin.menuManagement.deleteConfirm.title')}</h3>
+            <p>{t('admin.menuManagement.deleteConfirm.message')} <strong>{showDeleteConfirm.name}</strong>?</p>
             <div className="confirm-actions">
               <button className="btn-cancel" onClick={() => setShowDeleteConfirm(null)}>
-                Otkaži
+                {t('admin.menuManagement.deleteConfirm.cancel')}
               </button>
               <button className="btn-confirm" onClick={() => deleteDrink(showDeleteConfirm._id)}>
-                Obriši
+                {t('admin.menuManagement.deleteConfirm.delete')}
               </button>
             </div>
           </div>

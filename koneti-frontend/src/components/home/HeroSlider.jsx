@@ -1,8 +1,11 @@
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./HeroSlider.scss";
 
 export default function HeroSlider() {
+  const { t } = useTranslation();
+
   const settings = {
     dots: true,
     infinite: true,
@@ -19,21 +22,21 @@ export default function HeroSlider() {
   const slides = [
     {
       image: "cafe1.jpg",
-      title: "Dobrodošli u Café Koneti",
-      subtitle: "Gde se svaki trenutak računa",
-      description: "Uživajte u vrhunskoj kafi i toploj atmosferi našeg kafića"
+      title: t('home.hero.slide1.title'),
+      subtitle: t('home.hero.slide1.subtitle'),
+      description: t('home.hero.slide1.description')
     },
     {
       image: "cafe2.jpg",
-      title: "Autentični ukusi kafe",
-      subtitle: "Pažljivo odabrana zrna",
-      description: "Svaka šolja je priprema sa ljubavlju i preciznošću naših barista"
+      title: t('home.hero.slide2.title'),
+      subtitle: t('home.hero.slide2.subtitle'),
+      description: t('home.hero.slide2.description')
     },
     {
       image: "cafe3.jpg",
-      title: "Vaš omiljeni kutak",
-      subtitle: "Za nezaboravne trenutke",
-      description: "Idealno mesto za sastanke, rad ili opuštanje uz odličnu kafu"
+      title: t('home.hero.slide3.title'),
+      subtitle: t('home.hero.slide3.subtitle'),
+      description: t('home.hero.slide3.description')
     },
   ];
 
@@ -58,13 +61,13 @@ export default function HeroSlider() {
                 <p className="slide-description">{slide.description}</p>
                 <div className="slide-actions">
                   <Link to="/menu" className="btn-primary">
-                    <span>Istražite meni</span>
+                    <span>{t('home.hero.exploreMenu')}</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </Link>
                   <Link to="/reservation" className="btn-secondary">
-                    <span>Rezervišite mesto</span>
+                    <span>{t('home.hero.reserveTable')}</span>
                   </Link>
                 </div>
               </div>
@@ -78,7 +81,7 @@ export default function HeroSlider() {
         onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
         style={{ cursor: 'pointer' }}
       >
-        <div className="scroll-text">Skrolujte dole</div>
+        <div className="scroll-text">{t('home.hero.scrollDown')}</div>
         <div className="scroll-arrow">↓</div>
       </div>
     </div>

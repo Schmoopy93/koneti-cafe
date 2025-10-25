@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCoffee,
@@ -46,6 +47,7 @@ const faIconsMap = {
 };
 
 export default function Menu() {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -131,7 +133,7 @@ export default function Menu() {
             <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronLeft} />
           </button>
 
-          <div className="sidebar-title">Karta pića</div>
+          <div className="sidebar-title">{t('menu.title')}</div>
           <div className="category-list">
             {categories.map((cat) => (
               <button
@@ -172,7 +174,7 @@ export default function Menu() {
         )}
 
         <h2 className="content-title">
-          <span className="highlight">Karta pića</span>
+          <span className="highlight">{t('menu.title')}</span>
         </h2>
 
         <div className="search-container">
@@ -180,7 +182,7 @@ export default function Menu() {
           <input
             type="text"
             className="search-input"
-            placeholder="Pretražite piće..."
+            placeholder={t('menu.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -188,15 +190,15 @@ export default function Menu() {
 
         <div className="filter-container">
           <FontAwesomeIcon icon={faSort} className="filter-icon" />
-          <label className="filter-label">Sortiraj po:</label>
-          <select 
+          <label className="filter-label">{t('menu.sortLabel')}</label>
+          <select
             className="filter-dropdown"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="name">A-Z</option>
-            <option value="price-low">Najjeftiniji</option>
-            <option value="price-high">Najskuplji</option>
+            <option value="name">{t('menu.sortOptions.name')}</option>
+            <option value="price-low">{t('menu.sortOptions.priceLow')}</option>
+            <option value="price-high">{t('menu.sortOptions.priceHigh')}</option>
           </select>
         </div>
 
@@ -221,7 +223,7 @@ export default function Menu() {
                 </div>
                 <div className="card-content">
                   <h3>{drink.name}</h3>
-                  <div className="price">{drink.price} RSD</div>
+                  <div className="price">{drink.price} {t('menu.currency')}</div>
                 </div>
               </motion.div>
             ))
@@ -232,13 +234,13 @@ export default function Menu() {
         {categoryDrinks.length > itemsPerPage && (
           <div className="pagination-controls">
             <button onClick={handlePrev} disabled={currentPage === 1}>
-              Prev
+              {t('menu.pagination.prev')}
             </button>
             <span>
               {currentPage} / {totalPages}
             </span>
             <button onClick={handleNext} disabled={currentPage === totalPages}>
-              Next
+              {t('menu.pagination.next')}
             </button>
           </div>
         )}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import MenuManagement from "./MenuManagement";
 import AddDrink from "../forms/AddDrink";
@@ -11,6 +12,7 @@ import "./MenuManagementPage.scss";
 Modal.setAppElement('#root');
 
 export default function MenuManagementPage() {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(null);
   const [editingDrink, setEditingDrink] = useState(null);
 
@@ -36,11 +38,11 @@ export default function MenuManagementPage() {
       >
         <div className="modal-header">
           <h3>
-            {showModal === "addDrink" && "Dodaj novo piće"}
-            {showModal === "editDrink" && "Uredi piće"}
-            {showModal === "addCategory" && "Dodaj novu kategoriju"}
+            {showModal === "addDrink" && t('admin.addDrink.title')}
+            {showModal === "editDrink" && t('admin.addDrink.editTitle')}
+            {showModal === "addCategory" && t('admin.addCategory.title')}
           </h3>
-          <button onClick={() => setShowModal(null)}>×</button>
+          <button onClick={() => setShowModal(null)}>{t('admin.closeButton')}</button>
         </div>
         <div className="modal-body">
           {(showModal === "addDrink" || showModal === "editDrink") && (

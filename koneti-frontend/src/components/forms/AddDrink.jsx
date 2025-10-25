@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import Cropper from "react-easy-crop";
 import toast, { Toaster } from "react-hot-toast";
 import getCroppedImg from "../utils/cropImage";
@@ -7,6 +8,7 @@ import "./AddDrink.scss";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AddDrink({ onClose, onSuccess, editData }) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -86,18 +88,18 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Naziv je obavezan.";
-    if (!formData.price.trim()) newErrors.price = "Cena je obavezna.";
+    if (!formData.name.trim()) newErrors.name = t('admin.addDrink.errors.name');
+    if (!formData.price.trim()) newErrors.price = t('admin.addDrink.errors.price');
     else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0)
-      newErrors.price = "Cena mora biti pozitivan broj.";
-    if (!formData.category) newErrors.category = "Morate izabrati kategoriju.";
+      newErrors.price = t('admin.addDrink.errors.priceInvalid');
+    if (!formData.category) newErrors.category = t('admin.addDrink.errors.category');
     if (formData.description.length > 250)
-      newErrors.description = "Opis ne sme biti duži od 250 karaktera.";
-    if (!editData && !formData.image) newErrors.image = "Morate dodati sliku.";
+      newErrors.description = t('admin.addDrink.errors.description');
+    if (!editData && !formData.image) newErrors.image = t('admin.addDrink.errors.image');
     else if (formData.image && !["image/jpeg", "image/png"].includes(formData.image.type))
-      newErrors.image = "Dozvoljeni formati: JPG, PNG.";
+      newErrors.image = t('admin.addDrink.errors.imageFormat');
     else if (formData.image && formData.image.size > 2 * 1024 * 1024)
-      newErrors.image = "Maksimalna veličina slike: 2MB.";
+      newErrors.image = t('admin.addDrink.errors.imageSize');
     return newErrors;
   };
 
@@ -155,10 +157,10 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
   return (
     <div className="add-drink-form">
       <Toaster position="top-right" reverseOrder={false} />
-      <h2>{editData ? "Uredi piće" : "Nova konzumacija"}</h2>
+      <h2>{editData ? t('admin.addDrink.editTitle') : t('admin.addDrink.title')}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Naziv:</label>
+          <label>{t('admin.addDrink.name')}:</label>
           <input
             type="text"
             name="name"
@@ -170,7 +172,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>Cena:</label>
+          <label>{t('admin.addDrink.price')}:</label>
           <input
             type="text"
             name="price"
@@ -182,14 +184,14 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>Kategorija:</label>
+          <label>{t('admin.addDrink.category')}:</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
             className={shakeFields.category ? "shake" : ""}
           >
-            <option value="">Izaberi kategoriju</option>
+            <option value="">{t('admin.addDrink.category')}</option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
@@ -200,7 +202,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>Opis:</label>
+          <label>{t('admin.addDrink.description')}:</label>
           <textarea
             name="description"
             value={formData.description}
@@ -211,7 +213,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>Slika:</label>
+          <label>{t('admin.addDrink.image')}:</label>
           <input
             type="file"
             accept="image/png, image/jpeg"
@@ -272,7 +274,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
           </div>
         )}
 
-        <button type="submit">Sačuvaj</button>
+        <button type="submit">{t('admin.addDrink.save')}</button>
       </form>
     </div>
   );

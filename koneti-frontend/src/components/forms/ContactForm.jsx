@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 import "./ContactForm.scss";
 
 export default function ContactForm() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -42,14 +44,14 @@ export default function ContactForm() {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.fullName) errors.fullName = "Unesite ime i prezime";
+    if (!formData.fullName) errors.fullName = t('home.contact.form.fullName.error');
     if (!formData.email) {
-      errors.email = "Unesite email adresu";
+      errors.email = t('home.contact.form.email.error');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email adresa nije validna";
+      errors.email = t('home.contact.form.email.invalid');
     }
-    if (!formData.phone) errors.phone = "Unesite broj telefona";
-    if (!formData.message) errors.message = "Unesite poruku";
+    if (!formData.phone) errors.phone = t('home.contact.form.phone.error');
+    if (!formData.message) errors.message = t('home.contact.form.message.error');
     return errors;
   };
 
@@ -77,19 +79,19 @@ export default function ContactForm() {
   return (
     <section id="contact-section" className="contact-form-section" ref={sectionRef}>
       <div className="contact-header">
-        <h2 className="section-title">💬 Kontaktirajte nas</h2>
-        <p className="section-subtitle">Pošaljite nam poruku ili nas pozovite direktno</p>
+        <h2 className="section-title">💬 {t('home.contact.title')}</h2>
+        <p className="section-subtitle">{t('home.contact.subtitle')}</p>
       </div>
       
       <div className="contact-container">
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="fullName">👤 Ime i prezime</label>
+            <label htmlFor="fullName">{t('home.contact.form.fullName.label')}</label>
             <input
               id="fullName"
               type="text"
               name="fullName"
-              placeholder="Unesite vaše ime i prezime"
+              placeholder={t('home.contact.form.fullName.placeholder')}
               value={formData.fullName}
               onChange={handleChange}
               className={formErrors.fullName ? "input-error" : ""}
@@ -99,12 +101,12 @@ export default function ContactForm() {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="email">📧 Email adresa</label>
+              <label htmlFor="email">{t('home.contact.form.email.label')}</label>
               <input
                 id="email"
                 type="email"
                 name="email"
-                placeholder="vas.email@example.com"
+                placeholder={t('home.contact.form.email.placeholder')}
                 value={formData.email}
                 onChange={handleChange}
                 className={formErrors.email ? "input-error" : ""}
@@ -113,12 +115,12 @@ export default function ContactForm() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">📱 Broj telefona</label>
+              <label htmlFor="phone">{t('home.contact.form.phone.label')}</label>
               <input
                 id="phone"
                 type="tel"
                 name="phone"
-                placeholder="+381 xx xxx xxxx"
+                placeholder={t('home.contact.form.phone.placeholder')}
                 value={formData.phone}
                 onChange={handleChange}
                 className={formErrors.phone ? "input-error" : ""}
@@ -128,11 +130,11 @@ export default function ContactForm() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="message">💭 Vaša poruka</label>
+            <label htmlFor="message">{t('home.contact.form.message.label')}</label>
             <textarea
               id="message"
               name="message"
-              placeholder="Opišite kako možemo da vam pomognemo..."
+              placeholder={t('home.contact.form.message.placeholder')}
               rows="5"
               value={formData.message}
               onChange={handleChange}
@@ -142,29 +144,29 @@ export default function ContactForm() {
           </div>
 
           <div className="form-actions">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={`btn-submit ${isSubmitting ? 'submitting' : ''}`}
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
                   <div className="spinner"></div>
-                  Šalje se...
+                  {t('home.contact.form.submit.sending')}
                 </>
               ) : (
                 <>
                   <FontAwesomeIcon icon={faPaperPlane} />
-                  Pošaljite poruku
+                  {t('home.contact.form.submit.send')}
                 </>
               )}
             </button>
-            
+
             <div className="contact-options">
-              <span className="or-text">ili</span>
+              <span className="or-text">{t('home.contact.form.call.or')}</span>
               <a href="tel:+38165637371" className="btn-call">
                 <FontAwesomeIcon icon={faPhone} />
-                Pozovite nas direktno
+                {t('home.contact.form.call.call')}
               </a>
             </div>
           </div>
@@ -175,8 +177,8 @@ export default function ContactForm() {
         <div className="success-popup">
           <div className="popup-content">
             <div className="success-icon">✅</div>
-            <h4>Poruka je uspešno poslata!</h4>
-            <p>Odgovoriće vam u najkraćem mogućem roku.</p>
+            <h4>{t('home.contact.form.success.title')}</h4>
+            <p>{t('home.contact.form.success.message')}</p>
           </div>
         </div>
       )}

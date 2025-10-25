@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import "./CookieConsent.scss";
 
 export default function CookieConsent() {
+  const { t } = useTranslation();
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
@@ -23,11 +25,10 @@ export default function CookieConsent() {
     <div className="cookie-consent-banner">
       <div className="cookie-content">
         <p>
-          Ovaj sajt koristi kolačiće (cookies) da bi vam pružio najbolje iskustvo.
-          Nastavkom korišćenja sajta pristajete na upotrebu kolačića.
+          {t('cookieConsent.message')}
         </p>
         <button onClick={acceptCookies} className="accept-btn">
-          Prihvatam
+          {t('cookieConsent.accept')}
         </button>
       </div>
     </div>

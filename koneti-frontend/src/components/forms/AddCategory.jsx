@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCoffee, faMugHot, faBeer, faWineGlassAlt, faWineBottle,
@@ -32,6 +33,7 @@ const iconOptions = [
 ];
 
 export default function AddCategory({ onClose, onSuccess }) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: "", icon: "" });
   const [errors, setErrors] = useState({});
   const [shakeFields, setShakeFields] = useState({});
@@ -48,8 +50,8 @@ export default function AddCategory({ onClose, onSuccess }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Naziv kategorije je obavezan.";
-    if (!formData.icon) newErrors.icon = "Morate izabrati ikonicu.";
+    if (!formData.name.trim()) newErrors.name = t('admin.addCategory.errors.name');
+    if (!formData.icon) newErrors.icon = t('admin.addCategory.errors.icon');
     return newErrors;
   };
 
@@ -95,10 +97,10 @@ export default function AddCategory({ onClose, onSuccess }) {
   return (
     <div className="add-category-form">
       <Toaster position="top-right" reverseOrder={false} />
-      <h3>Nova kategorija</h3>
+      <h3>{t('admin.addCategory.title')}</h3>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Naziv kategorije:</label>
+          <label>{t('admin.addCategory.name')}:</label>
           <input
             type="text"
             name="name"
@@ -110,7 +112,7 @@ export default function AddCategory({ onClose, onSuccess }) {
         </div>
 
         <div className="form-group">
-          <label>Izaberi ikonicu:</label>
+          <label>{t('admin.addCategory.icon')}:</label>
           <div className={`icon-picker ${shakeFields.icon ? "shake" : ""}`}>
             {iconOptions.map((option) => (
               <button
@@ -128,7 +130,7 @@ export default function AddCategory({ onClose, onSuccess }) {
         </div>
 
         <button type="submit" className="gradient-btn">
-          Sačuvaj
+          {t('admin.addCategory.save')}
         </button>
       </form>
     </div>

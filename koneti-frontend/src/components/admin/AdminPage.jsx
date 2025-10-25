@@ -22,6 +22,7 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 
 import "./AdminPage.scss";
@@ -38,6 +39,7 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function AdminPage() {
+  const { t } = useTranslation();
   const [drinks, setDrinks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState([]);
@@ -144,7 +146,7 @@ export default function AdminPage() {
               </div>
               <div className="stat-info">
                 <h3>{stats.totalDrinks}</h3>
-                <p>Ukupno pića</p>
+                <p>{t('adminPage.stats.totalDrinks')}</p>
               </div>
             </div>
             <div className="stat-card">
@@ -153,7 +155,7 @@ export default function AdminPage() {
               </div>
               <div className="stat-info">
                 <h3>{stats.totalCategories}</h3>
-                <p>Kategorije</p>
+                <p>{t('adminPage.stats.totalCategories')}</p>
               </div>
             </div>
             <div className="stat-card">
@@ -162,7 +164,7 @@ export default function AdminPage() {
               </div>
               <div className="stat-info">
                 <h3>{stats.totalReservations}</h3>
-                <p>Rezervacije</p>
+                <p>{t('adminPage.stats.totalReservations')}</p>
               </div>
             </div>
           </div>
@@ -170,21 +172,21 @@ export default function AdminPage() {
           <div className="action-cards">
             <div className="action-card" onClick={() => window.location.href = '/menu-management'}>
               <FontAwesomeIcon icon={faGlassMartiniAlt} />
-              <h3>Upravljaj menijem</h3>
-              <p>Upravljanje stavkama u meniju</p>
+              <h3>{t('adminPage.actions.manageMenu')}</h3>
+              <p>{t('adminPage.actions.manageMenuDesc')}</p>
             </div>
             <div className="action-card" onClick={() => {
               setShowModal("calendar");
             }}>
               <FontAwesomeIcon icon={faCalendarAlt} />
-              <h3>Kalendar</h3>
-              <p>Pregled rezervacija</p>
+              <h3>{t('adminPage.actions.calendar')}</h3>
+              <p>{t('adminPage.actions.calendarDesc')}</p>
             </div>
 
             <div className="action-card logout-card" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} />
-              <h3>Odjavi se</h3>
-              <p>Izađi iz admin panela</p>
+              <h3>{t('adminPage.actions.logout')}</h3>
+              <p>{t('adminPage.actions.logoutDesc')}</p>
             </div>
             </div>
           </motion.div>
@@ -196,13 +198,13 @@ export default function AdminPage() {
         <div className="modal-overlay blur-backdrop" onClick={() => setShowModal(null)}>
           <div className="modal-content fullscreen-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Kalendar rezervacija</h3>
+              <h3>{t('adminPage.calendar.title')}</h3>
               <button onClick={() => setShowModal(null)}>×</button>
             </div>
             <div className="modal-body">
               <div className="calendar-wrapper">
                 <div style={{ marginBottom: '1rem', color: '#666' }}>
-                  Ukupno događaja: {events.length}
+                  {t('adminPage.calendar.totalEvents')} {events.length}
                 </div>
                 <div style={{ height: '600px' }}>
                   <Calendar
@@ -240,31 +242,31 @@ export default function AdminPage() {
             </div>
             <div className="event-body">
               <div className="event-info">
-                <p><strong>Tip:</strong> {selectedEvent.type === 'biznis' ? 'Biznis sastanak' : selectedEvent.type === 'koneti' ? `Koneti Experience - ${selectedEvent.subType ? selectedEvent.subType.charAt(0).toUpperCase() + selectedEvent.subType.slice(1) : 'Basic'}` : selectedEvent.type}</p>
-                <p><strong>Email:</strong> {selectedEvent.email}</p>
-                <p><strong>Telefon:</strong> {selectedEvent.phone}</p>
-                <p><strong>Datum:</strong> {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}</p>
-                <p><strong>Vreme:</strong> {selectedEvent.time}</p>
-                <p><strong>Gosti:</strong> {selectedEvent.guests}</p>
+                <p><strong>{t('adminPage.event.type')}:</strong> {selectedEvent.type === 'biznis' ? t('adminPage.event.businessMeeting') : selectedEvent.type === 'koneti' ? `${t('adminPage.event.konetiExperience')} - ${selectedEvent.subType ? selectedEvent.subType.charAt(0).toUpperCase() + selectedEvent.subType.slice(1) : 'Basic'}` : selectedEvent.type}</p>
+                <p><strong>{t('adminPage.event.email')}:</strong> {selectedEvent.email}</p>
+                <p><strong>{t('adminPage.event.phone')}:</strong> {selectedEvent.phone}</p>
+                <p><strong>{t('adminPage.event.date')}:</strong> {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}</p>
+                <p><strong>{t('adminPage.event.time')}:</strong> {selectedEvent.time}</p>
+                <p><strong>{t('adminPage.event.guests')}:</strong> {selectedEvent.guests}</p>
                 {selectedEvent.selectedMenu && (
-                  <p><strong>Meni:</strong> {selectedEvent.selectedMenu}</p>
+                  <p><strong>{t('adminPage.event.menu')}:</strong> {selectedEvent.selectedMenu}</p>
                 )}
                 {selectedEvent.message && (
-                  <p><strong>Poruka:</strong> {selectedEvent.message}</p>
+                  <p><strong>{t('adminPage.event.message')}:</strong> {selectedEvent.message}</p>
                 )}
               </div>
               <div className="event-actions">
-                <button 
+                <button
                   className="btn-approve"
                   onClick={() => handleReservationAction(selectedEvent._id, 'approved')}
                 >
-                  <FontAwesomeIcon icon={faCheck} /> Potvrdi
+                  <FontAwesomeIcon icon={faCheck} /> {t('adminPage.event.confirm')}
                 </button>
-                <button 
+                <button
                   className="btn-reject"
                   onClick={() => handleReservationAction(selectedEvent._id, 'rejected')}
                 >
-                  <FontAwesomeIcon icon={faTimes} /> Odbij
+                  <FontAwesomeIcon icon={faTimes} /> {t('adminPage.event.reject')}
                 </button>
               </div>
             </div>
