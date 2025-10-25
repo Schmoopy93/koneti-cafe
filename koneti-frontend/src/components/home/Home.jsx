@@ -1,4 +1,4 @@
-import ContactForm from "./ContactForm";
+import ContactForm from "../forms/ContactForm";
 import HeroSlider from "./HeroSlider";
 import Offer from "./Offer";
 import WeeklyPromotions from "./WeeklyPromotions";

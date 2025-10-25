@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Cropper from "react-easy-crop";
 import toast, { Toaster } from "react-hot-toast";
-import getCroppedImg from "./cropImage";
+import getCroppedImg from "../utils/cropImage";
 import "./AddDrink.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;

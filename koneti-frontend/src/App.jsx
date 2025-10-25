@@ -1,18 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Home from "./components/Home";
-import Menu from "./components/Menu";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import Home from "./components/home/Home";
+import Menu from "./components/menu/Menu";
 import "./styles/main.scss";
-import ReservationForm from "./components/ReservationForm";
+import ReservationForm from "./components/forms/ReservationForm";
 import ScrollToTop from "./ScrollToTop";
-import StaffLogin from "./components/StaffLogin";
-import AdminPage from "./components/AdminPage";
-import MenuManagementPage from "./components/MenuManagementPage";
-import Gallery from "./components/Gallery";
+import StaffLogin from "./components/auth/StaffLogin";
+import AdminPage from "./components/admin/AdminPage";
+import MenuManagementPage from "./components/menu/MenuManagementPage";
+import Gallery from "./components/gallery/Gallery";
 import ProtectedRoute from "./ProtectedRoute";
-import CookieConsent from "./components/CookieConsent";
+import CookieConsent from "./components/utils/CookieConsent";
 
 export default function App() {
   return (

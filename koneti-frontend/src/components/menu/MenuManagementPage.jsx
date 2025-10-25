@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import MenuManagement from "./MenuManagement";
-import AddDrink from "./AddDrink";
-import AddCategory from "./AddCategory";
+import AddDrink from "../forms/AddDrink";
+import AddCategory from "../forms/AddCategory";
 import "./MenuManagementPage.scss";
 
 Modal.setAppElement('#root');

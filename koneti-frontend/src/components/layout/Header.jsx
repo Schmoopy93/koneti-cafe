@@ -10,7 +10,7 @@ import {
   faUserShield,
   faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import "./Header.scss";
 
 export default function Header() {
