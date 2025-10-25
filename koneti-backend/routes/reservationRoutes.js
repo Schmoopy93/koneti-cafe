@@ -1,12 +1,16 @@
 import express from "express";
-import { createReservation, getReservations } from "../controllers/reservationController.js";
+import { createReservation, getReservations, updateReservationStatus } from "../controllers/reservationController.js";
+import { validateReservation } from '../middleware/simpleValidation.js';
 
 const router = express.Router();
 
-// POST /api/reservations → kreiranje rezervacije
-router.post("/", createReservation);
+// Create a new reservation
+router.post("/", validateReservation, createReservation);
 
-// GET /api/reservations → dohvatanje svih rezervacija
+// Get all reservations
 router.get("/", getReservations);
+
+// Update reservation status by ID
+router.patch("/:id", updateReservationStatus);
 
 export default router;

@@ -31,7 +31,7 @@ const iconOptions = [
   { name: "faLemon", icon: faLemon, label: "Limunada" },
 ];
 
-export default function AddCategory() {
+export default function AddCategory({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({ name: "", icon: "" });
   const [errors, setErrors] = useState({});
   const [shakeFields, setShakeFields] = useState({});
@@ -82,6 +82,7 @@ export default function AddCategory() {
         setFormData({ name: "", icon: "" });
         setErrors({});
         setShakeFields({});
+        if (onSuccess) onSuccess();
       } else {
         toast.error("Greška pri dodavanju kategorije");
       }

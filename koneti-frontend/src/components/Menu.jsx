@@ -18,6 +18,8 @@ import {
   faLemon,
   faChevronLeft,
   faChevronRight,
+  faSearch,
+  faSort,
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import "./Menu.scss";
@@ -50,6 +52,9 @@ export default function Menu() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [collapsed, setCollapsed] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("name");
+  const [drinksLoading, setDrinksLoading] = useState(true);
   const itemsPerPage = 8;
 
 
@@ -70,11 +75,15 @@ export default function Menu() {
   useEffect(() => {
     const fetchDrinks = async () => {
       try {
+        // Ultra kratki delay
+        await new Promise(resolve => setTimeout(resolve, 200));
         const res = await fetch(`${API_URL}/drinks`);
         const data = await res.json();
         setDrinks(data);
+        setDrinksLoading(false);
       } catch (err) {
         console.error(err);
+        setDrinksLoading(false);
       }
     };
     fetchDrinks();
@@ -93,7 +102,15 @@ export default function Menu() {
   }, [selectedCategory]);
 
   const activeCategory = selectedCategory || categories[0]?._id || "";
-  const categoryDrinks = drinks.filter((d) => d.category?._id === activeCategory);
+  const categoryDrinks = drinks
+    .filter((d) => d.category?._id === activeCategory)
+    .filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === "name") return a.name.localeCompare(b.name);
+      if (sortBy === "price-low") return a.price - b.price;
+      if (sortBy === "price-high") return b.price - a.price;
+      return 0;
+    });
 
   const totalPages = Math.ceil(categoryDrinks.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -155,25 +172,60 @@ export default function Menu() {
         )}
 
         <h2 className="content-title">
-          {categories.find((c) => c._id === activeCategory)?.name}
+          <span className="highlight">Karta pića</span>
         </h2>
 
+        <div className="search-container">
+          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Pretražite piće..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="filter-container">
+          <FontAwesomeIcon icon={faSort} className="filter-icon" />
+          <label className="filter-label">Sortiraj po:</label>
+          <select 
+            className="filter-dropdown"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="name">A-Z</option>
+            <option value="price-low">Najjeftiniji</option>
+            <option value="price-high">Najskuplji</option>
+          </select>
+        </div>
+
         <div className="drinks-grid">
-          {currentDrinks.map((drink) => (
-            <motion.div
-              key={drink._id}
-              className="drink-card"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {drink.image && (
-                <img src={drink.image} alt={drink.name} className="drink-img" />
-              )}
-              <h3>{drink.name}</h3>
-              <p className="price">{drink.price} RSD</p>
-            </motion.div>
-          ))}
+          {drinksLoading ? (
+            <div className="drinks-loading">
+              <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-bounce" />
+            </div>
+          ) : (
+            currentDrinks.map((drink) => (
+              <motion.div
+                key={drink._id}
+                className="drink-card"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+              >
+                <div className="image-container">
+                  {drink.image && (
+                    <img src={drink.image} alt={drink.name} className="drink-img" />
+                  )}
+                </div>
+                <div className="card-content">
+                  <h3>{drink.name}</h3>
+                  <div className="price">{drink.price} RSD</div>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
 
         {/* Paginacija */}

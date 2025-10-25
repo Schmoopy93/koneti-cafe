@@ -1,112 +1,223 @@
 .offer {
-  background-color: #fdfaf6;
-  padding-top: 8rem; 
-  padding-bottom: 4rem;
-
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #5a3e36;
-  text-align: center; 
-  display: block;
+  background: #fdfaf6;
+  padding: 5rem 2rem;
   position: relative;
-  margin-bottom: 3.5rem;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 60px;           
-    height: 3px;            
-    background-color: #926447;
-    margin: 0.5rem auto 0;  
+  .offer-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #5a3e36;
+      margin-bottom: 1rem;
+
+      .title-icon {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: #5a3e36;
+      line-height: 1.6;
+      font-weight: 500;
+      font-style: italic;
+    }
   }
-}
-
 
   .offer-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-    gap: 3rem; 
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5rem;
+    max-width: 1600px;
+    margin: 0 auto;
   }
 
   .service-card {
-    background: #fff;
-    border-radius: 1rem;
+    background: white;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-    transform: translateY(30px);
+    box-shadow: 0 8px 25px rgba(90, 62, 54, 0.1);
+    transform: translateY(50px) scale(0.9);
     opacity: 0;
-    transition: all 0.8s ease;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(207, 166, 138, 0.1);
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(90, 62, 54, 0.2);
+      
+      .card-image {
+        transform: scale(1.1);
+      }
+      
+      .feature-tag {
+        transform: translateY(-2px);
+        background: rgba(207, 166, 138, 0.3);
+      }
     }
 
-    img {
-      width: 100%;
-      height: 350px; 
-      object-fit: cover;
-      transition: transform 0.4s ease;
+    &.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
-    &:hover img {
-      transform: scale(1.05);
+    .card-header {
+      position: relative;
+      height: 280px;
+      overflow: hidden;
+
+      .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      &:hover .card-image {
+        transform: scale(1.05);
+      }
     }
 
     .card-content {
-      padding: 1.8rem; 
+      padding: 1.5rem;
 
-      h3 {
-        font-family: 'Playfair Display', serif;
-        font-weight: bold;
-        font-size: 1.4rem; 
-        color: #5a3e36;
-        margin-bottom: 0.5rem;
+      .card-title-section {
+        margin-bottom: 1.5rem;
+
+        h3 {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 700;
+          font-size: 1.5rem;
+          color: #5a3e36;
+          margin-bottom: 0.5rem;
+          line-height: 1.2;
+        }
+
+        .subtitle {
+          color: #5a3e36;
+          font-weight: 700;
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+        }
       }
 
-      p {
-        font-family: 'Lato', sans-serif;
-        font-size: 1rem;
-        color: #555;
-        margin-bottom: 1.2rem;
+      .description {
+        font-size: 1.1rem;
+        color: #4a3529;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.5rem;
+
+        .feature-tag {
+          background: rgba(207, 166, 138, 0.2);
+          color: #5a3e36;
+          padding: 0.4rem 0.8rem;
+          border-radius: 12px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          border: 1px solid rgba(207, 166, 138, 0.4);
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(207, 166, 138, 0.25);
+            transform: translateY(-2px);
+          }
+        }
       }
 
       .btn-card {
-        display: inline-block;
-        padding: 0.6rem 1.5rem; 
-        border-radius: 1rem;
-        background: linear-gradient(145deg, #f6e8d7, #e9d9c6);
-        color: #5a3e36;
-        font-family: 'Playfair Display', serif;
-        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #cfa68a, #d4a574);
+        color: white;
         text-decoration: none;
-        transition: box-shadow 0.3s ease, transform 0.2s ease;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(207, 166, 138, 0.3);
 
         &:hover {
-          box-shadow: 0 6px 15px rgba(0,0,0,0.25);
           transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(207, 166, 138, 0.4);
+
+          svg {
+            transform: translateX(3px);
+          }
+        }
+
+        svg {
+          transition: transform 0.3s ease;
         }
       }
     }
   }
 
-  .service-card.in-view {
-    opacity: 1;
-    transform: translateY(0);
+
+
+  @media (max-width: 992px) {
+    padding: 4rem 1.5rem;
+
+    .offer-header .section-title {
+      font-size: 2.2rem;
+    }
+
+    .offer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
   }
 
   @media (max-width: 768px) {
-    padding-top: 6rem;
+    padding: 3rem 1rem;
 
-    .offer-grid {
-      gap: 2rem;
+    .offer-header {
+      margin-bottom: 2.5rem;
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+      }
     }
 
-    .service-card img {
-      height: 220px;
+    .service-card {
+      .card-header {
+        height: 220px;
+      }
+
+      .card-content {
+        padding: 1.2rem;
+
+        .card-title-section h3 {
+          font-size: 1.3rem;
+        }
+      }
     }
   }
-  
+
+  @media (max-width: 480px) {
+    .service-card .card-content {
+      padding: 1.5rem;
+    }
+  }
 }

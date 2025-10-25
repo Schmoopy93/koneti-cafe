@@ -1,9 +1,9 @@
-import fs from "fs";
 import path from "path";
 import Drink from "../models/Drink.js";
 import Category from "../models/Category.js";
 import cloudinary from "../middleware/cloudinary.js";
 
+// Create a new drink with optional image upload to Cloudinary
 export const createDrink = async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
@@ -11,26 +11,27 @@ export const createDrink = async (req, res) => {
     let cloudinaryId = "";
 
     if (req.file) {
-      // Upload na Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "drinks",
-      });
-      imageUrl = result.secure_url;    // javni URL slike
-      cloudinaryId = result.public_id; // interni ID za brisanje
-      fs.unlinkSync(req.file.path);    // obriši privremeni fajl
+      const result = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`,
+        {
+          folder: "drinks",
+        }
+      );
+      imageUrl = result.secure_url;
+      cloudinaryId = result.public_id;
     }
 
-    // Validacija
+    // Validation
     if (!name || !price || !category) {
-      return res.status(400).json({ message: "Obavezna polja nedostaju." });
+      return res.status(400).json({ message: "Required fields are missing." });
     }
 
     const categoryExists = await Category.findById(category);
     if (!categoryExists) {
-      return res.status(400).json({ message: "Kategorija ne postoji." });
+      return res.status(400).json({ message: "Category does not exist." });
     }
 
-    // Čuvanje u MongoDB
+    // Save to MongoDB
     const drink = new Drink({
       name,
       price,
@@ -43,25 +44,30 @@ export const createDrink = async (req, res) => {
     await drink.save();
     res.status(201).json(drink);
   } catch (err) {
-    console.error("Greška pri kreiranju pića:", err);
+    console.error("Error creating drink:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// Get all drinks with populated category information
 export const getDrinks = async (req, res) => {
   try {
+    console.log('Fetching drinks...');
     const drinks = await Drink.find().populate("category", "name");
+    console.log('Found drinks:', drinks.length);
     res.json(drinks);
   } catch (err) {
+    console.error('Error in getDrinks:', err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// Get drink by ID with populated category
 export const getDrinkById = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id).populate("category", "name");
     if (!drink) {
-      return res.status(404).json({ message: "Piće nije pronađeno." });
+      return res.status(404).json({ message: "Drink not found." });
     }
     res.json(drink);
   } catch (err) {
@@ -69,11 +75,12 @@ export const getDrinkById = async (req, res) => {
   }
 };
 
+// Update drink by ID with optional image upload
 export const updateDrink = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id);
     if (!drink) {
-      return res.status(404).json({ message: "Piće nije pronađeno." });
+      return res.status(404).json({ message: "Drink not found." });
     }
 
     const { name, price, category, description } = req.body;
@@ -81,7 +88,7 @@ export const updateDrink = async (req, res) => {
     if (category) {
       const categoryExists = await Category.findById(category);
       if (!categoryExists) {
-        return res.status(400).json({ message: "Kategorija ne postoji." });
+        return res.status(400).json({ message: "Category does not exist." });
       }
       drink.category = category;
     }
@@ -103,20 +110,20 @@ export const updateDrink = async (req, res) => {
     await drink.save();
     res.json(drink);
   } catch (err) {
-    console.error("Greška pri ažuriranju pića:", err);
+    console.error("Error updating drink:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-
+// Delete drink by ID and remove associated image
 export const deleteDrink = async (req, res) => {
   try {
     const drink = await Drink.findById(req.params.id);
     if (!drink) {
-      return res.status(404).json({ message: "Piće nije pronađeno." });
+      return res.status(404).json({ message: "Drink not found." });
     }
 
-    // Obrisi sliku ako postoji
+    // Delete image if exists
     if (drink.image) {
       const imagePath = path.join("uploads/drinks", drink.image);
       if (fs.existsSync(imagePath)) {
@@ -126,9 +133,9 @@ export const deleteDrink = async (req, res) => {
 
     await Drink.deleteOne({ _id: drink._id });
 
-    res.json({ message: "Piće uspešno obrisano." });
+    res.json({ message: "Drink successfully deleted." });
   } catch (err) {
-    console.error("Greška pri brisanju pića:", err);
+    console.error("Error deleting drink:", err);
     res.status(500).json({ message: err.message });
   }
 };

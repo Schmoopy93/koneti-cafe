@@ -19,6 +19,9 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Indexi za performanse
+categorySchema.index({ name: 1 });
+
 const Category = mongoose.model("Category", categorySchema);
 
 export default Category;

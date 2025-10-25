@@ -6,7 +6,7 @@ import "./AddDrink.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function AddDrink() {
+export default function AddDrink({ onClose, onSuccess, editData }) {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -32,7 +32,21 @@ export default function AddDrink() {
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch(console.error);
-  }, []);
+      
+    // Populate form if editing
+    if (editData) {
+      setFormData({
+        name: editData.name || "",
+        price: editData.price || "",
+        category: editData.category?._id || "",
+        description: editData.description || "",
+        image: null, // Keep null for file input
+      });
+      if (editData.image) {
+        setImagePreview(editData.image);
+      }
+    }
+  }, [editData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,10 +93,10 @@ export default function AddDrink() {
     if (!formData.category) newErrors.category = "Morate izabrati kategoriju.";
     if (formData.description.length > 250)
       newErrors.description = "Opis ne sme biti duži od 250 karaktera.";
-    if (!formData.image) newErrors.image = "Morate dodati sliku.";
-    else if (!["image/jpeg", "image/png"].includes(formData.image.type))
+    if (!editData && !formData.image) newErrors.image = "Morate dodati sliku.";
+    else if (formData.image && !["image/jpeg", "image/png"].includes(formData.image.type))
       newErrors.image = "Dozvoljeni formati: JPG, PNG.";
-    else if (formData.image.size > 2 * 1024 * 1024)
+    else if (formData.image && formData.image.size > 2 * 1024 * 1024)
       newErrors.image = "Maksimalna veličina slike: 2MB.";
     return newErrors;
   };
@@ -110,19 +124,25 @@ export default function AddDrink() {
       payload.append("price", formData.price);
       payload.append("category", formData.category);
       payload.append("description", formData.description);
-      payload.append("image", formData.image);
+      if (formData.image) {
+        payload.append("image", formData.image);
+      }
 
-      const res = await fetch(`${API_URL}/drinks`, {
-        method: "POST",
+      const url = editData ? `${API_URL}/drinks/${editData._id}` : `${API_URL}/drinks`;
+      const method = editData ? "PUT" : "POST";
+      
+      const res = await fetch(url, {
+        method: method,
         body: payload,
       });
 
       if (res.ok) {
-        toast.success("Drink uspešno dodat!");
+        toast.success(editData ? "Piće uspešno ažurirano!" : "Piće uspešno dodato!");
         setFormData({ name: "", price: "", category: "", description: "", image: null });
         setImagePreview(null);
         setErrors({});
         if (fileInputRef.current) fileInputRef.current.value = "";
+        if (onSuccess) onSuccess();
       } else {
         toast.error("Greška pri dodavanju konzumacije");
       }
@@ -135,7 +155,7 @@ export default function AddDrink() {
   return (
     <div className="add-drink-form">
       <Toaster position="top-right" reverseOrder={false} />
-      <h2>Nova konzumacija</h2>
+      <h2>{editData ? "Uredi piće" : "Nova konzumacija"}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Naziv:</label>
@@ -232,11 +252,12 @@ export default function AddDrink() {
                 onChange={(e) => setZoom(Number(e.target.value))}
               />
               <div className="cropper-buttons">
-                <button type="button" onClick={saveCroppedImage}>
+                <button type="button" className="btn-confirm-crop" onClick={saveCroppedImage}>
                   Potvrdi crop
                 </button>
                 <button
                   type="button"
+                  className="btn-cancel-crop"
                   onClick={() => {
                     setShowCropper(false);
                     setImagePreview(null);

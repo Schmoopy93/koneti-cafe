@@ -33,6 +33,10 @@ const drinkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Indexi za performanse
+drinkSchema.index({ category: 1, name: 1 });
+drinkSchema.index({ name: 'text' }); // Za text search
+
 const Drink = mongoose.model("Drink", drinkSchema);
 
 export default Drink;

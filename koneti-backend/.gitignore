@@ -44,3 +44,14 @@ typings/
 # Cache
 .cache/
 .tmp/
+
+# Test coverage
+coverage/
+
+# Logs
+logs/
+*.log
+
+# Uploads (keep structure but ignore files)
+uploads/*
+!uploads/.gitkeep

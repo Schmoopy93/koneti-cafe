@@ -8,7 +8,7 @@ export default function Home() {
     <div className="home">
       <HeroSlider />
       <Offer />
-      <WeeklyPromotions />
+      {/* <WeeklyPromotions /> */}
       <ContactForm />
     </div>
   );
