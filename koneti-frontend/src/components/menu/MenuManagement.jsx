@@ -1,63 +1,52 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faPlus, faSearch, faGlassMartiniAlt, faList, faChevronLeft, faChevronRight, faSort, faTag } from "@fortawesome/free-solid-svg-icons";
+import { 
+  faEdit, faTrash, faPlus, faSearch, 
+  faGlassMartiniAlt, faChevronLeft, faChevronRight, 
+  faSort, faTag 
+} from "@fortawesome/free-solid-svg-icons";
 import "./MenuManagement.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink }) {
-  const { t } = useTranslation();
-  const [categories, setCategories] = useState([]);
-  const [drinks, setDrinks] = useState([]);
+export default function MenuManagement({ drinks: externalDrinks = [], categories: externalCategories = [], onAddDrink, onAddCategory, onEditDrink, onDeleteDrink, isLoading: externalLoading = false }) {
+  const { t, i18n } = useTranslation();
+  const language = i18n.language || "sr";
+
+  const [categories, setCategories] = useState(externalCategories);
+  const [drinks, setDrinks] = useState(externalDrinks);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(externalLoading);
   const itemsPerPage = 8;
 
+  // Sync with external props provided by MenuManagementPage
   useEffect(() => {
-    fetchData();
-  }, []);
+    setCategories(externalCategories);
+  }, [externalCategories]);
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const [categoriesRes, drinksRes] = await Promise.all([
-        fetch(`${API_URL}/categories`),
-        fetch(`${API_URL}/drinks`)
-      ]);
-      
-      const categoriesData = await categoriesRes.json();
-      const drinksData = await drinksRes.json();
-      
-      setCategories(categoriesData);
-      setDrinks(drinksData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    setDrinks(externalDrinks);
+  }, [externalDrinks]);
+
+  useEffect(() => {
+    setIsLoading(externalLoading);
+  }, [externalLoading]);
 
   const deleteDrink = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/drinks/${id}`, {
-        method: "DELETE"
-      });
-      
-      if (response.ok) {
-        setDrinks(drinks.filter(drink => drink._id !== id));
+      if (onDeleteDrink) {
+        await onDeleteDrink(id);
         setShowDeleteConfirm(null);
       }
     } catch (error) {
       console.error("Error deleting drink:", error);
     }
   };
-
-
 
   const filteredDrinks = drinks
     .filter(drink => {
@@ -94,7 +83,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
             />
           </div>
         </div>
-        
+
         <div className="category-tabs">
           <button
             className={selectedCategory === "all" ? "active" : ""}
@@ -108,11 +97,11 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
               className={selectedCategory === category._id ? "active" : ""}
               onClick={() => setSelectedCategory(category._id)}
             >
-              {category.name} ({drinks.filter(d => d.category?._id === category._id).length})
+              {category.name?.[language] || category.name?.sr} ({drinks.filter(d => d.category?._id === category._id).length})
             </button>
           ))}
         </div>
-        
+
         <div className="filter-container">
           <FontAwesomeIcon icon={faSort} className="filter-icon" />
           <label className="filter-label">{t('admin.menuManagement.sortLabel')}</label>
@@ -126,7 +115,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
             <option value="price-high">{t('admin.menuManagement.sortOptions.priceHigh')}</option>
           </select>
         </div>
-        
+
         <div className="action-buttons">
           <button className="btn-add-drink" onClick={onAddDrink}>
             <FontAwesomeIcon icon={faPlus} /> {t('admin.addDrink.addButton')}
@@ -137,17 +126,15 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
         </div>
       </div>
 
-
-
       <div className="drinks-section">
         <h3>
           <FontAwesomeIcon icon={faGlassMartiniAlt} style={{marginRight: '0.5rem'}} />
           {selectedCategory === "all"
             ? `${t('admin.menuManagement.allDrinks')} (${filteredDrinks.length})`
-            : `${categories.find(c => c._id === selectedCategory)?.name || ""} (${filteredDrinks.length})`
+            : `${categories.find(c => c._id === selectedCategory)?.name?.[language] || categories.find(c => c._id === selectedCategory)?.name?.sr} (${filteredDrinks.length})`
           }
         </h3>
-        
+
         <div className="drinks-grid">
           {isLoading ? (
             <div className="drinks-loading">
@@ -161,7 +148,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
                 </div>
                 <div className="card-content">
                   <h4>{drink.name}</h4>
-                  <p>{drink.category?.name}</p>
+                  <p>{drink.category?.name?.[language] || drink.category?.name?.sr}</p>
                   <span className="price">{drink.price} RSD</span>
                 </div>
                 <div className="drink-actions">
@@ -176,7 +163,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
             ))
           )}
         </div>
-        
+
         {totalPages > 1 && (
           <div className="pagination">
             <button
@@ -186,7 +173,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
               <FontAwesomeIcon icon={faChevronLeft} style={{marginRight: '0.5rem'}} />
               {t('admin.menuManagement.pagination.prev')}
             </button>
-            
+
             <div className="page-numbers">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
@@ -198,7 +185,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
                 </button>
               ))}
             </div>
-            
+
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
@@ -209,7 +196,7 @@ export default function MenuManagement({ onAddDrink, onAddCategory, onEditDrink 
           </div>
         )}
       </div>
-      
+
       {showDeleteConfirm && (
         <div className="delete-confirm-overlay" onClick={() => setShowDeleteConfirm(null)}>
           <div className="delete-confirm-popup" onClick={(e) => e.stopPropagation()}>

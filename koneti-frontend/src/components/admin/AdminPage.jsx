@@ -24,6 +24,8 @@ import enUS from "date-fns/locale/en-US";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 import "./AdminPage.scss";
 
@@ -53,6 +55,8 @@ export default function AdminPage() {
     totalReservations: 0,
   });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchData();
@@ -106,7 +110,22 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await logout();
-    window.location.href = "/";
+    navigate("/");
+  };
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    hover: { scale: 1.05, boxShadow: "0 20px 40px rgba(61, 47, 40, 0.15)" },
   };
 
   const handleReservationAction = async (reservationId, action) => {
@@ -133,63 +152,78 @@ export default function AdminPage() {
             <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-bounce" />
           </div>
         ) : (
-          <motion.div 
-            className="dashboard-content"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">
-                <FontAwesomeIcon icon={faGlassMartiniAlt} />
-              </div>
-              <div className="stat-info">
-                <h3>{stats.totalDrinks}</h3>
-                <p>{t('adminPage.stats.totalDrinks')}</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">
-                <FontAwesomeIcon icon={faList} />
-              </div>
-              <div className="stat-info">
-                <h3>{stats.totalCategories}</h3>
-                <p>{t('adminPage.stats.totalCategories')}</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">
-                <FontAwesomeIcon icon={faCalendarAlt} />
-              </div>
-              <div className="stat-info">
-                <h3>{stats.totalReservations}</h3>
-                <p>{t('adminPage.stats.totalReservations')}</p>
-              </div>
-            </div>
+ <motion.div
+      className="dashboard-content"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      {/* Stats grid */}
+      <motion.div className="stats-grid" variants={containerVariants}>
+        <motion.div className="stat-card" variants={cardVariants}>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faGlassMartiniAlt} />
           </div>
+          <div className="stat-info">
+            <h3>{stats.totalDrinks}</h3>
+            <p>{t('adminPage.stats.totalDrinks')}</p>
+          </div>
+        </motion.div>
 
-          <div className="action-cards">
-            <div className="action-card" onClick={() => window.location.href = '/menu-management'}>
-              <FontAwesomeIcon icon={faGlassMartiniAlt} />
-              <h3>{t('adminPage.actions.manageMenu')}</h3>
-              <p>{t('adminPage.actions.manageMenuDesc')}</p>
-            </div>
-            <div className="action-card" onClick={() => {
-              setShowModal("calendar");
-            }}>
-              <FontAwesomeIcon icon={faCalendarAlt} />
-              <h3>{t('adminPage.actions.calendar')}</h3>
-              <p>{t('adminPage.actions.calendarDesc')}</p>
-            </div>
+        <motion.div className="stat-card" variants={cardVariants}>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faList} />
+          </div>
+          <div className="stat-info">
+            <h3>{stats.totalCategories}</h3>
+            <p>{t('adminPage.stats.totalCategories')}</p>
+          </div>
+        </motion.div>
 
-            <div className="action-card logout-card" onClick={handleLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-              <h3>{t('adminPage.actions.logout')}</h3>
-              <p>{t('adminPage.actions.logoutDesc')}</p>
-            </div>
-            </div>
-          </motion.div>
+        <motion.div className="stat-card" variants={cardVariants}>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faCalendarAlt} />
+          </div>
+          <div className="stat-info">
+            <h3>{stats.totalReservations}</h3>
+            <p>{t('adminPage.stats.totalReservations')}</p>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Action cards */}
+      <motion.div className="action-cards" variants={containerVariants}>
+        <motion.div
+          className="action-card"
+          onClick={() => navigate("/menu-management")}
+          variants={cardVariants}
+        >
+          <FontAwesomeIcon icon={faGlassMartiniAlt} />
+          <h3>{t('adminPage.actions.manageMenu')}</h3>
+          <p>{t('adminPage.actions.manageMenuDesc')}</p>
+        </motion.div>
+
+        <motion.div
+          className="action-card"
+          onClick={() => setShowModal("calendar")}
+          variants={cardVariants}
+        >
+          <FontAwesomeIcon icon={faCalendarAlt} />
+          <h3>{t('adminPage.actions.calendar')}</h3>
+          <p>{t('adminPage.actions.calendarDesc')}</p>
+        </motion.div>
+
+        <motion.div
+          className="action-card logout-card"
+          onClick={handleLogout}
+          variants={cardVariants}
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          <h3>{t('adminPage.actions.logout')}</h3>
+          <p>{t('adminPage.actions.logoutDesc')}</p>
+        </motion.div>
+      </motion.div>
+    </motion.div>
         )}
       </main>
 

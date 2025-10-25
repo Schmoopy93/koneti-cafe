@@ -3,24 +3,23 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema(
   {
     name: {
-      type: String,
-      required: true,
-      trim: true,
+      sr: { type: String, required: true, trim: true },
+      en: { type: String, trim: true },
     },
     icon: {
       type: String,
       required: true,
     },
     description: {
-      type: String,
-      default: "",
+      sr: { type: String, default: "" },
+      en: { type: String, default: "" },
     },
   },
   { timestamps: true }
 );
 
 // Indexi za performanse
-categorySchema.index({ name: 1 });
+categorySchema.index({ "name.sr": 1 });
 
 const Category = mongoose.model("Category", categorySchema);
 

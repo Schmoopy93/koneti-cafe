@@ -8,7 +8,7 @@ import "./AddDrink.scss";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AddDrink({ onClose, onSuccess, editData }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -34,7 +34,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch(console.error);
-      
+
     // Populate form if editing
     if (editData) {
       setFormData({
@@ -88,18 +88,24 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = t('admin.addDrink.errors.name');
-    if (!formData.price.trim()) newErrors.price = t('admin.addDrink.errors.price');
+    if (!formData.name.trim()) newErrors.name = t("admin.addDrink.errors.name");
+    if (!formData.price.trim())
+      newErrors.price = t("admin.addDrink.errors.price");
     else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0)
-      newErrors.price = t('admin.addDrink.errors.priceInvalid');
-    if (!formData.category) newErrors.category = t('admin.addDrink.errors.category');
+      newErrors.price = t("admin.addDrink.errors.priceInvalid");
+    if (!formData.category)
+      newErrors.category = t("admin.addDrink.errors.category");
     if (formData.description.length > 250)
-      newErrors.description = t('admin.addDrink.errors.description');
-    if (!editData && !formData.image) newErrors.image = t('admin.addDrink.errors.image');
-    else if (formData.image && !["image/jpeg", "image/png"].includes(formData.image.type))
-      newErrors.image = t('admin.addDrink.errors.imageFormat');
+      newErrors.description = t("admin.addDrink.errors.description");
+    if (!editData && !formData.image)
+      newErrors.image = t("admin.addDrink.errors.image");
+    else if (
+      formData.image &&
+      !["image/jpeg", "image/png"].includes(formData.image.type)
+    )
+      newErrors.image = t("admin.addDrink.errors.imageFormat");
     else if (formData.image && formData.image.size > 2 * 1024 * 1024)
-      newErrors.image = t('admin.addDrink.errors.imageSize');
+      newErrors.image = t("admin.addDrink.errors.imageSize");
     return newErrors;
   };
 
@@ -130,23 +136,35 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         payload.append("image", formData.image);
       }
 
-      const url = editData ? `${API_URL}/drinks/${editData._id}` : `${API_URL}/drinks`;
+      const url = editData
+        ? `${API_URL}/drinks/${editData._id}`
+        : `${API_URL}/drinks`;
       const method = editData ? "PUT" : "POST";
-      
+
       const res = await fetch(url, {
         method: method,
         body: payload,
       });
 
       if (res.ok) {
-        toast.success(editData ? "Piće uspešno ažurirano!" : "Piće uspešno dodato!");
-        setFormData({ name: "", price: "", category: "", description: "", image: null });
+        const data = await res.json();
+        toast.success(
+          editData ? "Piće uspešno ažurirano!" : "Piće uspešno dodato!"
+        );
+        setFormData({
+          name: "",
+          price: "",
+          category: "",
+          description: "",
+          image: null,
+        });
         setImagePreview(null);
         setErrors({});
         if (fileInputRef.current) fileInputRef.current.value = "";
-        if (onSuccess) onSuccess();
+        if (onSuccess) onSuccess(data);
       } else {
-        toast.error("Greška pri dodavanju konzumacije");
+        const err = await res.json().catch(() => null);
+        toast.error(err?.message || "Greška pri dodavanju konzumacije");
       }
     } catch (err) {
       console.error(err);
@@ -157,10 +175,12 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
   return (
     <div className="add-drink-form">
       <Toaster position="top-right" reverseOrder={false} />
-      <h2>{editData ? t('admin.addDrink.editTitle') : t('admin.addDrink.title')}</h2>
+      <h2>
+        {editData ? t("admin.addDrink.editTitle") : t("admin.addDrink.title")}
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>{t('admin.addDrink.name')}:</label>
+          <label>{t("admin.addDrink.name")}:</label>
           <input
             type="text"
             name="name"
@@ -172,7 +192,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>{t('admin.addDrink.price')}:</label>
+          <label>{t("admin.addDrink.price")}:</label>
           <input
             type="text"
             name="price"
@@ -184,36 +204,44 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
         </div>
 
         <div className="form-group">
-          <label>{t('admin.addDrink.category')}:</label>
+          <label>{t("admin.addDrink.category")}:</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
             className={shakeFields.category ? "shake" : ""}
           >
-            <option value="">{t('admin.addDrink.category')}</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
+            <option value="">{t("admin.addDrink.category")}</option>
+            {categories?.map((cat) => {
+              const name =
+                typeof cat.name === "object"
+                  ? cat.name[i18n.language] ?? cat.name.en
+                  : cat.name;
+              return (
+                <option key={cat._id} value={cat._id}>
+                  {name}
+                </option>
+              );
+            })}
           </select>
           {errors.category && <span className="error">{errors.category}</span>}
         </div>
 
         <div className="form-group">
-          <label>{t('admin.addDrink.description')}:</label>
+          <label>{t("admin.addDrink.description")}:</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             className={shakeFields.description ? "shake" : ""}
           />
-          {errors.description && <span className="error">{errors.description}</span>}
+          {errors.description && (
+            <span className="error">{errors.description}</span>
+          )}
         </div>
 
         <div className="form-group">
-          <label>{t('admin.addDrink.image')}:</label>
+          <label>{t("admin.addDrink.image")}:</label>
           <input
             type="file"
             accept="image/png, image/jpeg"
@@ -254,7 +282,11 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
                 onChange={(e) => setZoom(Number(e.target.value))}
               />
               <div className="cropper-buttons">
-                <button type="button" className="btn-confirm-crop" onClick={saveCroppedImage}>
+                <button
+                  type="button"
+                  className="btn-confirm-crop"
+                  onClick={saveCroppedImage}
+                >
                   Potvrdi crop
                 </button>
                 <button
@@ -274,7 +306,7 @@ export default function AddDrink({ onClose, onSuccess, editData }) {
           </div>
         )}
 
-        <button type="submit">{t('admin.addDrink.save')}</button>
+        <button type="submit">{t("admin.addDrink.save")}</button>
       </form>
     </div>
   );

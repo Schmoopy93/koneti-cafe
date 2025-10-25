@@ -98,13 +98,22 @@ export const updateDrink = async (req, res) => {
     if (description) drink.description = description;
 
     if (req.file) {
-      if (drink.image) {
-        const oldImagePath = path.join("uploads/drinks", drink.image);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+      // Remove previous image from Cloudinary if exists
+      if (drink.cloudinary_id) {
+        try {
+          await cloudinary.uploader.destroy(drink.cloudinary_id);
+        } catch (e) {
+          console.warn("Warning: failed to delete old image from Cloudinary", e?.message || e);
         }
       }
-      drink.image = req.file.filename;
+
+      // Upload new image to Cloudinary
+      const result = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`,
+        { folder: 'drinks' }
+      );
+      drink.image = result.secure_url;
+      drink.cloudinary_id = result.public_id;
     }
 
     await drink.save();
@@ -123,11 +132,12 @@ export const deleteDrink = async (req, res) => {
       return res.status(404).json({ message: "Drink not found." });
     }
 
-    // Delete image if exists
-    if (drink.image) {
-      const imagePath = path.join("uploads/drinks", drink.image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+    // Delete image from Cloudinary if exists
+    if (drink.cloudinary_id) {
+      try {
+        await cloudinary.uploader.destroy(drink.cloudinary_id);
+      } catch (e) {
+        console.warn("Warning: failed to delete image from Cloudinary", e?.message || e);
       }
     }
 

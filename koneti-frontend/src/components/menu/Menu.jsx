@@ -26,7 +26,6 @@ import { motion } from "framer-motion";
 import "./Menu.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
 
 const faIconsMap = {
   faCoffee,
@@ -47,7 +46,7 @@ const faIconsMap = {
 };
 
 export default function Menu() {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -59,26 +58,26 @@ export default function Menu() {
   const [drinksLoading, setDrinksLoading] = useState(true);
   const itemsPerPage = 8;
 
-
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${API_URL}/categories`);
         const data = await res.json();
         setCategories(data);
-        setSelectedCategory(data[0]?._id || "");
+        if (data.length > 0) setSelectedCategory(data[0]._id);
       } catch (err) {
         console.error(err);
       }
     };
     fetchCategories();
   }, []);
-  
+
+  // Fetch drinks
   useEffect(() => {
     const fetchDrinks = async () => {
       try {
-        // Ultra kratki delay
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         const res = await fetch(`${API_URL}/drinks`);
         const data = await res.json();
         setDrinks(data);
@@ -91,19 +90,24 @@ export default function Menu() {
     fetchDrinks();
   }, []);
 
-
+  // Handle window resize for mobile
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
+  // Reset page on category change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory]);
 
   const activeCategory = selectedCategory || categories[0]?._id || "";
+  const activeCategoryObj = categories.find(
+    (cat) => cat._id === activeCategory
+  );
+
+  // Filter and sort drinks
   const categoryDrinks = drinks
     .filter((d) => d.category?._id === activeCategory)
     .filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -116,10 +120,21 @@ export default function Menu() {
 
   const totalPages = Math.ceil(categoryDrinks.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentDrinks = categoryDrinks.slice(startIndex, startIndex + itemsPerPage);
+  const currentDrinks = categoryDrinks.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
+
+  // Helper to get category name with i18n support
+  const getCategoryName = (cat) => {
+    if (!cat) return "";
+    return typeof cat.name === "object"
+      ? cat.name[i18n.language] ?? cat.name.en
+      : cat.name;
+  };
 
   return (
     <div className="drink-menu-layout">
@@ -127,30 +142,52 @@ export default function Menu() {
       {!isMobile && (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-logo">
-            <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
+            <img
+              src="/koneti-logo.png"
+              alt="Koneti Logo"
+              className="logo-img"
+            />
           </div>
-          <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-            <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronLeft} />
+
+          <button
+            className="collapse-btn"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            <FontAwesomeIcon
+              icon={collapsed ? faChevronRight : faChevronLeft}
+            />
           </button>
 
-          <div className="sidebar-title">{t('menu.title')}</div>
+          <div className="sidebar-title">
+            {activeCategoryObj
+              ? getCategoryName(activeCategoryObj)
+              : t("menu.title")}
+          </div>
+
           <div className="category-list">
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`category-btn ${activeCategory === cat._id ? "active" : ""}`}
-                data-tooltip={cat.name}
+                className={`category-btn ${
+                  activeCategory === cat._id ? "active" : ""
+                }`}
+                data-tooltip={getCategoryName(cat)}
                 onClick={() => setSelectedCategory(cat._id)}
               >
-                {cat.icon && <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />}
-                <span>{cat.name}</span>
+                {cat.icon && (
+                  <FontAwesomeIcon
+                    icon={faIconsMap[cat.icon]}
+                    className="icon"
+                  />
+                )}
+                <span>{getCategoryName(cat)}</span>
               </button>
             ))}
           </div>
         </aside>
       )}
 
-      {/* Glavni content */}
+      {/* Main content */}
       <motion.main
         key={activeCategory + currentPage}
         className="drink-content"
@@ -164,48 +201,69 @@ export default function Menu() {
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`category-btn ${activeCategory === cat._id ? "active" : ""}`}
+                className={`category-btn ${
+                  activeCategory === cat._id ? "active" : ""
+                }`}
                 onClick={() => setSelectedCategory(cat._id)}
               >
-                {cat.icon && <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />}
+                {cat.icon && (
+                  <FontAwesomeIcon
+                    icon={faIconsMap[cat.icon]}
+                    className="icon"
+                  />
+                )}
               </button>
             ))}
           </div>
         )}
 
+        {/* Dynamic content title */}
         <h2 className="content-title">
-          <span className="highlight">{t('menu.title')}</span>
+          <span className="highlight">
+            {activeCategoryObj
+              ? getCategoryName(activeCategoryObj)
+              : t("menu.title")}
+          </span>
         </h2>
 
+        {/* Search */}
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
             className="search-input"
-            placeholder={t('menu.searchPlaceholder')}
+            placeholder={t("menu.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
+        {/* Sorting */}
         <div className="filter-container">
           <FontAwesomeIcon icon={faSort} className="filter-icon" />
-          <label className="filter-label">{t('menu.sortLabel')}</label>
+          <label className="filter-label">{t("menu.sortLabel")}</label>
           <select
             className="filter-dropdown"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="name">{t('menu.sortOptions.name')}</option>
-            <option value="price-low">{t('menu.sortOptions.priceLow')}</option>
-            <option value="price-high">{t('menu.sortOptions.priceHigh')}</option>
+            <option value="name">{t("menu.sortOptions.name")}</option>
+            <option value="price-low">{t("menu.sortOptions.priceLow")}</option>
+            <option value="price-high">
+              {t("menu.sortOptions.priceHigh")}
+            </option>
           </select>
         </div>
 
+        {/* Drinks grid */}
         <div className="drinks-grid">
           {drinksLoading ? (
             <div className="drinks-loading">
-              <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-bounce" />
+              <img
+                src="/koneti-logo.png"
+                alt="Koneti Logo"
+                className="logo-bounce"
+              />
             </div>
           ) : (
             currentDrinks.map((drink) => (
@@ -218,29 +276,35 @@ export default function Menu() {
               >
                 <div className="image-container">
                   {drink.image && (
-                    <img src={drink.image} alt={drink.name} className="drink-img" />
+                    <img
+                      src={drink.image}
+                      alt={drink.name}
+                      className="drink-img"
+                    />
                   )}
                 </div>
                 <div className="card-content">
                   <h3>{drink.name}</h3>
-                  <div className="price">{drink.price} {t('menu.currency')}</div>
+                  <div className="price">
+                    {drink.price} {t("menu.currency")}
+                  </div>
                 </div>
               </motion.div>
             ))
           )}
         </div>
 
-        {/* Paginacija */}
+        {/* Pagination */}
         {categoryDrinks.length > itemsPerPage && (
           <div className="pagination-controls">
             <button onClick={handlePrev} disabled={currentPage === 1}>
-              {t('menu.pagination.prev')}
+              {t("menu.pagination.prev")}
             </button>
             <span>
               {currentPage} / {totalPages}
             </span>
             <button onClick={handleNext} disabled={currentPage === totalPages}>
-              {t('menu.pagination.next')}
+              {t("menu.pagination.next")}
             </button>
           </div>
         )}

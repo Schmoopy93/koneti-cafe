@@ -14,26 +14,26 @@ import "./AddCategory.scss";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const iconOptions = [
-  { name: "faCoffee", icon: faCoffee, label: "Kafa" },
-  { name: "faMugHot", icon: faMugHot, label: "Topli napici" },
-  { name: "faBeer", icon: faBeer, label: "Pivo" },
-  { name: "faWineGlassAlt", icon: faWineGlassAlt, label: "Vino" },
-  { name: "faWineBottle", icon: faWineBottle, label: "Vinska boca" },
-  { name: "faGlassWhiskey", icon: faGlassWhiskey, label: "Viski" },
-  { name: "faCocktail", icon: faCocktail, label: "Koktel" },
-  { name: "faGlassMartiniAlt", icon: faGlassMartiniAlt, label: "Martini" },
-  { name: "faGlassCheers", icon: faGlassCheers, label: "Šampanjac" },
-  { name: "faChampagneGlasses", icon: faChampagneGlasses, label: "Proslava" },
-  { name: "faGlassWater", icon: faGlassWater, label: "Voda" },
-  { name: "faBottleDroplet", icon: faBottleDroplet, label: "Sok / flaširano" },
-  { name: "faBlender", icon: faBlender, label: "Smoothie" },
-  { name: "faJugDetergent", icon: faJugDetergent, label: "Sokovi / hladni napici" },
-  { name: "faIceCream", icon: faIceCream, label: "Milkšejk / desert" },
-  { name: "faLemon", icon: faLemon, label: "Limunada" },
+  { name: "faCoffee", icon: faCoffee, label: { sr: "Kafa", en: "Coffee" } },
+  { name: "faMugHot", icon: faMugHot, label: { sr: "Topli napici", en: "Hot drinks" } },
+  { name: "faBeer", icon: faBeer, label: { sr: "Pivo", en: "Beer" } },
+  { name: "faWineGlassAlt", icon: faWineGlassAlt, label: { sr: "Vino", en: "Wine" } },
+  { name: "faWineBottle", icon: faWineBottle, label: { sr: "Vinska boca", en: "Wine bottle" } },
+  { name: "faGlassWhiskey", icon: faGlassWhiskey, label: { sr: "Viski", en: "Whiskey" } },
+  { name: "faCocktail", icon: faCocktail, label: { sr: "Koktel", en: "Cocktail" } },
+  { name: "faGlassMartiniAlt", icon: faGlassMartiniAlt, label: { sr: "Martini", en: "Martini" } },
+  { name: "faGlassCheers", icon: faGlassCheers, label: { sr: "Šampanjac", en: "Champagne" } },
+  { name: "faChampagneGlasses", icon: faChampagneGlasses, label: { sr: "Proslava", en: "Celebration" } },
+  { name: "faGlassWater", icon: faGlassWater, label: { sr: "Voda", en: "Water" } },
+  { name: "faBottleDroplet", icon: faBottleDroplet, label: { sr: "Sok / flaširano", en: "Juice / bottled" } },
+  { name: "faBlender", icon: faBlender, label: { sr: "Smoothie", en: "Smoothie" } },
+  { name: "faJugDetergent", icon: faJugDetergent, label: { sr: "Sokovi / hladni napici", en: "Juices / cold drinks" } },
+  { name: "faIceCream", icon: faIceCream, label: { sr: "Milkšejk / desert", en: "Milkshake / dessert" } },
+  { name: "faLemon", icon: faLemon, label: { sr: "Limunada", en: "Lemonade" } },
 ];
 
 export default function AddCategory({ onClose, onSuccess }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({ name: "", icon: "" });
   const [errors, setErrors] = useState({});
   const [shakeFields, setShakeFields] = useState({});
@@ -62,37 +62,46 @@ export default function AddCategory({ onClose, onSuccess }) {
     setTimeout(() => setShakeFields({}), 500);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      triggerShake(Object.keys(validationErrors));
-      toast.error("Proverite greške u formi!");
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    triggerShake(Object.keys(validationErrors));
+    toast.error("Proverite greške u formi!");
+    return;
+  }
 
-    try {
-      const res = await fetch(`${API_URL}/categories`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  try {
+    const payload = {
+      name: { sr: formData.name },
+      icon: formData.icon,
+      description: { sr: "" },         
+    };
 
-      if (res.ok) {
-        toast.success("Kategorija uspešno dodata!");
-        setFormData({ name: "", icon: "" });
-        setErrors({});
-        setShakeFields({});
-        if (onSuccess) onSuccess();
-      } else {
-        toast.error("Greška pri dodavanju kategorije");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Greška na serveru");
+    const res = await fetch(`${API_URL}/categories`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      toast.success("Kategorija uspešno dodata!");
+      setFormData({ name: "", icon: "" });
+      setErrors({});
+      setShakeFields({});
+      if (onSuccess) onSuccess(data);
+    } else {
+      const err = await res.json();
+      toast.error(err.message || "Greška pri dodavanju kategorije");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("Greška na serveru");
+  }
+};
+
 
   return (
     <div className="add-category-form">
@@ -114,17 +123,23 @@ export default function AddCategory({ onClose, onSuccess }) {
         <div className="form-group">
           <label>{t('admin.addCategory.icon')}:</label>
           <div className={`icon-picker ${shakeFields.icon ? "shake" : ""}`}>
-            {iconOptions.map((option) => (
-              <button
-                key={option.name}
-                type="button"
-                title={option.label}
-                className={`icon-btn ${formData.icon === option.name ? "selected" : ""}`}
-                onClick={() => handleIconSelect(option.name)}
-              >
-                <FontAwesomeIcon icon={option.icon} />
-              </button>
-            ))}
+            {iconOptions.map((option) => {
+              const lang = i18n.language?.startsWith('en') ? 'en' : 'sr';
+              const labelText = option.label?.[lang] || option.label?.sr || '';
+              return (
+                <div key={option.name} className="icon-wrap">
+                  <button
+                    type="button"
+                    aria-label={labelText}
+                    className={`icon-btn ${formData.icon === option.name ? "selected" : ""}`}
+                    onClick={() => handleIconSelect(option.name)}
+                  >
+                    <FontAwesomeIcon icon={option.icon} />
+                  </button>
+                  <div className="icon-tooltip koneti-tooltip">{labelText}</div>
+                </div>
+              );
+            })}
           </div>
           {errors.icon && <span className="error">{errors.icon}</span>}
         </div>

@@ -272,7 +272,7 @@
     }
   },
   "menu": {
-    "title": "Drink Menu",
+   
     "searchPlaceholder": "Search for drinks...",
     "sortLabel": "Sort by:",
     "sortOptions": {
