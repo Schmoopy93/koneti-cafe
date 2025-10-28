@@ -27,13 +27,7 @@ app.set("trust proxy", 1); // 🔥 Neophodno za Render (HTTPS proxy)
 app.use(helmet());
 app.use(compression());
 
-// ✅ Dozvoli samo tvoj frontend domen
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  'https://koneti-cafe-frontend.onrender.com',
-  'https://koneti.netlify.app/'
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 app.use(cors({
   origin: (origin, callback) => {
