@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: "Koneti Café - Dobrodošli",
     template: "%s | Koneti Café",
   },
-  description: "Uživajte u najboljoj kafi i svežim pecivima u prijatnom ambijentu.",
+  description: "Uživajte u najboljoj kafi u prijatnom ambijentu.",
 };
 
 export default function RootLayout({
