@@ -5,9 +5,6 @@ export const metadata = {
   description: "Pregledajte naš meni sa svim dostupnim pićima",
 };
 
-export default async function MenuPage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, { cache: "no-store" });
-  const categories = await res.json();
-
-  return <Menu initialCategories={categories} />;
+export default function MenuPage() {
+  return <Menu />;
 }

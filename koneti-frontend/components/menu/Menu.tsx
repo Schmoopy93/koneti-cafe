@@ -43,10 +43,6 @@ interface Drink {
   category?: Category;
 }
 
-interface MenuProps {
-  initialCategories?: Category[];
-}
-
 const faIconsMap: Record<string, any> = {
   faCoffee,
   faGlassWhiskey,
@@ -65,34 +61,30 @@ const faIconsMap: Record<string, any> = {
   faLemon,
 };
 
-const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
+const Menu: React.FC = () => {
   const { i18n, t } = useTranslation();
 
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    initialCategories[0]?._id || ""
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
   const [drinksLoading, setDrinksLoading] = useState<boolean>(true);
-
   const itemsPerPage = 8;
 
-  // ✅ Detekcija mobilnog uređaja
+  // Set initial mobile state
   useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Fetch kategorija (samo ako nema initialCategories)
+  // Fetch categories
   useEffect(() => {
-    if (initialCategories.length > 0) return;
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${API_URL}/categories`);
@@ -104,30 +96,30 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
       }
     };
     fetchCategories();
-  }, [initialCategories]);
+  }, []);
 
-  // ✅ Fetch pića
+  // Fetch drinks
   useEffect(() => {
     const fetchDrinks = async () => {
       try {
+        await new Promise((resolve) => setTimeout(resolve, 200));
         const res = await fetch(`${API_URL}/drinks`);
         const data: Drink[] = await res.json();
         setDrinks(data);
+        setDrinksLoading(false);
       } catch (err) {
         console.error(err);
-      } finally {
         setDrinksLoading(false);
       }
     };
     fetchDrinks();
   }, []);
 
-  // Reset stranice pri promeni kategorije
+  // Reset page on category change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory]);
 
-  // Filtriranje i sortiranje
   const activeCategory = selectedCategory || categories[0]?._id || "";
   const activeCategoryObj = categories.find((cat) => cat._id === activeCategory);
 
@@ -150,46 +142,31 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
 
   const getCategoryName = (cat?: Category) => {
     if (!cat) return "";
-    return typeof cat.name === "object"
-      ? cat.name[i18n.language] ?? cat.name.en
-      : cat.name;
+    return typeof cat.name === "object" ? cat.name[i18n.language] ?? cat.name.en : cat.name;
   };
 
   return (
     <div className="drink-menu-layout">
-      {/* Sidebar */}
       {!isMobile && (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-logo">
             <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
           </div>
-          <button
-            className="collapse-btn"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            <FontAwesomeIcon
-              icon={collapsed ? faChevronRight : faChevronLeft}
-            />
+          <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+            <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronLeft} />
           </button>
           <div className="sidebar-title">
-            {activeCategoryObj
-              ? getCategoryName(activeCategoryObj)
-              : t("menu.title")}
+            {activeCategoryObj ? getCategoryName(activeCategoryObj) : t("menu.title")}
           </div>
-
           <div className="category-list">
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`category-btn ${
-                  activeCategory === cat._id ? "active" : ""
-                }`}
+                className={`category-btn ${activeCategory === cat._id ? "active" : ""}`}
                 data-tooltip={getCategoryName(cat)}
                 onClick={() => setSelectedCategory(cat._id)}
               >
-                {cat.icon && (
-                  <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />
-                )}
+                {cat.icon && <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />}
                 <span>{getCategoryName(cat)}</span>
               </button>
             ))}
@@ -197,7 +174,6 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
         </aside>
       )}
 
-      {/* Glavni sadržaj */}
       <motion.main
         key={activeCategory + currentPage}
         className="drink-content"
@@ -210,14 +186,10 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`category-btn ${
-                  activeCategory === cat._id ? "active" : ""
-                }`}
+                className={`category-btn ${activeCategory === cat._id ? "active" : ""}`}
                 onClick={() => setSelectedCategory(cat._id)}
               >
-                {cat.icon && (
-                  <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />
-                )}
+                {cat.icon && <FontAwesomeIcon icon={faIconsMap[cat.icon]} className="icon" />}
               </button>
             ))}
           </div>
@@ -225,9 +197,7 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
 
         <h2 className="content-title">
           <span className="highlight">
-            {activeCategoryObj
-              ? getCategoryName(activeCategoryObj)
-              : t("menu.title")}
+            {activeCategoryObj ? getCategoryName(activeCategoryObj) : t("menu.title")}
           </span>
         </h2>
 
@@ -245,48 +215,32 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
         <div className="filter-container">
           <FontAwesomeIcon icon={faSort} className="filter-icon" />
           <label className="filter-label">{t("menu.sortLabel")}</label>
-          <select
-            className="filter-dropdown"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
+          <select className="filter-dropdown" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="name">{t("menu.sortOptions.name")}</option>
             <option value="price-low">{t("menu.sortOptions.priceLow")}</option>
             <option value="price-high">{t("menu.sortOptions.priceHigh")}</option>
           </select>
         </div>
 
-        {/* Pića */}
+
         <div className="drinks-grid">
-          {drinksLoading ? (
-            <div className="loading">{t("menu.loading")}</div>
-          ) : (
-            currentDrinks.map((drink) => (
-              <motion.div
-                key={drink._id}
-                className="drink-card"
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-              >
-                <div className="image-container">
-                  {drink.image && (
-                    <img
-                      src={drink.image}
-                      alt={drink.name}
-                      className="drink-img"
-                    />
-                  )}
-                </div>
-                <div className="card-content">
-                  <h3>{drink.name}</h3>
-                  <div className="price">
-                    {drink.price} {t("menu.currency")}
-                  </div>
-                </div>
-              </motion.div>
-            ))
-          )}
+          {currentDrinks.map((drink) => (
+            <motion.div
+              key={drink._id}
+              className="drink-card"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <div className="image-container">
+                {drink.image && <img src={drink.image} alt={drink.name} className="drink-img" />}
+              </div>
+              <div className="card-content">
+                <h3>{drink.name}</h3>
+                <div className="price">{drink.price} {t("menu.currency")}</div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {categoryDrinks.length > itemsPerPage && (
@@ -294,9 +248,7 @@ const Menu: React.FC<MenuProps> = ({ initialCategories = [] }) => {
             <button onClick={handlePrev} disabled={currentPage === 1}>
               {t("menu.pagination.prev")}
             </button>
-            <span>
-              {currentPage} / {totalPages}
-            </span>
+            <span>{currentPage} / {totalPages}</span>
             <button onClick={handleNext} disabled={currentPage === totalPages}>
               {t("menu.pagination.next")}
             </button>
