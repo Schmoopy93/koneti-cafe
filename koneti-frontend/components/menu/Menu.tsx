@@ -27,8 +27,6 @@ import {
 import { motion } from "framer-motion";
 import "./Menu.scss";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
 interface Category {
   _id: string;
   name: string | Record<string, string>;
@@ -41,6 +39,11 @@ interface Drink {
   price: number;
   image?: string;
   category?: Category;
+}
+
+interface MenuClientProps {
+  initialCategories: Category[];
+  initialDrinks: Drink[];
 }
 
 const faIconsMap: Record<string, any> = {
@@ -61,71 +64,44 @@ const faIconsMap: Record<string, any> = {
   faLemon,
 };
 
-const Menu: React.FC = () => {
+const MenuClient: React.FC<MenuClientProps> = ({
+  initialCategories,
+  initialDrinks,
+}) => {
   const { i18n, t } = useTranslation();
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [categories] = useState<Category[]>(initialCategories);
+  const [drinks] = useState<Drink[]>(initialDrinks);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    initialCategories[0]?._id || ""
+  );
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
-  const [drinksLoading, setDrinksLoading] = useState<boolean>(true);
+
   const itemsPerPage = 8;
 
-  // Set initial mobile state
+  // Responsive check
   useEffect(() => {
-    setIsMobile(window.innerWidth <= 768);
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`${API_URL}/categories`);
-        const data: Category[] = await res.json();
-        setCategories(data);
-        if (data.length > 0) setSelectedCategory(data[0]._id);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  // Fetch drinks
-  useEffect(() => {
-    const fetchDrinks = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        const res = await fetch(`${API_URL}/drinks`);
-        const data: Drink[] = await res.json();
-        setDrinks(data);
-        setDrinksLoading(false);
-      } catch (err) {
-        console.error(err);
-        setDrinksLoading(false);
-      }
-    };
-    fetchDrinks();
-  }, []);
-
-  // Reset page on category change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory]);
-
   const activeCategory = selectedCategory || categories[0]?._id || "";
-  const activeCategoryObj = categories.find(
-    (cat) => cat._id === activeCategory
-  );
+  const activeCategoryObj = categories.find((cat) => cat._id === activeCategory);
 
-  const categoryDrinks = drinks
+  const getCategoryName = (cat?: Category) => {
+    if (!cat || !i18n.isInitialized) return "";
+    return typeof cat.name === "object"
+      ? cat.name[i18n.language] ?? cat.name.en
+      : cat.name;
+  };
+
+  const filteredDrinks = drinks
     .filter((d) => d.category?._id === activeCategory)
     .filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
@@ -135,33 +111,19 @@ const Menu: React.FC = () => {
       return 0;
     });
 
-  const totalPages = Math.ceil(categoryDrinks.length / itemsPerPage) || 1;
+  const totalPages = Math.ceil(filteredDrinks.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentDrinks = categoryDrinks.slice(
+  const currentDrinks = filteredDrinks.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-
-  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
-  const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
-
-  const getCategoryName = (cat?: Category) => {
-    if (!cat || !i18n.isInitialized) return "";
-    return typeof cat.name === "object"
-      ? cat.name[i18n.language] ?? cat.name.en
-      : cat.name;
-  };
 
   return (
     <div className="drink-menu-layout">
       {!isMobile && (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-logo">
-            <img
-              src="/koneti-logo.png"
-              alt="Koneti Logo"
-              className="logo-img"
-            />
+            <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
           </div>
           <button
             className="collapse-btn"
@@ -183,7 +145,6 @@ const Menu: React.FC = () => {
                 className={`category-btn ${
                   activeCategory === cat._id ? "active" : ""
                 }`}
-                data-tooltip={getCategoryName(cat)}
                 onClick={() => setSelectedCategory(cat._id)}
               >
                 {cat.icon && (
@@ -290,15 +251,17 @@ const Menu: React.FC = () => {
           ))}
         </div>
 
-        {categoryDrinks.length > itemsPerPage && (
+        {filteredDrinks.length > itemsPerPage && (
           <div className="pagination-controls">
-            <button onClick={handlePrev} disabled={currentPage === 1}>
+            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}>
               {t("menu.pagination.prev")}
             </button>
             <span>
               {currentPage} / {totalPages}
             </span>
-            <button onClick={handleNext} disabled={currentPage === totalPages}>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+            >
               {t("menu.pagination.next")}
             </button>
           </div>
@@ -308,4 +271,4 @@ const Menu: React.FC = () => {
   );
 };
 
-export default Menu;
+export default MenuClient;
