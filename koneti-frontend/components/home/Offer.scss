@@ -1,0 +1,274 @@
+.offer {
+  background: #fdfaf6;
+  padding: 5rem 2rem;
+  position: relative;
+
+  .offer-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .section-title {
+      font-family: "Playfair Display", "Times New Roman", serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #5a3e36;
+      margin-bottom: 1rem;
+      letter-spacing: 0.3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+
+      .title-icon {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .section-subtitle {
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto,
+        sans-serif;
+      color: #cfa68a;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      position: relative;
+      display: inline-block;
+    }
+    .section-subtitle::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 2px;
+      background: #cfa68a;
+      border-radius: 2px;
+    }
+  }
+
+  .offer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(90, 62, 54, 0.1);
+    transform: translateY(50px) scale(0.9);
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(207, 166, 138, 0.1);
+
+    &:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(90, 62, 54, 0.2);
+
+      .card-image {
+        transform: scale(1.1);
+      }
+
+      .feature-tag {
+        transform: translateY(-2px);
+        background: rgba(207, 166, 138, 0.3);
+      }
+    }
+
+    &.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card-header {
+      position: relative;
+      height: 280px;
+      overflow: hidden;
+
+      .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      &:hover .card-image {
+        transform: scale(1.05);
+      }
+    }
+
+    .card-content {
+      padding: 1.5rem;
+
+      .card-title-section {
+        margin-bottom: 1.5rem;
+
+        h3 {
+          font-family: "Playfair Display", "Times New Roman", serif;
+          font-weight: 700;
+          font-size: 1.6rem;
+          color: #5a3e36;
+          margin-bottom: 0.5rem;
+          line-height: 1.25;
+          letter-spacing: 0.2px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        .subtitle {
+          font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto,
+            sans-serif;
+          color: #cfa68a;
+          font-weight: 700;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+          letter-spacing: 1.6px;
+          position: relative;
+          display: inline-block;
+        }
+
+        .subtitle::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -4px;
+          width: 100%;
+          height: 2px;
+          background: #cfa68a;
+          border-radius: 2px;
+        }
+      }
+
+      .description {
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto,
+          sans-serif;
+        font-size: 1.02rem;
+        color: #4a3529;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        background: rgba(207, 166, 138, 0.08);
+        border: 1px solid rgba(207, 166, 138, 0.25);
+        border-radius: 10px;
+        padding: 0.95rem 1.05rem;
+        letter-spacing: 0.15px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.5rem;
+
+        .feature-tag {
+          background: linear-gradient(
+            180deg,
+            rgba(207, 166, 138, 0.22),
+            rgba(207, 166, 138, 0.12)
+          );
+          color: #5a3e36;
+          padding: 0.55rem 0.95rem;
+          border-radius: 14px;
+          font-size: 0.9rem;
+          font-weight: 800;
+          border: 1px solid rgba(207, 166, 138, 0.55);
+          transition: all 0.25s ease;
+          box-shadow: 0 2px 6px rgba(207, 166, 138, 0.25);
+          letter-spacing: 0.3px;
+          backdrop-filter: saturate(110%);
+
+          &:hover {
+            background: rgba(207, 166, 138, 0.32);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(207, 166, 138, 0.35);
+            border-color: rgba(207, 166, 138, 0.75);
+          }
+        }
+      }
+
+      .btn-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #cfa68a, #d4a574);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(207, 166, 138, 0.3);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(207, 166, 138, 0.4);
+
+          svg {
+            transform: translateX(3px);
+          }
+        }
+
+        svg {
+          transition: transform 0.3s ease;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    padding: 4rem 1.5rem;
+
+    .offer-header .section-title {
+      font-size: 2.2rem;
+    }
+
+    .offer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 3rem 1rem;
+
+    .offer-header {
+      margin-bottom: 2.5rem;
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .service-card {
+      .card-header {
+        height: 220px;
+      }
+
+      .card-content {
+        padding: 1.2rem;
+
+        .card-title-section h3 {
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .service-card .card-content {
+      padding: 1.5rem;
+    }
+  }
+}
