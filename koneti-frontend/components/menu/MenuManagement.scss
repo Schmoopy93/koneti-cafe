@@ -313,6 +313,9 @@
 
   /* ---------- DRINKS SECTION ---------- */
   .drinks-section {
+      opacity: 0;
+      animation: fadeUp 0.7s ease-out forwards;
+      animation-delay: 0.1s;
     h3 {
       display: flex;
       align-items: center;
@@ -356,6 +359,7 @@
           opacity: 0;
           transition: opacity 0.3s ease;
           z-index: 1;
+          pointer-events: none;
         }
 
         &:hover {
@@ -747,5 +751,18 @@
         max-width: 250px;
       }
     }
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }

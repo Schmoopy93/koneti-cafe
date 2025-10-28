@@ -106,7 +106,9 @@ const AdminPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [showModal, setShowModal] = useState<ModalType>(null);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [calendarView, setCalendarView] = useState<View>("month");
   const [calendarDate, setCalendarDate] = useState<Date>(new Date());
   const [stats, setStats] = useState<Stats>({
@@ -134,9 +136,9 @@ const AdminPage: React.FC = () => {
   const fetchData = async (): Promise<void> => {
     try {
       const [reservationsRes, drinksRes, categoriesRes] = await Promise.all([
-        fetch(`${API_URL}/reservations`, { credentials: 'include' }),
-        fetch(`${API_URL}/drinks`, { credentials: 'include' }),
-        fetch(`${API_URL}/categories`, { credentials: 'include' }),
+        fetch(`${API_URL}/reservations`, { credentials: "include" }),
+        fetch(`${API_URL}/drinks`, { credentials: "include" }),
+        fetch(`${API_URL}/categories`, { credentials: "include" }),
       ]);
 
       if (!reservationsRes.ok || !drinksRes.ok || !categoriesRes.ok) {
@@ -150,12 +152,12 @@ const AdminPage: React.FC = () => {
       const formattedEvents: CalendarEvent[] = reservations.map((e) => {
         const datePart = new Date(e.date);
         const startDate = new Date(datePart);
-        
+
         if (e.time) {
           const [hours, minutes] = e.time.split(":");
           startDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
         }
-        
+
         return {
           ...e,
           title: `${e.name} (${
@@ -171,9 +173,13 @@ const AdminPage: React.FC = () => {
       });
 
       // Status counters
-      const pendingCount = reservations.filter((r) => r.status === "pending").length;
-      const approvedCount = reservations.filter((r) => r.status === "approved").length;
-      
+      const pendingCount = reservations.filter(
+        (r) => r.status === "pending"
+      ).length;
+      const approvedCount = reservations.filter(
+        (r) => r.status === "approved"
+      ).length;
+
       setStatusCounters({ pending: pendingCount, approved: approvedCount });
       setEvents(formattedEvents);
       setDrinks(drinksData);
@@ -222,7 +228,7 @@ const AdminPage: React.FC = () => {
       const response = await fetch(`${API_URL}/reservations/${reservationId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ status: action }),
       });
 
@@ -241,7 +247,9 @@ const AdminPage: React.FC = () => {
     return "#5a3e36"; // default pending
   };
 
-  const getStatusBadgeColor = (status: string): { bg: string; text: string } => {
+  const getStatusBadgeColor = (
+    status: string
+  ): { bg: string; text: string } => {
     if (status === "approved") return { bg: "#c3f7c7", text: "#155724" };
     if (status === "rejected") return { bg: "#f8d7da", text: "#721c24" };
     return { bg: "#f3e5ab", text: "#5a3e36" };
@@ -259,29 +267,9 @@ const AdminPage: React.FC = () => {
     return event.title;
   };
 
-  if (!mounted) {
-    return (
-      <div className="admin-dashboard">
-        <div className="admin-loading">
-          <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-bounce" />
-        </div>
-      </div>
-    );
-  }
-
-  
-return (
-  <div className="admin-dashboard">
-    <main className="admin-main">
-      {loading ? (
-        <div className="admin-loading">
-          <img
-            src="/koneti-logo.png"
-            alt="Koneti Logo"
-            className="logo-bounce"
-          />
-        </div>
-      ) : (
+  return (
+    <div className="admin-dashboard">
+      <main className="admin-main">
         <motion.div
           className="dashboard-content"
           initial="hidden"
@@ -290,7 +278,11 @@ return (
         >
           {/* Stats grid */}
           <motion.div className="stats-grid" variants={containerVariants}>
-            <motion.div className="stat-card" variants={cardVariants} whileHover="hover">
+            <motion.div
+              className="stat-card"
+              variants={cardVariants}
+              whileHover="hover"
+            >
               <div className="stat-icon">
                 <FontAwesomeIcon icon={faGlassMartiniAlt} />
               </div>
@@ -300,7 +292,11 @@ return (
               </div>
             </motion.div>
 
-            <motion.div className="stat-card" variants={cardVariants} whileHover="hover">
+            <motion.div
+              className="stat-card"
+              variants={cardVariants}
+              whileHover="hover"
+            >
               <div className="stat-icon">
                 <FontAwesomeIcon icon={faList} />
               </div>
@@ -310,7 +306,11 @@ return (
               </div>
             </motion.div>
 
-            <motion.div className="stat-card" variants={cardVariants} whileHover="hover">
+            <motion.div
+              className="stat-card"
+              variants={cardVariants}
+              whileHover="hover"
+            >
               <div className="stat-icon">
                 <FontAwesomeIcon icon={faCalendarAlt} />
               </div>
@@ -355,219 +355,228 @@ return (
               <h3>{t("adminPage.actions.logout")}</h3>
               <p>{t("adminPage.actions.logoutDesc")}</p>
             </motion.div>
+            <motion.div
+              className="action-card"
+              onClick={() => router.push("/statistics")}
+              variants={cardVariants}
+              whileHover="hover"
+            >
+              <FontAwesomeIcon icon={faChartLine} />
+              <h3>{t("adminPage.actions.statistics")}</h3>
+              <p>{t("adminPage.actions.statisticsDesc")}</p>
+            </motion.div>
           </motion.div>
         </motion.div>
-      )}
-    </main>
+      </main>
 
-    {/* Calendar Modal */}
-    {showModal === "calendar" && (
-      <div
-        className="modal-overlay blur-backdrop"
-        onClick={() => setShowModal(null)}
-      >
+      {/* Calendar Modal */}
+      {showModal === "calendar" && (
         <div
-          className="modal-content fullscreen-modal"
-          onClick={(e) => e.stopPropagation()}
+          className="modal-overlay blur-backdrop"
+          onClick={() => setShowModal(null)}
         >
-          <div className="modal-header">
-            <h3>{t("adminPage.calendar.title")}</h3>
-            <button onClick={() => setShowModal(null)}>×</button>
-          </div>
-          <div className="modal-body">
-            <div className="calendar-wrapper">
-              <div style={{ marginBottom: "1rem", color: "#666" }}>
-                {t("adminPage.calendar.totalEvents")} {events.length}
-              </div>
-              <div style={{ height: "600px" }}>
-                <Calendar
-                  localizer={localizer}
-                  events={events}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onSelectEvent={(event) => setSelectedEvent(event)}
-                  views={["month", "week", "day", "agenda"]}
-                  view={calendarView}
-                  onView={(view) => setCalendarView(view)}
-                  date={calendarDate}
-                  onNavigate={(date) => setCalendarDate(date)}
-                  eventPropGetter={(event) => {
-                    const bgColor = getEventBackgroundColor(event.status);
+          <div
+            className="modal-content fullscreen-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h3>{t("adminPage.calendar.title")}</h3>
+              <button onClick={() => setShowModal(null)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="calendar-wrapper">
+                <div style={{ marginBottom: "1rem", color: "#666" }}>
+                  {t("adminPage.calendar.totalEvents")} {events.length}
+                </div>
+                <div style={{ height: "600px" }}>
+                  <Calendar
+                    localizer={localizer}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    onSelectEvent={(event) => setSelectedEvent(event)}
+                    views={["month", "week", "day", "agenda"]}
+                    view={calendarView}
+                    onView={(view) => setCalendarView(view)}
+                    date={calendarDate}
+                    onNavigate={(date) => setCalendarDate(date)}
+                    eventPropGetter={(event) => {
+                      const bgColor = getEventBackgroundColor(event.status);
 
-                    return {
-                      style: {
-                        backgroundColor: bgColor,
-                        color: "white",
-                        borderRadius: "4px",
-                        border: "none",
-                        padding: "2px 5px",
-                        fontSize: "0.85rem",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      },
-                    };
-                  }}
-                  components={{
-                    event: ({ event }: { event: CalendarEvent }) => {
-                      const displayTitle = formatEventTitle(event);
-                      const statusColors = getStatusBadgeColor(event.status);
+                      return {
+                        style: {
+                          backgroundColor: bgColor,
+                          color: "white",
+                          borderRadius: "4px",
+                          border: "none",
+                          padding: "2px 5px",
+                          fontSize: "0.85rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        },
+                      };
+                    }}
+                    components={{
+                      event: ({ event }: { event: CalendarEvent }) => {
+                        const displayTitle = formatEventTitle(event);
+                        const statusColors = getStatusBadgeColor(event.status);
 
-                      return (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <span>{displayTitle}</span>
-                          <span
+                        return (
+                          <div
                             style={{
-                              marginLeft: "6px",
-                              padding: "2px 6px",
-                              borderRadius: "12px",
-                              fontSize: "0.7rem",
-                              backgroundColor: statusColors.bg,
-                              color: statusColors.text,
-                              fontWeight: "600",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
                             }}
                           >
-                            {event.status === "approved"
-                              ? t("adminPage.status.approved")
-                              : event.status === "rejected"
-                              ? t("adminPage.status.rejected")
-                              : t("adminPage.status.pending")}
-                          </span>
-                        </div>
-                      );
-                    },
-                  }}
-                />
+                            <span>{displayTitle}</span>
+                            <span
+                              style={{
+                                marginLeft: "6px",
+                                padding: "2px 6px",
+                                borderRadius: "12px",
+                                fontSize: "0.7rem",
+                                backgroundColor: statusColors.bg,
+                                color: statusColors.text,
+                                fontWeight: "600",
+                              }}
+                            >
+                              {event.status === "approved"
+                                ? t("adminPage.status.approved")
+                                : event.status === "rejected"
+                                ? t("adminPage.status.rejected")
+                                : t("adminPage.status.pending")}
+                            </span>
+                          </div>
+                        );
+                      },
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* Event Details Panel */}
-    {selectedEvent && (
-      <div
-        className="modal-overlay blur-backdrop"
-        onClick={() => setSelectedEvent(null)}
-      >
+      {/* Event Details Panel */}
+      {selectedEvent && (
         <div
-          className={`event-details-panel ${
-            selectedEvent.type === "koneti"
-              ? `${selectedEvent.subType || "basic"}-package`
-              : ""
-          }`}
-          onClick={(e) => e.stopPropagation()}
+          className="modal-overlay blur-backdrop"
+          onClick={() => setSelectedEvent(null)}
         >
-          <div className="event-header">
-            <FontAwesomeIcon
-              icon={
-                selectedEvent.type === "biznis" ? faBriefcase : faGlassCheers
-              }
-              className="event-icon"
-            />
-            <h4>{selectedEvent.name}</h4>
-            <button
-              className="close-event"
-              onClick={() => setSelectedEvent(null)}
-            >
-              ×
-            </button>
-          </div>
-          <div className="event-body">
-            <div className="event-info">
-              <p className={`event-status ${selectedEvent.status}`}>
-                <strong>{t("adminPage.event.status")}</strong>{" "}
-                {selectedEvent.status === "pending"
-                  ? t("adminPage.status.pending")
-                  : selectedEvent.status === "approved"
-                  ? t("adminPage.status.approved")
-                  : selectedEvent.status === "rejected"
-                  ? t("adminPage.status.rejected")
-                  : selectedEvent.status}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.type")}</strong>{" "}
-                {selectedEvent.type === "biznis"
-                  ? t("adminPage.event.businessMeeting")
-                  : selectedEvent.type === "koneti"
-                  ? `${t("adminPage.event.konetiExperience")} - ${
-                      selectedEvent.subType
-                        ? selectedEvent.subType.charAt(0).toUpperCase() +
-                          selectedEvent.subType.slice(1)
-                        : "Basic"
-                    }`
-                  : selectedEvent.type}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.email")}</strong>{" "}
-                {selectedEvent.email}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.phone")}</strong>{" "}
-                {selectedEvent.phone}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.date")}</strong>{" "}
-                {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.time")}</strong>{" "}
-                {selectedEvent.time}
-              </p>
-              <p>
-                <strong>{t("adminPage.event.guests")}</strong>{" "}
-                {selectedEvent.guests}
-              </p>
-              {selectedEvent.selectedMenu && (
-                <p>
-                  <strong>{t("adminPage.event.menu")}:</strong>{" "}
-                  {selectedEvent.selectedMenu}
-                </p>
-              )}
-              {selectedEvent.message && (
-                <p>
-                  <strong>{t("adminPage.event.message")}</strong>{" "}
-                  {selectedEvent.message}
-                </p>
-              )}
+          <div
+            className={`event-details-panel ${
+              selectedEvent.type === "koneti"
+                ? `${selectedEvent.subType || "basic"}-package`
+                : ""
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="event-header">
+              <FontAwesomeIcon
+                icon={
+                  selectedEvent.type === "biznis" ? faBriefcase : faGlassCheers
+                }
+                className="event-icon"
+              />
+              <h4>{selectedEvent.name}</h4>
+              <button
+                className="close-event"
+                onClick={() => setSelectedEvent(null)}
+              >
+                ×
+              </button>
             </div>
-            <div className="event-actions">
-              {selectedEvent.status === "pending" && (
-                <>
-                  <button
-                    className="btn-approve"
-                    onClick={() =>
-                      handleReservationAction(selectedEvent._id, "approved")
-                    }
-                  >
-                    <FontAwesomeIcon icon={faCheck} />{" "}
-                    {t("adminPage.event.confirm")}
-                  </button>
-                  <button
-                    className="btn-reject"
-                    onClick={() =>
-                      handleReservationAction(selectedEvent._id, "rejected")
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTimes} />{" "}
-                    {t("adminPage.event.reject")}
-                  </button>
-                </>
-              )}
+            <div className="event-body">
+              <div className="event-info">
+                <p className={`event-status ${selectedEvent.status}`}>
+                  <strong>{t("adminPage.event.status")}</strong>{" "}
+                  {selectedEvent.status === "pending"
+                    ? t("adminPage.status.pending")
+                    : selectedEvent.status === "approved"
+                    ? t("adminPage.status.approved")
+                    : selectedEvent.status === "rejected"
+                    ? t("adminPage.status.rejected")
+                    : selectedEvent.status}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.type")}</strong>{" "}
+                  {selectedEvent.type === "biznis"
+                    ? t("adminPage.event.businessMeeting")
+                    : selectedEvent.type === "koneti"
+                    ? `${t("adminPage.event.konetiExperience")} - ${
+                        selectedEvent.subType
+                          ? selectedEvent.subType.charAt(0).toUpperCase() +
+                            selectedEvent.subType.slice(1)
+                          : "Basic"
+                      }`
+                    : selectedEvent.type}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.email")}</strong>{" "}
+                  {selectedEvent.email}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.phone")}</strong>{" "}
+                  {selectedEvent.phone}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.date")}</strong>{" "}
+                  {new Date(selectedEvent.date).toLocaleDateString("sr-RS")}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.time")}</strong>{" "}
+                  {selectedEvent.time}
+                </p>
+                <p>
+                  <strong>{t("adminPage.event.guests")}</strong>{" "}
+                  {selectedEvent.guests}
+                </p>
+                {selectedEvent.selectedMenu && (
+                  <p>
+                    <strong>{t("adminPage.event.menu")}:</strong>{" "}
+                    {selectedEvent.selectedMenu}
+                  </p>
+                )}
+                {selectedEvent.message && (
+                  <p>
+                    <strong>{t("adminPage.event.message")}</strong>{" "}
+                    {selectedEvent.message}
+                  </p>
+                )}
+              </div>
+              <div className="event-actions">
+                {selectedEvent.status === "pending" && (
+                  <>
+                    <button
+                      className="btn-approve"
+                      onClick={() =>
+                        handleReservationAction(selectedEvent._id, "approved")
+                      }
+                    >
+                      <FontAwesomeIcon icon={faCheck} />{" "}
+                      {t("adminPage.event.confirm")}
+                    </button>
+                    <button
+                      className="btn-reject"
+                      onClick={() =>
+                        handleReservationAction(selectedEvent._id, "rejected")
+                      }
+                    >
+                      <FontAwesomeIcon icon={faTimes} />{" "}
+                      {t("adminPage.event.reject")}
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
 };
 
 export default AdminPage;
