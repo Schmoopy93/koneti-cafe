@@ -314,7 +314,9 @@
       "calendar": "Calendar",
       "calendarDesc": "View reservations",
       "logout": "Log out",
-      "logoutDesc": "Exit admin panel"
+      "logoutDesc": "Exit admin panel",
+      "statistics": "Reservation statistics",
+      "statisticsDesc": "View reservation statistics"
     },
     "calendar": {
       "title": "Reservation Calendar",
@@ -344,5 +346,18 @@
   "cookieConsent": {
     "message": "This website uses cookies to provide you with the best experience. By continuing to use the site, you agree to the use of cookies.",
     "accept": "Accept"
+  },
+   "eventStats": {
+    "title": "📊 Reservation Statistics",
+    "monthlyTitle": "Reservations per Month",
+    "statusTitle": "Reservation Status",
+    "loading": "⏳ Loading statistics...",
+    "fetchError": "Error loading data.",
+    "statuses": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
   }
 }

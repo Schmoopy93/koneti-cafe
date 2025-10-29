@@ -322,6 +322,7 @@ const AdminPage: React.FC = () => {
           </motion.div>
 
           {/* Action cards */}
+          {/* Action cards (prvi red) */}
           <motion.div className="action-cards" variants={containerVariants}>
             <motion.div
               className="action-card"
@@ -355,8 +356,17 @@ const AdminPage: React.FC = () => {
               <h3>{t("adminPage.actions.logout")}</h3>
               <p>{t("adminPage.actions.logoutDesc")}</p>
             </motion.div>
+          </motion.div>
+
+          {/* Novi red — Statistics kartica */}
+          <motion.div
+            className="action-cards stats-row"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             <motion.div
-              className="action-card"
+              className="action-card stats-card"
               onClick={() => router.push("/statistics")}
               variants={cardVariants}
               whileHover="hover"

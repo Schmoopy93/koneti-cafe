@@ -3,42 +3,44 @@
 import React, { useState, useEffect } from "react";
 import MenuManagement from "@/components/menu/MenuManagement";
 import AddCategory from "@/components/forms/AddCategory";
-import Modal from "../ui/Modal";
 import AddDrink from "@/components/forms/AddDrink";
+import Modal from "../ui/Modal";
+import { Drink } from "@/app/types/drink";
+import { Category } from "@/app/types/category";
+
+interface MenuManagementPageProps {
+  drinks: Drink[];
+  categories: Category[];
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-import { Drink } from "../../app/types/drink";
-import { Category } from "../../app/types/category";
-
-export default function MenuManagementPage() {
-  const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const MenuManagementPage: React.FC<MenuManagementPageProps> = ({
+  drinks: initialDrinks,
+  categories: initialCategories,
+}) => {
+  const [drinks, setDrinks] = useState<Drink[]>(initialDrinks);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [isLoading, setIsLoading] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddDrink, setShowAddDrink] = useState(false);
   const [editingDrink, setEditingDrink] = useState<Drink | null>(null);
 
-  // Fetch categories
+  // 🔹 Fetch funkcije
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${API_URL}/categories`, {
-        credentials: "include",
-      });
-      const data: Category[] = await res.json();
-      setCategories(data);
+      const res = await fetch(`${API_URL}/categories`, { credentials: "include" });
+      if (res.ok) setCategories(await res.json());
     } catch (err) {
       console.error("Error fetching categories:", err);
     }
   };
 
-  // Fetch drinks
   const fetchDrinks = async () => {
     try {
       setIsLoading(true);
       const res = await fetch(`${API_URL}/drinks`, { credentials: "include" });
-      const data: Drink[] = await res.json();
-      setDrinks(data);
+      if (res.ok) setDrinks(await res.json());
     } catch (err) {
       console.error("Error fetching drinks:", err);
     } finally {
@@ -46,24 +48,14 @@ export default function MenuManagementPage() {
     }
   };
 
-  useEffect(() => {
-    fetchCategories();
-    fetchDrinks();
-  }, []);
-
-  // 🔹 Event handlers
-  const handleAddDrink = () => {
-    setShowAddDrink(true);
-  };
+  // 🔹 Handleri
+  const handleAddDrink = () => setShowAddDrink(true);
+  const handleAddCategory = () => setShowAddCategory(true);
 
   const handleDrinkAdded = async () => {
     await fetchDrinks();
     setShowAddDrink(false);
     setEditingDrink(null);
-  };
-
-  const handleAddCategory = () => {
-    setShowAddCategory(true);
   };
 
   const handleCategoryAdded = async () => {
@@ -102,19 +94,17 @@ export default function MenuManagementPage() {
         isLoading={isLoading}
       />
 
+      {/* ✅ Modal za kategorije */}
       <Modal
         show={showAddCategory}
         onClose={() => setShowAddCategory(false)}
         title="Dodaj novu kategoriju"
         emoji="🍸"
       >
-        <AddCategory
-          onClose={() => setShowAddCategory(false)}
-          onSuccess={handleCategoryAdded}
-        />
+        <AddCategory onClose={() => setShowAddCategory(false)} onSuccess={handleCategoryAdded} />
       </Modal>
 
-      {/* ✅ MODAL ZA DODAVANJE PIĆA */}
+      {/* ✅ Modal za pića */}
       <Modal
         show={showAddDrink}
         onClose={() => {
@@ -135,4 +125,6 @@ export default function MenuManagementPage() {
       </Modal>
     </div>
   );
-}
+};
+
+export default MenuManagementPage;

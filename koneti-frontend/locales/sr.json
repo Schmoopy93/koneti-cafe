@@ -14,8 +14,8 @@
       "packageLabel": "Izaberite paket:",
       "tooltip": "Pogledajte naše ponude i rezervišite svoje mesto još danas!",
       "types": {
-        "business": "Poslovni sastanci / prezentacije",
-        "experience": "Koneti Iskustvo"
+        "business": "Poslovni sastanci/ prezentacije",
+        "experience": "Proslave"
       },
       "packages": {
         "basic": "Basic",
@@ -309,7 +309,10 @@
       "calendar": "Kalendar",
       "calendarDesc": "Pregled rezervacija",
       "logout": "Odjavi se",
-      "logoutDesc": "Izađi iz admin panela"
+      "logoutDesc": "Izađi iz admin panela",
+      "statistics": "Statistika rezervacija",
+      "statisticsDesc": "Prikazivanje statistike rezervacija"
+      
     },
     "calendar": {
       "title": "Kalendar rezervacija",
@@ -340,5 +343,18 @@
   "cookieConsent": {
     "message": "Ovaj sajt koristi kolačiće (cookies) da bi vam pružio najbolje iskustvo. Nastavkom korišćenja sajta pristajete na upotrebu kolačića.",
     "accept": "Prihvatam"
+  },
+  "eventStats": {
+    "title": "📊 Statistika rezervacija",
+    "monthlyTitle": "Broj rezervacija po mesecu",
+    "statusTitle": "Status rezervacija",
+    "loading": "⏳ Učitavanje statistike...",
+    "fetchError": "Greška pri učitavanju podataka.",
+    "statuses": {
+      "approved": "Odobreno",
+      "pending": "Na čekanju",
+      "rejected": "Odbijeno",
+      "cancelled": "Otkazano"
+    }
   }
 }
