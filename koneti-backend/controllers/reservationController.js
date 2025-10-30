@@ -13,6 +13,23 @@ import {
  */
 export const createReservation = async (req, res) => {
   try {
+    const { type, subType } = req.body;
+    
+    // Validate subType based on type
+    if (type === 'biznis' && !['basic', 'vip'].includes(subType)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Biznis događaji mogu biti samo basic ili vip'
+      });
+    }
+    
+    if (type === 'koneti' && !['basic', 'premium', 'vip'].includes(subType)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Koneti događaji mogu biti basic, premium ili vip'
+      });
+    }
+
     const newReservation = new Reservation({
       ...req.body,
       status: "pending",

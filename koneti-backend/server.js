@@ -7,10 +7,14 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
-import { errorHandler, notFound } from "./middleware/simpleErrorHandler.js";
+import { errorHandler, notFound } from "./middleware/secureErrorHandler.js";
+import { securityHeaders } from "./middleware/securityHeaders.js";
+import { sanitizeInput } from "./middleware/sanitization.js";
+import { generalLimiter } from "./middleware/security.js";
 import { logger } from "./utils/logger.js";
 
 import reservationRoutes from "./routes/reservationRoutes.js";
+import reservationTypesRoutes from "./routes/reservationTypesRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import categoriesRoutes from "./routes/categoryRoutes.js";
 import drinkRoutes from "./routes/drinkRoutes.js";
@@ -22,10 +26,21 @@ const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-// === Middleware ===
-app.set("trust proxy", 1); // 🔥 Neophodno za Render (HTTPS proxy)
-app.use(helmet());
+// === Security Middleware ===
+app.set("trust proxy", 1);
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+}));
+app.use(securityHeaders);
 app.use(compression());
+app.use(generalLimiter);
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
@@ -41,14 +56,13 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+app.use(sanitizeInput);
 
-// === Request logging ===
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url} - ${req.ip}`);
-  next();
-});
+// === Security logging ===
+import { securityLogger } from "./middleware/securityLogger.js";
+app.use(securityLogger);
 
 // === Static ===
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -56,6 +70,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // === Routes ===
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/reservation-types", reservationTypesRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/drinks", drinkRoutes);
