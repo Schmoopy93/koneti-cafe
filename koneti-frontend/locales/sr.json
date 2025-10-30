@@ -8,7 +8,8 @@
   },
   "home": {
     "reservation": {
-      "title": "Rezervišite Vaše <span class=\"highlight\">Koneti Iskustvo</span>",
+      "title1": "Rezervišite Vaše",
+      "title2": "Koneti Iskustvo",
       "intro": "Dobrodošli u Koneti - ekskluzivno mesto u srcu Novog Sada! Izaberite tip rezervacije koji najbolje odgovara vašim potrebama:",
       "typeLabel": "Tip rezervacije:",
       "packageLabel": "Izaberite paket:",

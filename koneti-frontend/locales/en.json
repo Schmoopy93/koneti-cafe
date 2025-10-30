@@ -8,7 +8,8 @@
   },
   "home": {
     "reservation": {
-      "title": "Book Your <span class=\"highlight\">Koneti Experience</span>",
+      "title1": "Book Your",
+      "title2": "Koneti Experience",
       "intro": "Welcome to Koneti - an exclusive place in the heart of Novi Sad! Choose the reservation type that best suits your needs:",
       "typeLabel": "Reservation type:",
       "packageLabel": "Choose package:",
@@ -347,7 +348,7 @@
     "message": "This website uses cookies to provide you with the best experience. By continuing to use the site, you agree to the use of cookies.",
     "accept": "Accept"
   },
-   "eventStats": {
+  "eventStats": {
     "title": "📊 Reservation Statistics",
     "monthlyTitle": "Reservations per Month",
     "statusTitle": "Reservation Status",

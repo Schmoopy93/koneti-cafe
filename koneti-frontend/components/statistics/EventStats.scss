@@ -1,306 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
-
 .event-stats {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-
   h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: "Playfair Display", serif;
     font-size: 2rem;
     font-weight: 700;
     color: #5a3e36;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     text-align: center;
+    position: relative;
+    padding-bottom: 0.75rem;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #cfa68a, transparent);
+      border-radius: 2px;
+    }
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
+  h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4e372b;
+    margin-bottom: 0.85rem;
+    text-align: center;
+    letter-spacing: 0.3px;
+    position: relative;
+    padding-bottom: 0.35rem;
+    transition: color 0.3s ease;
 
-  .stat-card {
-    background: #fff;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 55px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #b88a64, transparent);
+      border-radius: 2px;
+    }
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+      color: #7b5944;
     }
+  }
 
-    h3 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #5a3e36;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    &.wide {
-      grid-column: 1 / -1;
-    }
-
-    &.status-chart {
-      grid-column: 1 / -1;
+  @media (max-width: 768px) {
+    .status-chart {
+      min-height: 300px !important;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-    }
-  }
-
-  /* Recharts customization */
-  .recharts-wrapper {
-    margin: 0 auto;
-  }
-
-  .recharts-surface {
-    overflow: visible;
-  }
-
-  .recharts-cartesian-axis-tick {
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.875rem;
-    fill: #666;
-  }
-
-  .recharts-tooltip-wrapper {
-    outline: none;
-  }
-
-  .recharts-default-tooltip {
-    background-color: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid #cfa68a !important;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-    .recharts-tooltip-label {
-      color: #5a3e36;
-      font-weight: 600;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .recharts-tooltip-item {
-      color: #555;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.875rem;
-    }
-  }
-
-  .recharts-legend-wrapper {
-    padding-top: 1rem;
-
-    .recharts-legend {
-      display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .recharts-legend-item {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.875rem;
-      color: #555;
-    }
-  }
-
-  .recharts-pie-sector {
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-      filter: brightness(1.1);
-    }
-  }
-
-  .recharts-pie-label-text {
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    fill: #5a3e36;
-  }
-
-  .recharts-bar {
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-}
-
-/* Loading state */
-.event-stats p {
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  color: #666;
-  padding: 2rem;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.event-stats {
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .event-stats {
-    padding: 1.5rem;
-
-    h2 {
-      font-size: 1.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stats-grid {
-      gap: 1.5rem;
-    }
-
-    .stat-card {
-      padding: 1.25rem;
 
       h3 {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-      }
-
-      &.status-chart {
-        grid-column: 1 / -1;
-      }
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .event-stats {
-    padding: 1rem;
-
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .stats-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-
-    .stat-card {
-      padding: 1rem;
-      border-radius: 0.75rem;
-
-      h3 {
-        font-size: 1rem;
+        font-size: 1.25rem;
         margin-bottom: 0.75rem;
       }
 
-      &.wide {
-        grid-column: 1;
+      .recharts-pie-label-text {
+        font-size: 0.7rem !important;
       }
 
-      &.status-chart {
-        grid-column: 1;
-      }
-    }
+      .recharts-legend-wrapper {
+        padding-top: 0.5rem;
 
-    .recharts-wrapper {
-      width: 100%;
-      height: auto;
-    }
+        .recharts-legend {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.6rem;
+        }
 
-    .recharts-cartesian-axis-tick {
-      font-size: 0.75rem;
-    }
-
-    .recharts-pie-label-text {
-      font-size: 0.65rem;
-    }
-
-    .recharts-legend-wrapper {
-      padding-top: 0.75rem;
-
-      .recharts-legend {
-        gap: 1rem;
-      }
-
-      .recharts-legend-item {
-        font-size: 0.75rem;
+        .recharts-legend-item {
+          font-size: 0.8rem;
+        }
       }
     }
   }
-}
 
-@media (max-width: 480px) {
-  .event-stats {
-    padding: 0.75rem;
-
-    h2 {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    .stats-grid {
-      gap: 1rem;
-    }
-
-    .stat-card {
-      padding: 0.75rem;
-      border-radius: 0.5rem;
+  @media (max-width: 480px) {
+    .status-chart {
+      min-height: 260px !important;
+      padding: 0 0.5rem;
 
       h3 {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
       }
 
-      &.wide {
-        grid-column: 1;
-      }
-
-      &.status-chart {
-        grid-column: 1;
-      }
-    }
-
-    .recharts-cartesian-axis-tick {
-      font-size: 0.65rem;
-    }
-
-    .recharts-pie-label-text {
-      font-size: 0.55rem;
-    }
-
-    .recharts-legend-wrapper {
-      padding-top: 0.5rem;
-
-      .recharts-legend {
-        gap: 0.75rem;
+      .recharts-pie-label-text {
+        display: none !important; // skriva tekst koji ide iza pite
       }
 
       .recharts-legend-item {
-        font-size: 0.65rem;
-      }
-    }
-
-    .recharts-tooltip-wrapper {
-      .recharts-default-tooltip {
         font-size: 0.75rem;
       }
     }

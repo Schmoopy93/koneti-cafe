@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, FormEvent, MouseEvent } from "react";
+import { useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,15 +9,13 @@ import {
   faLaptop,
   faChampagneGlasses,
   faMedal,
-  faCrown,
   faStar,
+  faCrown,
 } from "@fortawesome/free-solid-svg-icons";
 import "./ReservationForm.scss";
-
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
-// ✅ Tipovi podataka
 interface FormData {
   type: string;
   subType: string;
@@ -43,7 +41,6 @@ type ShakeFields = Partial<
   Record<keyof FormData | "type" | "subType", boolean>
 >;
 
-// ✅ API URL iz .env fajla
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ReservationForm() {
@@ -67,6 +64,59 @@ export default function ReservationForm() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupData, setPopupData] = useState<PopupData>({});
   const [shakeFields, setShakeFields] = useState<ShakeFields>({});
+
+  const types = [
+    {
+      id: "biznis",
+      label: t("home.reservation.types.business"),
+      icon: faLaptop,
+    },
+    {
+      id: "koneti",
+      label: t("home.reservation.types.experience"),
+      icon: faChampagneGlasses,
+    },
+  ];
+
+  const subCategories: Record<
+    string,
+    { id: string; label: string; icon: any; colorClass: string }[]
+  > = {
+    biznis: [
+      {
+        id: "basic",
+        label: t("home.reservation.packages.basic"),
+        icon: faMedal,
+        colorClass: "silver",
+      },
+      {
+        id: "premium",
+        label: t("home.reservation.packages.premium"),
+        icon: faStar,
+        colorClass: "gold",
+      },
+    ],
+    koneti: [
+      {
+        id: "basic",
+        label: t("home.reservation.packages.basic"),
+        icon: faMedal,
+        colorClass: "silver",
+      },
+      {
+        id: "premium",
+        label: t("home.reservation.packages.premium"),
+        icon: faStar,
+        colorClass: "gold",
+      },
+      {
+        id: "vip",
+        label: t("home.reservation.packages.vip"),
+        icon: faCrown,
+        colorClass: "vip",
+      },
+    ],
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -100,33 +150,16 @@ export default function ReservationForm() {
     });
     setFormErrors({});
     setShowEventForm(false);
-
-    if (type === "biznis") {
-      setTimeout(() => {
-        const el = document.querySelector(".form-section");
-        el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 100);
-    }
   };
 
   const handleSubTypeSelect = (subType: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      subType,
-      name: "",
-      email: "",
-      phone: "",
-      date: "",
-      time: "",
-      guests: 1,
-      message: "",
-    }));
+    setFormData((prev) => ({ ...prev, subType }));
     setFormErrors({});
     setShowEventForm(true);
-
     setTimeout(() => {
-      const el = document.querySelector(".event-form");
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document
+        .querySelector(".event-form")
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
   };
 
@@ -139,7 +172,6 @@ export default function ReservationForm() {
       premium: "premium",
       vip: "vip",
     };
-
     const key = typeToKey[type] || type;
     const data: PopupData = {
       title: t(`home.reservation.popups.${key}.title`),
@@ -150,71 +182,43 @@ export default function ReservationForm() {
       price: t(`home.reservation.popups.${key}.price`),
       extraInfo: t(`home.reservation.popups.${key}.extraInfo`),
     };
-
     setPopupData(data);
     setShowPopup(true);
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const closePopup = () => setShowPopup(false);
 
   const validateForm = (): FormErrors => {
     const errors: FormErrors = {};
-    const today = new Date();
-    const selectedDate = new Date(formData.date);
-    const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
-
     if (!formData.type) errors.type = t("home.reservation.errors.type");
-    if (formData.type === "koneti" && !formData.subType)
+    if (!formData.subType)
       errors.subType = t("home.reservation.errors.subType");
     if (!formData.name) errors.name = t("home.reservation.errors.name");
-
-    if (!formData.email) {
-      errors.email = t("home.reservation.errors.email");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = t("home.reservation.errors.emailInvalid");
-    }
-
+    if (!formData.email) errors.email = t("home.reservation.errors.email");
     if (!formData.phone) errors.phone = t("home.reservation.errors.phone");
-
-    if (!formData.date) {
-      errors.date = t("home.reservation.errors.date");
-    } else if (selectedDate < new Date(today.setHours(0, 0, 0, 0))) {
-      errors.date = t("home.reservation.errors.datePast");
-    }
-
-    if (!formData.time) {
-      errors.time = t("home.reservation.errors.time");
-    } else if (formData.date && selectedDateTime < new Date()) {
-      errors.time = t("home.reservation.errors.timePast");
-    }
-
+    if (!formData.date) errors.date = t("home.reservation.errors.date");
+    if (!formData.time) errors.time = t("home.reservation.errors.time");
     if (!formData.guests || formData.guests < 1)
       errors.guests = t("home.reservation.errors.guests");
-
     return errors;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const errors = validateForm();
-
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length) {
       setFormErrors(errors);
       triggerShake(Object.keys(errors));
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/reservations`, {
+      const res = await fetch(`${API_URL}/reservations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      if (!response.ok) throw new Error("Greška pri slanju rezervacije");
+      if (!res.ok) throw new Error("Error");
 
       setFormData({
         type: "",
@@ -229,28 +233,24 @@ export default function ReservationForm() {
       });
       setFormErrors({});
       setShowEventForm(false);
-
       setPopupData({
         title: "Uspešno poslato!",
         description: "Vaša rezervacija je primljena. Odgovorićemo uskoro.",
       });
       setShowPopup(true);
-
-      setTimeout(() => {
-        router.push("/");
-      }, 5000);
-    } catch (err) {
-      console.error(err);
+      setTimeout(() => router.push("/"), 5000);
+    } catch {
       alert(t("home.reservation.errors.submit"));
     }
   };
 
   return (
     <div className="reservation-wrapper">
-      <h2
-        className="section-title"
-        dangerouslySetInnerHTML={{ __html: t("home.reservation.title") }}
-      ></h2>
+      <h2 className="section-title">
+        {t("home.reservation.title1")}{" "}
+        <span className="highlight">{t("home.reservation.title2")}</span>
+      </h2>
+
       <form className="reservation-form" onSubmit={handleSubmit}>
         <div className="intro-text">
           <p>{t("home.reservation.intro")}</p>
@@ -258,147 +258,101 @@ export default function ReservationForm() {
 
         <label>{t("home.reservation.typeLabel")}</label>
         <div className="type-grid">
-          {/* Biznis */}
-          <div
-            className={`type-card ${
-              formData.type === "biznis" ? "selected" : ""
-            } ${shakeFields.type ? "shake" : ""}`}
-            onClick={() => handleTypeSelect("biznis")}
-          >
-            <FontAwesomeIcon icon={faLaptop} className="type-icon" />{" "}
-            {t("home.reservation.types.business")}
-            <FontAwesomeIcon
-              icon={faInfoCircle}
-              className="info-icon"
-              data-tooltip-id="info-tip-biznis"
-              data-tooltip-content={t("home.reservation.tooltip")}
-              onClick={(e) => openInfo("biznis", e)}
-            />
-            <Tooltip
-              id="info-tip-biznis"
-              place="top"
-              offset={25}
-              variant="dark"
-              opacity={1}
-              style={{
-                backgroundColor: "#5a3e36",
-                color: "#fff",
-                fontSize: "0.8rem",
-                borderRadius: "6px",
-                padding: "6px 10px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-              }}
-            />
-          </div>
-
-          {/* Koneti Experience */}
-          <div
-            className={`type-card ${
-              formData.type === "koneti" ? "selected" : ""
-            } ${shakeFields.type ? "shake" : ""}`}
-            onClick={() => handleTypeSelect("koneti")}
-          >
-            <FontAwesomeIcon icon={faChampagneGlasses} className="type-icon" />{" "}
-            {t("home.reservation.types.experience")}
-            <FontAwesomeIcon
-              icon={faInfoCircle}
-              className="info-icon"
-              data-tooltip-id="info-tip-biznis"
-              data-tooltip-content={t("home.reservation.tooltip")}
-              onClick={(e) => openInfo("koneti", e)}
-            />
-            <Tooltip
-              id="info-tip-biznis"
-              place="top"
-              offset={25}
-              variant="dark"
-              opacity={1}
-              style={{
-                backgroundColor: "#946051ff",
-                color: "#fff",
-                fontSize: "0.8rem",
-                borderRadius: "6px",
-                padding: "6px 10px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-              }}
-            />
-          </div>
+          {types.map(({ id, label, icon }) => (
+            <div
+              key={id}
+              className={`type-card ${formData.type === id ? "selected" : ""} ${
+                shakeFields.type ? "shake" : ""
+              }`}
+              onClick={() => handleTypeSelect(id)}
+            >
+              <FontAwesomeIcon icon={icon} className="type-icon" />
+              {label}
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                className="info-icon"
+                onClick={(e) => openInfo(id, e)}
+              />
+            </div>
+          ))}
         </div>
         {formErrors.type && <span className="error">{formErrors.type}</span>}
 
-        {/* Biznis forma */}
-        {formData.type === "biznis" && (
-          <div className="form-section">
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder={t("home.reservation.form.name")}
-              className={shakeFields.name ? "shake" : ""}
-            />
-            {formErrors.name && (
-              <span className="error">{formErrors.name}</span>
+        {formData.type && (
+          <>
+            <label>{t("home.reservation.packageLabel")}</label>
+            <div
+              className={
+                subCategories[formData.type].length === 3
+                  ? "type-grid-three"
+                  : "type-grid-two"
+              }
+            >
+              {subCategories[formData.type].map(
+                ({ id, label, icon, colorClass }) => (
+                  <div
+                    key={id}
+                    className={`subtype-card ${
+                      formData.subType === id ? "selected" : ""
+                    } ${shakeFields.subType ? "shake" : ""}`}
+                    onClick={() => handleSubTypeSelect(id)}
+                  >
+                    <FontAwesomeIcon
+                      icon={icon}
+                      className={`type-icon ${colorClass}`}
+                    />
+                    {label}
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                      onClick={(e) => openInfo(id, e)}
+                    />
+                  </div>
+                )
+              )}
+            </div>
+            {formErrors.subType && (
+              <span className="error">{formErrors.subType}</span>
             )}
+          </>
+        )}
 
-            <input
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder={t("home.reservation.form.email")}
-              className={shakeFields.email ? "shake" : ""}
-            />
-            {formErrors.email && (
-              <span className="error">{formErrors.email}</span>
+        {showEventForm && (
+          <div className="event-form">
+            {["name", "email", "phone", "date", "time", "guests"].map(
+              (field) => (
+                <div key={field}>
+                  <input
+                    name={field}
+                    type={
+                      field === "email"
+                        ? "email"
+                        : field === "phone"
+                        ? "tel"
+                        : field === "date"
+                        ? "date"
+                        : field === "time"
+                        ? "time"
+                        : field === "guests"
+                        ? "number"
+                        : "text"
+                    }
+                    min={field === "guests" ? 1 : undefined}
+                    value={(formData as any)[field]}
+                    onChange={handleChange}
+                    placeholder={t(`home.reservation.form.${field}`)}
+                    className={
+                      shakeFields[field as keyof ShakeFields] ? "shake" : ""
+                    }
+                  />
+                  {formErrors[field as keyof FormErrors] && (
+                    <span className="error">
+                      {formErrors[field as keyof FormErrors]}
+                    </span>
+                  )}
+                </div>
+              )
             )}
-
-            <input
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder={t("home.reservation.form.phone")}
-              className={shakeFields.phone ? "shake" : ""}
-            />
-            {formErrors.phone && (
-              <span className="error">{formErrors.phone}</span>
-            )}
-
-            <input
-              name="date"
-              type="date"
-              value={formData.date}
-              onChange={handleChange}
-              className={shakeFields.date ? "shake" : ""}
-            />
-            {formErrors.date && (
-              <span className="error">{formErrors.date}</span>
-            )}
-
-            <input
-              name="time"
-              type="time"
-              value={formData.time}
-              onChange={handleChange}
-              className={shakeFields.time ? "shake" : ""}
-            />
-            {formErrors.time && (
-              <span className="error">{formErrors.time}</span>
-            )}
-
-            <input
-              name="guests"
-              type="number"
-              min="1"
-              value={formData.guests}
-              onChange={handleChange}
-              placeholder={t("home.reservation.form.guests")}
-              className={shakeFields.guests ? "shake" : ""}
-            />
-            {formErrors.guests && (
-              <span className="error">{formErrors.guests}</span>
-            )}
-
             <textarea
               name="message"
               value={formData.message}
@@ -412,154 +366,13 @@ export default function ReservationForm() {
           </div>
         )}
 
-        {/* Koneti Experience */}
-        {formData.type === "koneti" && (
-          <>
-            <label>{t("home.reservation.packageLabel")}</label>
-            <div className="type-grid-three">
-              <div
-                className={`subtype-card ${
-                  formData.subType === "basic" ? "selected" : ""
-                } ${shakeFields.subType ? "shake" : ""}`}
-                onClick={() => handleSubTypeSelect("basic")}
-              >
-                <FontAwesomeIcon icon={faMedal} className="type-icon silver" />{" "}
-                {t("home.reservation.packages.basic")}
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  className="info-icon"
-                  onClick={(e) => openInfo("basic", e)}
-                />
-              </div>
-              <div
-                className={`subtype-card ${
-                  formData.subType === "premium" ? "selected" : ""
-                } ${shakeFields.subType ? "shake" : ""}`}
-                onClick={() => handleSubTypeSelect("premium")}
-              >
-                <FontAwesomeIcon icon={faStar} className="type-icon gold" />{" "}
-                {t("home.reservation.packages.premium")}
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  className="info-icon"
-                  onClick={(e) => openInfo("premium", e)}
-                />
-              </div>
-              <div
-                className={`subtype-card ${
-                  formData.subType === "vip" ? "selected" : ""
-                } ${shakeFields.subType ? "shake" : ""}`}
-                onClick={() => handleSubTypeSelect("vip")}
-              >
-                <FontAwesomeIcon icon={faCrown} className="type-icon vip" />{" "}
-                {t("home.reservation.packages.vip")}
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  className="info-icon"
-                  onClick={(e) => openInfo("vip", e)}
-                />
-              </div>
-            </div>
-            {formErrors.subType && (
-              <span className="error">{formErrors.subType}</span>
-            )}
-
-            {showEventForm && (
-              <div className="event-form">
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder={t("home.reservation.form.name")}
-                  className={shakeFields.name ? "shake" : ""}
-                />
-                {formErrors.name && (
-                  <span className="error">{formErrors.name}</span>
-                )}
-
-                <input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder={t("home.reservation.form.email")}
-                  className={shakeFields.email ? "shake" : ""}
-                />
-                {formErrors.email && (
-                  <span className="error">{formErrors.email}</span>
-                )}
-
-                <input
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t("home.reservation.form.phone")}
-                  className={shakeFields.phone ? "shake" : ""}
-                />
-                {formErrors.phone && (
-                  <span className="error">{formErrors.phone}</span>
-                )}
-
-                <input
-                  name="date"
-                  type="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className={shakeFields.date ? "shake" : ""}
-                />
-                {formErrors.date && (
-                  <span className="error">{formErrors.date}</span>
-                )}
-
-                <input
-                  name="time"
-                  type="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  className={shakeFields.time ? "shake" : ""}
-                />
-                {formErrors.time && (
-                  <span className="error">{formErrors.time}</span>
-                )}
-
-                <input
-                  name="guests"
-                  type="number"
-                  min="1"
-                  value={formData.guests}
-                  onChange={handleChange}
-                  placeholder={t("home.reservation.form.guests")}
-                  className={shakeFields.guests ? "shake" : ""}
-                />
-                {formErrors.guests && (
-                  <span className="error">{formErrors.guests}</span>
-                )}
-
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder={t("home.reservation.form.message")}
-                  className={shakeFields.message ? "shake" : ""}
-                />
-                {formErrors.message && (
-                  <span className="error">{formErrors.message}</span>
-                )}
-              </div>
-            )}
-          </>
-        )}
-
-        {(formData.type === "biznis" ||
-          (formData.type === "koneti" && formData.subType)) && (
+        {formData.subType && (
           <button type="submit" className="btn-submit">
             {t("home.reservation.submit")}
           </button>
         )}
       </form>
 
-      {/* Popup */}
       {showPopup && (
         <div className="popup-backdrop" onClick={closePopup}>
           <div className="popup" onClick={(e) => e.stopPropagation()}>
@@ -576,9 +389,7 @@ export default function ReservationForm() {
               </ul>
             )}
             {popupData.price && <p className="price">{popupData.price}</p>}
-            {popupData.extraInfo && (
-              <p className="extra-info">{popupData.extraInfo}</p>
-            )}
+            {popupData.extraInfo && <p>{popupData.extraInfo}</p>}
           </div>
         </div>
       )}

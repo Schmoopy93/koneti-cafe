@@ -48,7 +48,9 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Drink | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Drink | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(externalLoading);
   const itemsPerPage = 8;
 
@@ -68,16 +70,18 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
   }, []);
 
   useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}, [currentPage]);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
 
   const getCategoryName = (cat?: Category) => {
     if (!cat) return "";
     if (typeof cat.name === "string") return cat.name;
-    return cat.name[language] ?? cat.name["sr"] ?? Object.values(cat.name)[0] ?? "";
+    return (
+      cat.name[language] ?? cat.name["sr"] ?? Object.values(cat.name)[0] ?? ""
+    );
   };
 
   const deleteDrink = async (id: string) => {
@@ -95,7 +99,10 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
   const filteredDrinks = drinks
     .filter((d) => {
       if (selectedCategory === "all") return true;
-      const catId = typeof (d as any).categoryId === "string" ? (d as any).categoryId : d.category?._id;
+      const catId =
+        typeof (d as any).categoryId === "string"
+          ? (d as any).categoryId
+          : d.category?._id;
       return String(catId) === String(selectedCategory);
     })
     .filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -107,7 +114,10 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
     });
 
   const totalPages = Math.ceil(filteredDrinks.length / itemsPerPage);
-  const paginatedDrinks = filteredDrinks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedDrinks = filteredDrinks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="menu-management">
@@ -126,7 +136,10 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
         </div>
 
         <div className="category-tabs">
-          <button className={selectedCategory === "all" ? "active" : ""} onClick={() => setSelectedCategory("all")}>
+          <button
+            className={selectedCategory === "all" ? "active" : ""}
+            onClick={() => setSelectedCategory("all")}
+          >
             {t("admin.menuManagement.allCategories")} ({drinks.length})
           </button>
           {categories.map((cat) => (
@@ -136,18 +149,31 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
               onClick={() => setSelectedCategory(String(cat._id))}
             >
               {getCategoryName(cat)} (
-              {drinks.filter((d) => String(d.category?._id || (d as any).categoryId) === String(cat._id)).length})
+              {
+                drinks.filter(
+                  (d) =>
+                    String(d.category?._id || (d as any).categoryId) ===
+                    String(cat._id)
+                ).length
+              }
+              )
             </button>
           ))}
         </div>
 
         <div className="filter-container">
-          <FontAwesomeIcon icon={faSort} />
+          <FontAwesomeIcon icon={faSort} className="filter-icon" />
           <label>{t("admin.menuManagement.sortLabel")}</label>
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="name">{t("admin.menuManagement.sortOptions.name")}</option>
-            <option value="price-low">{t("admin.menuManagement.sortOptions.priceLow")}</option>
-            <option value="price-high">{t("admin.menuManagement.sortOptions.priceHigh")}</option>
+            <option value="name">
+              {t("admin.menuManagement.sortOptions.name")}
+            </option>
+            <option value="price-low">
+              {t("admin.menuManagement.sortOptions.priceLow")}
+            </option>
+            <option value="price-high">
+              {t("admin.menuManagement.sortOptions.priceHigh")}
+            </option>
           </select>
         </div>
 
@@ -162,39 +188,54 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
       </div>
 
       {/* DRINKS GRID */}
-      <div className="drinks-section">
+      <div className="admin-drinks-section">
         <h3>
-          <FontAwesomeIcon icon={faGlassMartiniAlt} style={{ marginRight: "0.5rem" }} />
+          <FontAwesomeIcon
+            icon={faGlassMartiniAlt}
+            style={{ marginRight: "0.5rem" }}
+          />
           {selectedCategory === "all"
-            ? `${t("admin.menuManagement.allDrinks")} (${filteredDrinks.length})`
-            : `${getCategoryName(categories.find((c) => String(c._id) === String(selectedCategory)))} (${filteredDrinks.length})`}
+            ? `${t("admin.menuManagement.allDrinks")} (${
+                filteredDrinks.length
+              })`
+            : `${getCategoryName(
+                categories.find(
+                  (c) => String(c._id) === String(selectedCategory)
+                )
+              )} (${filteredDrinks.length})`}
         </h3>
 
-        <div className="drinks-grid">
+        <div className="admin-drinks-grid">
           {isLoading ? (
-            <div className="drinks-loading">Loading...</div>
+            <div className="admin-drinks-loading">Loading...</div>
           ) : (
             paginatedDrinks.map((drink) => (
-              <div key={drink._id} className="drink-card">
+              <div key={drink._id} className="admin-drink-card">
                 {(drink as any).image || (drink as any).imageUrl ? (
                   <Image
                     src={(drink as any).image || (drink as any).imageUrl}
                     alt={drink.name}
                     width={200}
                     height={200}
-                    className="drink-image"
+                    className="admin-drink-image"
                   />
                 ) : null}
-                <div className="card-content">
+                <div className="admin-card-content">
                   <h4>{drink.name}</h4>
                   <p>{getCategoryName(drink.category)}</p>
                   <span className="price">{drink.price} RSD</span>
                 </div>
-                <div className="drink-actions">
-                  <button onClick={() => onEditDrink?.(drink)} className="edit-btn">
+                <div className="admin-drink-actions">
+                  <button
+                    onClick={() => onEditDrink?.(drink)}
+                    className="edit-btn"
+                  >
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
-                  <button onClick={() => setShowDeleteConfirm(drink)} className="delete-btn">
+                  <button
+                    onClick={() => setShowDeleteConfirm(drink)}
+                    className="delete-btn"
+                  >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
@@ -206,15 +247,25 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
         {/* PAGINATION */}
         {totalPages > 1 && (
           <div className="pagination">
-            <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+            >
               <FontAwesomeIcon icon={faChevronLeft} /> Prev
             </button>
             {Array.from({ length: totalPages }, (_, i) => (
-              <button key={i} className={currentPage === i + 1 ? "active" : ""} onClick={() => setCurrentPage(i + 1)}>
+              <button
+                key={i}
+                className={currentPage === i + 1 ? "active" : ""}
+                onClick={() => setCurrentPage(i + 1)}
+              >
                 {i + 1}
               </button>
             ))}
-            <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
               Next <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
@@ -223,17 +274,30 @@ const MenuManagement: React.FC<MenuManagementProps> = ({
 
       {/* DELETE CONFIRM */}
       {showDeleteConfirm && (
-        <div className="delete-confirm-overlay" onClick={() => setShowDeleteConfirm(null)}>
-          <div className="delete-confirm-popup" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="delete-confirm-overlay"
+          onClick={() => setShowDeleteConfirm(null)}
+        >
+          <div
+            className="delete-confirm-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3>{t("admin.menuManagement.deleteConfirm.title")}</h3>
             <p>
-              {t("admin.menuManagement.deleteConfirm.message")} <strong>{showDeleteConfirm.name}</strong>?
+              {t("admin.menuManagement.deleteConfirm.message")}{" "}
+              <strong>{showDeleteConfirm.name}</strong>?
             </p>
             <div className="confirm-actions">
-              <button className="btn-cancel" onClick={() => setShowDeleteConfirm(null)}>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDeleteConfirm(null)}
+              >
                 {t("admin.menuManagement.deleteConfirm.cancel")}
               </button>
-              <button className="btn-confirm" onClick={() => deleteDrink(showDeleteConfirm._id)}>
+              <button
+                className="btn-confirm"
+                onClick={() => deleteDrink(showDeleteConfirm._id)}
+              >
                 {t("admin.menuManagement.deleteConfirm.delete")}
               </button>
             </div>

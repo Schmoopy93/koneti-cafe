@@ -80,7 +80,7 @@ const MenuClient: React.FC<MenuClientProps> = ({
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
-
+  const [mounted, setMounted] = useState(false);
   const itemsPerPage = 8;
 
   // Responsive check
@@ -91,8 +91,12 @@ const MenuClient: React.FC<MenuClientProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => setMounted(true), []);
+
   const activeCategory = selectedCategory || categories[0]?._id || "";
-  const activeCategoryObj = categories.find((cat) => cat._id === activeCategory);
+  const activeCategoryObj = categories.find(
+    (cat) => cat._id === activeCategory
+  );
 
   const getCategoryName = (cat?: Category) => {
     if (!cat || !i18n.isInitialized) return "";
@@ -123,7 +127,11 @@ const MenuClient: React.FC<MenuClientProps> = ({
       {!isMobile && (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-logo">
-            <img src="/koneti-logo.png" alt="Koneti Logo" className="logo-img" />
+            <img
+              src="/koneti-logo.png"
+              alt="Koneti Logo"
+              className="logo-img"
+            />
           </div>
           <button
             className="collapse-btn"
@@ -224,13 +232,17 @@ const MenuClient: React.FC<MenuClientProps> = ({
         </div>
 
         <div className="drinks-grid">
-          {currentDrinks.map((drink) => (
+          {currentDrinks.map((drink, index) => (
             <motion.div
               key={drink._id}
               className="drink-card"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
+              initial={mounted ? { opacity: 0, y: 40 } : false}
+              animate={mounted ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 1.1,
+                delay: index * 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               <div className="image-container">
                 {drink.image && (
@@ -238,6 +250,7 @@ const MenuClient: React.FC<MenuClientProps> = ({
                     src={drink.image}
                     alt={drink.name}
                     className="drink-img"
+                    loading="lazy"
                   />
                 )}
               </div>
@@ -253,14 +266,14 @@ const MenuClient: React.FC<MenuClientProps> = ({
 
         {filteredDrinks.length > itemsPerPage && (
           <div className="pagination-controls">
-            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}>
+            <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}>
               {t("menu.pagination.prev")}
             </button>
             <span>
               {currentPage} / {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             >
               {t("menu.pagination.next")}
             </button>

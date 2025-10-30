@@ -131,7 +131,7 @@ const Header: React.FC = () => {
                   <ReactCountryFlag
                     countryCode="RS"
                     svg
-                    style={{ width: 16, height: 12, marginRight: 4 }}
+                    style={{ width: 16, height: 12 }}
                   />
                   SR
                 </>
@@ -140,12 +140,17 @@ const Header: React.FC = () => {
                   <ReactCountryFlag
                     countryCode="GB"
                     svg
-                    style={{ width: 16, height: 12, marginRight: 4 }}
+                    style={{ width: 16, height: 12 }}
                   />
                   EN
                 </>
               )}
-              <ChevronDown size={14} />
+              <ChevronDown
+                size={14}
+                className={`language-dropdown-toggle ${
+                  isLangDropdownOpen ? "open" : ""
+                }`}
+              />
             </button>
 
             {isLangDropdownOpen && (
@@ -161,7 +166,7 @@ const Header: React.FC = () => {
                     <ReactCountryFlag
                       countryCode="GB"
                       svg
-                      style={{ width: 16, height: 12, marginRight: 4 }}
+                      style={{ width: 16, height: 12 }}
                     />{" "}
                     EN
                   </button>
@@ -176,7 +181,7 @@ const Header: React.FC = () => {
                     <ReactCountryFlag
                       countryCode="RS"
                       svg
-                      style={{ width: 16, height: 12, marginRight: 4 }}
+                      style={{ width: 16, height: 12 }}
                     />{" "}
                     SR
                   </button>

@@ -382,7 +382,7 @@ const AdminPage: React.FC = () => {
       {/* Calendar Modal */}
       {showModal === "calendar" && (
         <div
-          className="modal-overlay blur-backdrop"
+          className="modal-overlay fullscreen blur-backdrop"
           onClick={() => setShowModal(null)}
         >
           <div
