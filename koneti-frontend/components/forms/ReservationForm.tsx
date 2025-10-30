@@ -246,9 +246,10 @@ export default function ReservationForm() {
 
   return (
     <div className="reservation-wrapper">
-      <h2 className="section-title">
+      <h2 className="section-title animated-title">
         {t("home.reservation.title1")}{" "}
         <span className="highlight">{t("home.reservation.title2")}</span>
+        <span className="title-emoji">✨</span>
       </h2>
 
       <form className="reservation-form" onSubmit={handleSubmit}>

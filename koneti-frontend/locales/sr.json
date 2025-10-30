@@ -4,7 +4,8 @@
     "menu": "Meni",
     "reservation": "Rezervacije",
     "gallery": "Galerija",
-    "admin": "Administracija"
+    "admin": "Administracija",
+    "career": "Karijera"
   },
   "home": {
     "reservation": {
@@ -356,6 +357,59 @@
       "pending": "Na čekanju",
       "rejected": "Odbijeno",
       "cancelled": "Otkazano"
+    }
+  },
+  "career": {
+    "title": "Postanite deo Koneti porodice",
+    "subtitle": "Karijera u našem kafeu",
+    "description": "Tražimo strastvene i posvećene ljude koji žele da budu deo našeg tima. Prijavite se i pokažite nam zašto ste savršen izbor za Koneti.",
+    "form": {
+      "position": "Pozicija *",
+      "selectPosition": "Izaberite poziciju",
+      "firstName": "Ime *",
+      "lastName": "Prezime *",
+      "email": "Email *",
+      "phone": "Telefon *",
+      "coverLetter": "Motivaciono pismo *",
+      "cv": "CV (opciono)",
+      "submit": "Pošalji prijavu",
+      "submitting": "Šalje se..."
+    },
+    "placeholders": {
+      "firstName": "Unesite vaše ime",
+      "lastName": "Unesite vaše prezime",
+      "email": "vasa.email@example.com",
+      "phone": "+381 60 123 4567",
+      "coverLetter": "Objasnite zašto ste idealan kandidat za ovu poziciju..."
+    },
+    "upload": {
+      "clickToUpload": "Kliknite da otpremite CV",
+      "fileFormats": "PDF, DOC, DOCX (max 5MB)",
+      "fileTooLarge": "Fajl je prevelik. Maksimalna veličina je 5MB.",
+      "invalidFormat": "Dozvoljen je samo PDF, DOC ili DOCX format."
+    },
+    "errors": {
+      "firstName": "Ime je obavezno",
+      "lastName": "Prezime je obavezno",
+      "email": "Email je obavezan",
+      "emailInvalid": "Email format nije valjan",
+      "phone": "Telefon je obavezan",
+      "phoneInvalid": "Telefon format nije valjan",
+      "position": "Pozicija je obavezna",
+      "coverLetter": "Motivaciono pismo je obavezno"
+    },
+    "positions": {
+      "waiter": "Konobar/Konobarica",
+      "barista": "Barista",
+      "cook": "Kuvar/Kuvarica",
+      "shiftManager": "Menadžer smene",
+      "cleaner": "Čistačica"
+    },
+    "departments": {
+      "service": "Usluga",
+      "kitchen": "Kuhinja",
+      "management": "Menadžment",
+      "maintenance": "Održavanje"
     }
   }
 }

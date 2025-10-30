@@ -8,6 +8,7 @@
   flex-direction: column;
   align-items: center;
   min-height: 60vh;
+  animation: slideUp 0.8s ease-out;
 
   .section-title {
     font-family: "Poppins", sans-serif;
@@ -332,16 +333,12 @@
   }
 
   h2 {
-    font-size: 2rem;
-    margin-bottom: 1.2rem;
-    color: #5a3e36;
-    font-weight: 800;
+    font-size: 1.7rem;
+    margin-bottom: 0.4rem;
+    color: #cd853f;
+    font-weight: 700;
     text-align: center;
     padding-right: 3rem;
-    background: linear-gradient(135deg, #5a3e36 0%, #7d5a4f 50%, #8b6355 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     position: relative;
 
     &::before {
@@ -513,6 +510,17 @@
   60% { transform: translateY(-2px); }
 }
 
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Tooltip Styles */
 .react-tooltip {
   background: linear-gradient(135deg, #cfa68a, #d4a574) !important;
@@ -649,7 +657,7 @@ input[type="date"], input[type="time"] {
     }
 
     h2 {
-      font-size: 1.4rem;
+      font-size: 1rem;
       padding-right: 2rem;
     }
 

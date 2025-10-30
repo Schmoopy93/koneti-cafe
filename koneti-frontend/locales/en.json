@@ -4,7 +4,8 @@
     "menu": "Menu",
     "reservation": "Reservations",
     "gallery": "Gallery",
-    "admin": "Administration"
+    "admin": "Administration",
+    "career": "Career"
   },
   "home": {
     "reservation": {
@@ -359,6 +360,59 @@
       "pending": "Pending",
       "rejected": "Rejected",
       "cancelled": "Cancelled"
+    }
+  },
+  "career": {
+    "title": "Join the Koneti Family",
+    "subtitle": "Career at Our Café",
+    "description": "We are looking for passionate and dedicated people who want to be part of our team. Apply and show us why you are the perfect choice for Koneti.",
+    "form": {
+      "position": "Position *",
+      "selectPosition": "Select position",
+      "firstName": "First Name *",
+      "lastName": "Last Name *",
+      "email": "Email *",
+      "phone": "Phone *",
+      "coverLetter": "Cover Letter *",
+      "cv": "CV (optional)",
+      "submit": "Submit Application",
+      "submitting": "Submitting..."
+    },
+    "placeholders": {
+      "firstName": "Enter your first name",
+      "lastName": "Enter your last name",
+      "email": "your.email@example.com",
+      "phone": "+381 60 123 4567",
+      "coverLetter": "Explain why you are the ideal candidate for this position..."
+    },
+    "upload": {
+      "clickToUpload": "Click to upload CV",
+      "fileFormats": "PDF, DOC, DOCX (max 5MB)",
+      "fileTooLarge": "File is too large. Maximum size is 5MB.",
+      "invalidFormat": "Only PDF, DOC or DOCX format allowed."
+    },
+    "errors": {
+      "firstName": "First name is required",
+      "lastName": "Last name is required",
+      "email": "Email is required",
+      "emailInvalid": "Email format is not valid",
+      "phone": "Phone is required",
+      "phoneInvalid": "Phone format is not valid",
+      "position": "Position is required",
+      "coverLetter": "Cover letter is required"
+    },
+    "positions": {
+      "waiter": "Waiter/Waitress",
+      "barista": "Barista",
+      "cook": "Cook",
+      "shiftManager": "Shift Manager",
+      "cleaner": "Cleaner"
+    },
+    "departments": {
+      "service": "Service",
+      "kitchen": "Kitchen",
+      "management": "Management",
+      "maintenance": "Maintenance"
     }
   }
 }

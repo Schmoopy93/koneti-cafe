@@ -22,7 +22,7 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-left: auto;
 }
 
@@ -226,19 +226,20 @@
   gap: 1.5rem;
   align-items: center;
   margin-left: auto;
+  margin-right: 1.5rem;
 
   a {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem 0.6rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 1.5rem;
     background: rgba(255, 255, 255, 0.2);
     color: #5a3e36;
     font-family: "Poppins", sans-serif;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-decoration: none;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.3);
