@@ -585,7 +585,7 @@
   .reservation-wrapper {
     padding: 2.5rem 0.5rem;
     min-height: auto;
-
+    padding-bottom: 15rem !important;
     .section-title {
       font-size: 1.6rem;
       margin-bottom: 1.5rem;
@@ -906,15 +906,3 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   }
 }
 
-@keyframes fadeInPage {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
