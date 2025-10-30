@@ -290,7 +290,8 @@
   font-family: "Poppins", sans-serif;
   margin: auto;
   animation: popupSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   &::before {
     content: "";
@@ -453,15 +454,7 @@
       animation: shimmer 4s infinite;
     }
 
-    &::after {
-      content: "💰";
-      position: absolute;
-      top: 0.6rem;
-      right: 1.5rem;
-      font-size: clamp(1.2rem, 3vw, 1.6rem);
-      opacity: 0.9;
-      animation: bounce 3s infinite;
-    }
+
 
     &:hover {
       transform: perspective(1200px) rotateX(-5deg) translateY(-5px);
@@ -602,6 +595,11 @@ input[type="date"], input[type="time"] {
 }
 
 @media screen and (max-width: 768px) {
+  /* Hide tooltips on mobile */
+  .react-tooltip {
+    display: none !important;
+  }
+
   .reservation-wrapper {
     padding: 2rem 0.8rem;
 
