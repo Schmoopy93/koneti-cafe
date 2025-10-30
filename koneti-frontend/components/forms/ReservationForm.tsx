@@ -271,6 +271,8 @@ export default function ReservationForm() {
               <FontAwesomeIcon
                 icon={faInfoCircle}
                 className="info-icon"
+                data-tooltip-id={`tooltip-${id}`}
+                data-tooltip-content={t("home.reservation.tooltip")}
                 onClick={(e) => openInfo(id, e)}
               />
             </div>
@@ -305,6 +307,8 @@ export default function ReservationForm() {
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
+                      data-tooltip-id={`tooltip-${id}`}
+                      data-tooltip-content={t("home.reservation.tooltip")}
                       onClick={(e) => openInfo(id, e)}
                     />
                   </div>
@@ -372,6 +376,12 @@ export default function ReservationForm() {
           </button>
         )}
       </form>
+
+      <Tooltip id="tooltip-biznis" />
+      <Tooltip id="tooltip-koneti" />
+      <Tooltip id="tooltip-basic" />
+      <Tooltip id="tooltip-premium" />
+      <Tooltip id="tooltip-vip" />
 
       {showPopup && (
         <div className="popup-backdrop" onClick={closePopup}>
