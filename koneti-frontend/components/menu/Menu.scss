@@ -35,20 +35,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border-radius: 20px;
   position: sticky;
   top: 70px;
   max-height: calc(100vh - 140px);
   z-index: 10;
   margin-bottom: 12rem;
-}
-
-.sidebar:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 70px rgba(61, 47, 40, 0.2),
-    0 12px 35px rgba(207, 166, 138, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
-  border-color: rgba(207, 166, 138, 0.5);
 }
 
 .sidebar.collapsed {
@@ -72,12 +64,6 @@
   cursor: pointer;
   align-self: flex-end;
   margin-bottom: 1.5rem;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.collapse-btn:hover {
-  transform: scale(1.2);
-  color: #cfa68a;
 }
 
 .sidebar-title {
@@ -143,7 +129,6 @@
   font-weight: 600;
   color: #3d2f28;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: "Poppins", sans-serif;
   letter-spacing: 0.3px;
   position: relative;
@@ -156,15 +141,7 @@
   color: #3d2f28;
 }
 
-.category-btn:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(245, 235, 220, 0.9),
-    rgba(238, 223, 204, 0.8)
-  );
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(61, 47, 40, 0.3);
-}
+
 
 .category-btn.active {
   background: linear-gradient(135deg, #cfa68a, #d4a574);
@@ -211,7 +188,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeIn 0.5s ease-out;
   position: relative;
   z-index: 2;
 }
@@ -267,7 +243,6 @@
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
   color: #3d2f28;
-  transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -278,7 +253,6 @@
 .search-input:focus {
   outline: none;
   border-color: rgba(207, 166, 138, 0.6);
-  box-shadow: 0 4px 15px rgba(207, 166, 138, 0.2);
 }
 
 .search-icon {
@@ -322,19 +296,12 @@
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
   min-width: 140px;
 }
 
 .filter-dropdown:focus {
   outline: none;
   border-color: rgba(207, 166, 138, 0.6);
-  box-shadow: 0 4px 15px rgba(207, 166, 138, 0.2);
-}
-
-.filter-dropdown:hover {
-  border-color: rgba(207, 166, 138, 0.5);
-  transform: translateY(-1px);
 }
 
 /* ===== DRINKS GRID ===== */
@@ -353,17 +320,9 @@
   border: 2px solid rgba(207, 166, 138, 0.3);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08),
     0 2px 6px rgba(207, 166, 138, 0.15);
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
   overflow: hidden;
   position: relative;
-}
-
-.drink-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(207, 166, 138, 0.6);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
-    0 5px 15px rgba(207, 166, 138, 0.2);
 }
 
 .image-container {
@@ -383,11 +342,6 @@
   width: 100%;
   height: 120px;
   object-fit: contain;
-  transition: all 0.4s ease;
-}
-
-.drink-card:hover .drink-img {
-  transform: scale(1.08);
 }
 
 .card-content {
@@ -566,14 +520,16 @@
     );
     border: 1px solid rgba(207, 166, 138, 0.3);
     border-radius: 15px;
-    padding: 0.6rem;
-    font-size: 0.9rem;
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #3d2f28;
     text-align: center;
     font-family: "Poppins", sans-serif;
     cursor: pointer;
-    transition: all 0.3s ease;
+    min-width: 60px;
+    word-wrap: break-word;
+    line-height: 1.2;
   }
 
   .mobile-category-btn.active {
@@ -601,8 +557,14 @@
   }
 
   .mobile-category-grid {
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: 0.5rem;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1rem;
+  }
+
+  .mobile-category-btn {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.8rem;
+    min-width: 65px;
   }
 }
 
