@@ -2,7 +2,7 @@ import express from "express";
 import { createAdmin, loginAdmin, getAdmins, deleteAdmin } from "../controllers/adminController.js";
 import { protectAdmin } from "../middleware/adminMiddleware.js";
 import { csrfProtection, getCSRFToken } from "../middleware/csrf.js";
-import { sanitizeInput } from "../middleware/sanitization.js";
+
 import { validateAdmin, validateLogin, validateId } from "../middleware/validation.js";
 import { authLimiter, adminLimiter } from "../middleware/security.js";
 
@@ -28,10 +28,10 @@ router.post("/logout", csrfProtection, (req, res) => {
 });
 
 // Create a new admin user
-router.post("/create", adminLimiter, sanitizeInput, validateAdmin, csrfProtection, createAdmin);
+router.post("/create", adminLimiter, validateAdmin, csrfProtection, createAdmin);
 
 // Admin login - sets authentication cookie
-router.post("/login", authLimiter, sanitizeInput, validateLogin, loginAdmin);
+router.post("/login", authLimiter, validateLogin, loginAdmin);
 
 // Get all admin users (protected route)
 router.get("/", protectAdmin, adminLimiter, getAdmins);

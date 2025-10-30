@@ -8,7 +8,14 @@ export const generalLimiter = rateLimit({
     message: 'Too many requests from this IP, please try again later.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many requests from this IP, please try again later.'
+    });
+  },
+
 });
 
 export const authLimiter = rateLimit({
@@ -19,7 +26,13 @@ export const authLimiter = rateLimit({
     message: 'Too many login attempts, please try again later.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many login attempts, please try again later.'
+    });
+  }
 });
 
 export const adminLimiter = rateLimit({
@@ -30,7 +43,13 @@ export const adminLimiter = rateLimit({
     message: 'Too many admin requests, please try again later.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many admin requests, please try again later.'
+    });
+  }
 });
 
 export const reservationLimiter = rateLimit({
@@ -41,5 +60,11 @@ export const reservationLimiter = rateLimit({
     message: 'Too many reservation attempts, please try again later.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many reservation attempts, please try again later.'
+    });
+  }
 });
